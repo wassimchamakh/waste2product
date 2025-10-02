@@ -3,7 +3,9 @@
 use App\Http\Controllers\Frontoffice\DechetController;
 use Illuminate\Support\Facades\Route;
 
-
+Route::get('/ADMIN', function () {
+    return view('BackOffice.home');
+})->name('home');
 
 Route::get('/', function () {
     return view('FrontOffice.home');
