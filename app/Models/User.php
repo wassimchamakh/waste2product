@@ -21,6 +21,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'city',
+        'avatar',
+        'is_admin',
     ];
 
     /**
@@ -43,6 +48,18 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
+            'total_co2_saved' => 'decimal:2',
         ];
+    }
+    public function dechets()
+    {
+        return $this->hasMany(Dechet::class);
+    }
+
+    // Helpers
+    public function isAdmin(): bool
+    {
+        return $this->is_admin;
     }
 }

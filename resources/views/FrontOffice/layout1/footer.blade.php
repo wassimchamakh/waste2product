@@ -67,7 +67,7 @@
         <div class="border-t border-white border-opacity-20 mt-8 pt-8 text-center">
             <p class="text-sm opacity-80">
                 © {{ date('Y') }} Waste2Product Tunisie. Tous droits réservés. 
-                <span class="mx-2">🇹🇳</span>
+                <span class="mx-2">PENTAGOS 🇹🇳</span>
                 Fait avec ❤️ pour l'environnement
             </p>
         </div>

@@ -114,7 +114,7 @@
                             <a href="/mes-projets" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <i class="fas fa-project-diagram w-4 mr-3"></i>Mes Projets
                             </a>
-                            <a href="/mes-dechets" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            <a href="/dechets/mesdechets" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">
                                 <i class="fas fa-recycle w-4 mr-3"></i>Mes Déchets
                             </a>
                             <a href="/impact" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600">

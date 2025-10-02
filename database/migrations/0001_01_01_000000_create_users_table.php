@@ -17,6 +17,13 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone', 20)->nullable();
+            $table->string('address')->nullable();
+            $table->string('city', 100)->nullable();
+            $table->string('avatar')->nullable();
+            $table->decimal('total_co2_saved', 10, 2)->default(0);
+            $table->integer('projects_completed')->default(0);
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
