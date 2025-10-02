@@ -18,7 +18,7 @@
     <nav class="mt-6">
         <ul>
             <li>
-                <a href="/admin/dashboard" class="flex items-center py-2 px-4 {{ Request::is('admin/dashboard') ? 'active' : '' }}">
+                <a href="/admin" class="flex items-center py-2 px-4 {{ Request::is('admin/dashboard') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt mr-2 icon-only"></i>
                     <span class="text">Dashboard</span>
                 </a>

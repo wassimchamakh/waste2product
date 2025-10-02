@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Frontoffice\DechetController;
+use App\Http\Controllers\Backoffice\Dechet1Controller;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/ADMIN', function () {
+Route::get('/admin', function () {
     return view('BackOffice.home');
 })->name('home');
 
@@ -36,4 +37,15 @@ Route::prefix('dechets')->name('dechets.')->group(function () {
     Route::put('/{id}', [DechetController::class, 'update'])->name('update');
     Route::delete('/{id}', [DechetController::class, 'destroy'])->name('destroy');
     Route::post('/{id}/reserve', [DechetController::class, 'reserve'])->name('reserve');
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('/dechets')->name('dechets.')->group(function () {
+    Route::get('/', [Dechet1Controller::class, 'index'])->name('index');
+    Route::get('/create', [Dechet1Controller::class, 'create'])->name('create');
+    Route::post('/', [Dechet1Controller::class, 'store'])->name('store');
+    Route::get('/{dechet}/edit', [Dechet1Controller::class, 'edit'])->name('edit');
+    Route::put('/{dechet}', [Dechet1Controller::class, 'update'])->name('update');
+    Route::delete('/{dechet}', [Dechet1Controller::class, 'destroy'])->name('destroy');
+});
 });
