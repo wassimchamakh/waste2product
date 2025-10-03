@@ -28,7 +28,7 @@
             @enderror
         </div>
 
-        <div class="mb-6">
+        <div class="mb-4">
             <label for="category_id" class="block text-gray-700 font-medium mb-2">Catégorie</label>
             <select name="category_id" id="category_id"
                     class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-300" required>
@@ -40,6 +40,16 @@
                 @endforeach
             </select>
             @error('category_id')
+                <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
+        <div class="mb-6">
+            <label for="estimated_time" class="block text-gray-700 font-medium mb-2">Temps estimé (heures)</label>
+            <input type="number" name="estimated_time" id="estimated_time" min="1"
+                   class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:border-blue-300"
+                   value="{{ old('estimated_time') }}" required>
+            @error('estimated_time')
                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
             @enderror
         </div>

@@ -25,8 +25,8 @@
             <div class="max-w-4xl">
                 <!-- Breadcrumb -->
                 <nav class="flex items-center space-x-2 text-sm text-white opacity-90 mb-6">
-                    <a href="{{ route('projects.index') }}" class="hover:text-warning transition-colors">
-                        <i class="fas fa-tools mr-1"></i>Projets
+                    <a href="{{ route('projects.my') }}" class="hover:text-warning transition-colors">
+                        <i class="fas fa-tools mr-1"></i>Mes Projets
                     </a>
                     <i class="fas fa-chevron-right text-xs"></i>
                     <span>{{ $project->title }}</span>

@@ -66,7 +66,7 @@
                                         <i class="fas fa-user text-white text-sm"></i>
                                     </div>
                                     <div class="flex-1">
-                                        <p class="text-sm text-gray-900 dark:text-white">Ahmed souhaite récupérer vos palettes</p>
+                                        <p class="text-sm text-gray-900 dark:text-white">Leila souhaite récupérer vos palettes</p>
                                         <p class="text-xs text-gray-500 dark:text-gray-400">Il y a 4 heures</p>
                                     </div>
                                 </div>
@@ -96,7 +96,7 @@
                             <span class="text-white text-sm font-medium">AM</span>
                         </div>
                         <div class="text-left">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">Ahmed M.</p>
+                            <p class="text-sm font-medium text-gray-900 dark:text-white">Leila M.</p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">Éco-Warrior 🏆</p>
                         </div>
                         <i class="fas fa-chevron-down text-gray-400 text-sm"></i>
@@ -179,7 +179,7 @@
                         <span class="text-white text-sm font-medium">AM</span>
                     </div>
                     <div>
-                        <p class="text-sm font-medium text-gray-900 dark:text-white">Ahmed Mansouri</p>
+                        <p class="text-sm font-medium text-gray-900 dark:text-white">Leila Gharbi</p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">Éco-Warrior 🏆</p>
                     </div>
                 </div>
