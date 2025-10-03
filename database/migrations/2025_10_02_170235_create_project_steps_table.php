@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('project_steps', function (Blueprint $table) {
-           $table->id();
+            $table->id();
             $table->foreignId('project_id')->constrained()->onDelete('cascade');
             $table->integer('step_number');
             $table->string('title');
@@ -21,6 +21,9 @@ return new class extends Migration
             $table->text('tools_required')->nullable();
             $table->string('duration')->nullable();
             $table->timestamps();
+            
+            // Index pour optimiser les requêtes
+            $table->index(['project_id', 'step_number']);
         });
     }
 

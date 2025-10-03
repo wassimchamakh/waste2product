@@ -17,6 +17,10 @@ class DatabaseSeeder extends Seeder
             CategorySeeder::class,
             UserSeeder::class,
             DechetSeeder::class,
+            ProjectSeeder::class,
+            ProjectStepSeeder::class,
+            EventSeeder::class,     
+            ParticipantSeeder::class, 
         ]);
 
         $this->command->info('');
@@ -26,6 +30,8 @@ class DatabaseSeeder extends Seeder
         $this->command->info('   Admin : ahmed@waste2product.tn | password');
         $this->command->info('   User  : sarah@waste2product.tn | password');
         $this->command->info('   User  : youssef@waste2product.tn | password');
+        $this->command->info('   - Événements créés : ' . \App\Models\Event::count());
+        $this->command->info('   - Participants inscrits : ' . \App\Models\Participant::count());
         $this->command->info('');
     }
 }

@@ -23,7 +23,7 @@
                 <a href="/dechets" class="nav-link {{ Request::is('dechets*') ? 'text-primary font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-primary' }}">
                     Déchets
                 </a>
-                <a href="/projets" class="nav-link {{ Request::is('projets*') ? 'text-primary font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-primary' }}">
+                <a href="/projects" class="nav-link {{ Request::is('projets*') ? 'text-primary font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-primary' }}">
                     Projets
                 </a>
                 <a href="/evenements" class="nav-link {{ Request::is('evenements*') ? 'text-primary font-medium' : 'text-gray-600 dark:text-gray-300 hover:text-primary' }}">

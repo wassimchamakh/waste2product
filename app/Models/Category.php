@@ -21,6 +21,11 @@ class Category extends Model
         return $this->hasMany(Dechet::class);
     }
 
+    public function projects()
+{
+    return $this->hasMany(Project::class, 'category_id');
+}
+
     // Helper pour compter les déchets
     public function getDechetsCountAttribute()
     {

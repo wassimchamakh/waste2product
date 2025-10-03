@@ -26,6 +26,8 @@ class User extends Authenticatable
         'city',
         'avatar',
         'is_admin',
+        'total_co2_saved',
+        'projects_completed',
     ];
 
     /**
@@ -57,9 +59,16 @@ class User extends Authenticatable
         return $this->hasMany(Dechet::class);
     }
 
+    public function projects()
+{
+    return $this->hasMany(Project::class);
+}
+
     // Helpers
     public function isAdmin(): bool
     {
         return $this->is_admin;
     }
+
+    
 }

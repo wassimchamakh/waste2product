@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('projects', function (Blueprint $table) {
-           $table->id();
+            $table->id();
             $table->string('title');
             $table->text('description');
             $table->enum('difficulty_level', ['facile','intermédiaire','difficile']);
@@ -20,6 +20,10 @@ return new class extends Migration
             $table->integer('impact_score')->default(0);
             $table->string('photo')->nullable();
             $table->enum('status', ['draft','published','archived'])->default('draft');
+            $table->integer('views_count')->default(0); // Ajouté
+            $table->integer('favorites_count')->default(0); // Ajouté
+            $table->decimal('average_rating', 3, 2)->default(0); // Ajouté
+            $table->integer('reviews_count')->default(0); // Ajouté
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
             $table->timestamps();
