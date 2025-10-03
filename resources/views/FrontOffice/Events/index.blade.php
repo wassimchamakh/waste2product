@@ -110,7 +110,7 @@
 <!-- Filters -->
 <section class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <form method="GET" action="{{ route('evenements.index') }}" id="filters-form">
+        <form method="GET" action="{{ route('Events.index') }}" id="filters-form">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <!-- Search -->
                 <div class="md:col-span-2">
@@ -270,7 +270,7 @@
                         <!-- Actions -->
                         <div class="flex gap-2">
                             @if(!$isFull)
-                                <form action="{{ route('evenements.register', $event->id) }}" method="POST" class="flex-1">
+                                <form action="{{ route('Events.register', $event->id) }}" method="POST" class="flex-1">
                                     @csrf
                                     <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
                                         S'inscrire
@@ -281,7 +281,7 @@
                                     Complet
                                 </button>
                             @endif
-                            <a href="{{ route('evenements.show', $event->id) }}" class="flex-1 border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium text-center">
+                            <a href="{{ route('Events.show', $event->id) }}" class="flex-1 border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium text-center">
                                 Détails
                             </a>
                         </div>
@@ -292,7 +292,7 @@
                     <i class="fas fa-calendar-times text-6xl text-gray-300 mb-4"></i>
                     <h3 class="text-xl font-medium text-gray-500 mb-2">Aucun événement trouvé</h3>
                     <p class="text-gray-400 mb-4">Modifiez vos filtres ou créez un nouvel événement.</p>
-                    <a href="{{ route('evenements.create') }}" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-green-600">
+                    <a href="{{ route('Events.create') }}" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-green-600">
                         Créer un événement
                     </a>
                 </div>
@@ -359,7 +359,7 @@
                         <i class="fas fa-users mr-1"></i>
                         {{ $currentParticipants }}/{{ $event->max_participants }} inscrits
                     </p>
-                    <a href="{{ route('evenements.show', $event->id) }}" class="text-primary hover:text-green-700 text-sm font-medium">
+                    <a href="{{ route('Events.show', $event->id) }}" class="text-primary hover:text-green-700 text-sm font-medium">
                         Voir l'événement <i class="fas fa-arrow-right ml-1"></i>
                     </a>
                 </div>
@@ -395,7 +395,7 @@
 
 <!-- Create Event CTA -->
 <div class="fixed bottom-6 right-6 z-50">
-    <a href="{{ route('evenements.create') }}" class="bg-primary text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-200 flex items-center">
+    <a href="{{ route('Events.create') }}" class="bg-primary text-white px-6 py-3 rounded-full shadow-lg hover:bg-green-600 transform hover:scale-105 transition-all duration-200 flex items-center">
         <i class="fas fa-plus mr-2"></i>
         <span class="hidden md:inline">Organiser un événement</span>
     </a>
@@ -461,7 +461,7 @@
 
     // Reset filters
     document.getElementById('reset-filters').addEventListener('click', () => {
-        window.location.href = '{{ route("evenements.index") }}';
+        window.location.href = '{{ route("Events.index") }}';
     });
 
     // Calendar rendering
