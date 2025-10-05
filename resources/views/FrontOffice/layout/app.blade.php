@@ -10,6 +10,7 @@
     
     <script>
         tailwind.config = {
+            darkMode: 'class', // Disable auto dark mode
             theme: {
                 extend: {
                     colors: {
@@ -29,52 +30,90 @@
     </script>
     
     <style>
-        body { font-family: 'Poppins', sans-serif; }
-        
+        /* Force light mode - override ALL dark classes */
+        * {
+            --tw-bg-opacity: 1 !important;
+        }
+
+        /* Ensure white backgrounds everywhere */
+        body, html {
+            background-color: white !important;
+            font-family: 'Poppins', sans-serif;
+        }
+
         .gradient-hero {
             background: linear-gradient(135deg, #2E7D47 0%, #06D6A0 100%);
         }
-        
+
         .card-hover {
             transition: all 0.3s ease;
         }
-        
+
         .card-hover:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
+
         .counter-animation {
             animation: countUp 2s ease-out;
         }
-        
+
         @keyframes countUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .floating-icon {
             animation: float 3s ease-in-out infinite;
         }
-        
+
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-10px); }
         }
-        
+
         .mobile-menu {
             transform: translateX(-100%);
             transition: transform 0.3s ease;
         }
-        
+
         .mobile-menu.open {
             transform: translateX(0);
+        }
+
+        /* Override dark mode backgrounds to white */
+        .dark\:bg-gray-900,
+        .dark\:bg-gray-800,
+        .dark\:bg-gray-700,
+        .dark\:bg-gray-600 {
+            background-color: white !important;
+        }
+
+        /* Force dark text on white backgrounds */
+        .dark\:text-white {
+            color: #1f2937 !important; /* gray-800 */
+        }
+
+        .dark\:text-gray-300,
+        .dark\:text-gray-400 {
+            color: #4b5563 !important; /* gray-600 */
+        }
+
+        /* Override dark mode borders */
+        .dark\:border-gray-600,
+        .dark\:border-gray-700 {
+            border-color: #e5e7eb !important;
+        }
+
+        /* Ensure all cards have proper text color */
+        .bg-white, .bg-gray-50 {
+            color: #1f2937;
         }
 
         @yield('additional-styles')
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+<body class="bg-white">
     @unless(Request::is('login') || Request::is('register'))
         @include('FrontOffice.layout.navbar')
     @endunless
@@ -86,17 +125,8 @@
     @endunless
 
     <script>
-        // Dark Mode Detection
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            document.documentElement.classList.add('dark');
-        }
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
-            if (event.matches) {
-                document.documentElement.classList.add('dark');
-            } else {
-                document.documentElement.classList.remove('dark');
-            }
-        });
+        // Force light mode (dark mode disabled)
+        document.documentElement.classList.remove('dark');
 
         // Custom CSS classes for buttons
         const style = document.createElement('style');

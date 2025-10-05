@@ -427,11 +427,40 @@
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             border-bottom-color: #374151;
         }
+
+        /* Force light mode - disable all dark mode styles */
+        body, html {
+            background-color: #f9fafb !important;
+        }
+
+        /* Override dark mode backgrounds */
+        .dark\:bg-gray-900,
+        .dark\:bg-gray-800,
+        .dark\:bg-gray-700,
+        .dark\:bg-gray-600 {
+            background-color: white !important;
+        }
+
+        /* Force dark text on white backgrounds */
+        .dark\:text-white {
+            color: #1f2937 !important;
+        }
+
+        .dark\:text-gray-300,
+        .dark\:text-gray-400 {
+            color: #4b5563 !important;
+        }
+
+        /* Override dark mode borders */
+        .dark\:border-gray-600,
+        .dark\:border-gray-700 {
+            border-color: #e5e7eb !important;
+        }
     </style>
 
     @stack('styles')
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
+<body class="bg-gray-50">
 
     @include('BackOffice.layouts.sidebar')
 
@@ -519,14 +548,8 @@
                 }
             }
 
-            // Dark mode handling
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                document.documentElement.classList.add('dark');
-            }
-            
-            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
-                document.documentElement.classList.toggle('dark', e.matches);
-            });
+            // Force light mode (dark mode disabled)
+            document.documentElement.classList.remove('dark');
         });
     </script>
 

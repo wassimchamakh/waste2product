@@ -34,24 +34,27 @@ public function index()
     /**
      * Store a newly created project in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title'       => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+  public function store(Request $request)
+{
+    $request->validate([
+        'title'          => 'required|string|max:255',
+        'description'    => 'nullable|string',
+        'category_id'    => 'required|exists:categories,id',
+        'estimated_time' => 'required|integer|min:1',
+    ]);
 
-        Project::create([
-            'title'       => $request->title,
-            'description' => $request->description,
-            'category_id' => $request->category_id,
-        ]);
+    Project::create([
+        'title'          => $request->title,
+        'description'    => $request->description,
+        'category_id'    => $request->category_id,
+        'estimated_time' => $request->estimated_time,
+        'user_id'        => 5, // Hardcoded for testing
+        'status'         => 'published',
+    ]);
 
-        return redirect()->route('admin.projects.index')
-                         ->with('success', 'Projet créé avec succès.');
-    }
-
+    return redirect()->route('admin.projects.index')
+                     ->with('success', 'Projet créé avec succès.');
+}
     /**
      * Show the form for editing the specified project.
      */

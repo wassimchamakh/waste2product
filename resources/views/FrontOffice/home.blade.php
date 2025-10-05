@@ -121,52 +121,111 @@
 <!-- Main Content -->
 <main class="pt-16">
     <!-- Hero Section -->
-    <section id="home" class="gradient-hero text-white py-20">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h1 class="text-4xl md:text-6xl font-bold mb-6">
-                    Transformons les déchets
-                    <span class="block text-secondary">en ressources 🌱</span>
-                </h1>
-                <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto opacity-90">
-                    Rejoignez la communauté tunisienne de l'économie circulaire et donnez une seconde vie à vos déchets
-                </p>
-                <!-- Boutons principaux de la vitrine -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    <a href="/login" class="btn-primary text-lg px-8 py-4 font-medium">🔐 Se connecter</a>
-                    <a href="/register" class="btn-secondary text-lg px-8 py-4 font-medium">✨ S'inscrire gratuitement</a>
+    <section id="home" class="relative gradient-hero text-white py-24 overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-white opacity-5 rounded-full blur-3xl animate-pulse"></div>
+            <div class="absolute bottom-20 right-10 w-96 h-96 bg-secondary opacity-5 rounded-full blur-3xl animate-pulse" style="animation-delay: 2s;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <!-- Hero Badge -->
+                <div class="inline-flex items-center gap-2 bg-white bg-opacity-20 backdrop-blur-md rounded-full px-6 py-2 mb-6 animate-fade-in">
+                    <span class="relative flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
+                    </span>
+                    <span class="text-sm font-medium">+423 membres actifs • Tunisie</span>
                 </div>
 
-                <!-- Message d'information -->
-              
-            </div>
-            
+                <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                    Transformons les déchets
+                    <span class="block bg-gradient-to-r from-secondary via-accent to-yellow-300 bg-clip-text text-transparent animate-gradient">
+                        en ressources précieuses
+                    </span>
+                </h1>
+
+                <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto opacity-90 leading-relaxed">
+                    Rejoignez la première plateforme tunisienne d'économie circulaire.
+                    <span class="font-semibold text-secondary">Donnez, transformez, valorisez</span> vos déchets pour un avenir plus vert 🌱
+                </p>
+
+                <!-- CTA Buttons -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+                    <a href="{{ route('dechets.index') }}" class="group relative inline-flex items-center justify-center gap-3 bg-white text-primary hover:bg-gray-50 px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all transform hover:-translate-y-1">
+                        <i class="fas fa-search"></i>
+                        <span>Explorer les déchets</span>
+                        <i class="fas fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </a>
+
+                    <a href="{{ route('dechets.create') }}" class="group inline-flex items-center justify-center gap-3 bg-gradient-to-r from-secondary to-accent hover:from-accent hover:to-secondary text-white px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:shadow-3xl transition-all transform hover:-translate-y-1">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Déclarer un déchet</span>
+                    </a>
+                </div>
+
+                <!-- Trust Indicators -->
+                <div class="flex flex-wrap items-center justify-center gap-6 text-sm opacity-80">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-shield-alt text-secondary"></i>
+                        <span>100% Gratuit</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-users text-secondary"></i>
+                        <span>Communauté Vérifiée</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-leaf text-secondary"></i>
+                        <span>Impact Environnemental</span>
+                    </div>
+                </div>
             </div>
             
             <!-- Impact Statistics -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
-                <div class="text-center">
-                    <div class="counter-animation">
-                        <div class="text-3xl md:text-4xl font-bold mb-2">{{ number_format($stats['co2_saved']) }}</div>
-                        <div class="text-sm opacity-80">Kg CO₂ économisés</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                <div class="group bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all transform hover:scale-105 border border-white border-opacity-20">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-success rounded-full mb-3">
+                            <i class="fas fa-leaf text-white text-xl"></i>
+                        </div>
+                        <div class="counter-animation">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">{{ number_format($stats['co2_saved']) }}</div>
+                            <div class="text-sm opacity-80 font-medium">Kg CO₂ économisés</div>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <div class="counter-animation">
-                        <div class="text-3xl md:text-4xl font-bold mb-2">{{ $stats['projects_count'] }}</div>
-                        <div class="text-sm opacity-80">Projets réalisés</div>
+                <div class="group bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all transform hover:scale-105 border border-white border-opacity-20">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-secondary rounded-full mb-3">
+                            <i class="fas fa-project-diagram text-white text-xl"></i>
+                        </div>
+                        <div class="counter-animation">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">{{ $stats['projects_count'] }}</div>
+                            <div class="text-sm opacity-80 font-medium">Projets réalisés</div>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <div class="counter-animation">
-                        <div class="text-3xl md:text-4xl font-bold mb-2">{{ $stats['wastes_count'] }}</div>
-                        <div class="text-sm opacity-80">Déchets valorisés</div>
+                <div class="group bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all transform hover:scale-105 border border-white border-opacity-20">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-accent rounded-full mb-3">
+                            <i class="fas fa-recycle text-white text-xl"></i>
+                        </div>
+                        <div class="counter-animation">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">{{ $stats['wastes_count'] }}</div>
+                            <div class="text-sm opacity-80 font-medium">Déchets valorisés</div>
+                        </div>
                     </div>
                 </div>
-                <div class="text-center">
-                    <div class="counter-animation">
-                        <div class="text-3xl md:text-4xl font-bold mb-2">{{ $stats['users_count'] }}</div>
-                        <div class="text-sm opacity-80">Membres actifs</div>
+                <div class="group bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 hover:bg-opacity-20 transition-all transform hover:scale-105 border border-white border-opacity-20">
+                    <div class="text-center">
+                        <div class="inline-flex items-center justify-center w-12 h-12 bg-blue-500 rounded-full mb-3">
+                            <i class="fas fa-users text-white text-xl"></i>
+                        </div>
+                        <div class="counter-animation">
+                            <div class="text-4xl md:text-5xl font-bold mb-1">{{ $stats['users_count'] }}</div>
+                            <div class="text-sm opacity-80 font-medium">Membres actifs</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -176,43 +235,76 @@
     <!-- Popular Projects Section -->
     <section id="projets" class="py-16 bg-white dark:bg-gray-800">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                    Projets populaires 🔥
-                </h2>
-                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    Découvrez les créations les plus appréciées par notre communauté tunisienne
-                </p>
+            <div class="flex items-center justify-between mb-12">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                        Projets populaires 🔥
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl">
+                        Découvrez les créations les plus appréciées par notre communauté tunisienne
+                    </p>
+                </div>
+                <a href="{{ route('projects.index') }}" class="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105">
+                    Voir tout
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($popularProjects as $project)
                 <!-- Project Card -->
-                <div class="card-hover bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden">
-                    <div class="h-48 bg-gradient-to-br from-primary to-success flex items-center justify-center">
-                        <i class="fas fa-{{ $project['icon'] }} text-white text-4xl"></i>
+                <div class="group relative card-hover bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-600 hover:shadow-2xl transition-all duration-300">
+                    <!-- Image/Icon Section with Overlay -->
+                    <div class="relative h-56 bg-gradient-to-br from-primary via-green-600 to-success flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                        <i class="fas fa-{{ $project['icon'] }} text-white text-5xl transform group-hover:scale-110 transition-transform duration-300"></i>
+
+                        <!-- Difficulty Badge -->
+                        <span class="absolute top-4 left-4 bg-{{ $project['difficulty_color'] }} text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                            {{ $project['difficulty'] }}
+                        </span>
+
+                        <!-- Duration Badge -->
+                        <span class="absolute top-4 right-4 bg-white bg-opacity-90 text-gray-800 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg">
+                            <i class="fas fa-clock text-primary"></i>
+                            {{ $project['duration'] }}h
+                        </span>
                     </div>
+
+                    <!-- Content -->
                     <div class="p-6">
-                        <div class="flex items-center justify-between mb-3">
-                            <span class="bg-{{ $project['difficulty_color'] }} text-white px-3 py-1 rounded-full text-sm">
-                                {{ $project['difficulty'] }}
-                            </span>
-                            <span class="text-gray-500 text-sm">⏱️ {{ $project['duration'] }}h</span>
-                        </div>
-                        <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                             {{ $project['title'] }}
                         </h3>
-                        <p class="text-gray-600 dark:text-gray-300 mb-4">
-                            Créé par {{ $project['creator'] }} • {{ $project['city'] }}
-                        </p>
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-1">
-                                <i class="fas fa-star text-yellow-400"></i>
-                                <span class="text-sm text-gray-600 dark:text-gray-300">
-                                    {{ $project['rating'] }} ({{ $project['reviews_count'] }})
-                                </span>
+
+                        <!-- Creator Info -->
+                        <div class="flex items-center gap-2 mb-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div class="w-8 h-8 bg-gradient-to-br from-primary to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
+                                {{ strtoupper(substr($project['creator'], 0, 1)) }}
                             </div>
-                            <button class="btn-primary text-sm px-4 py-2">Voir détails</button>
+                            <div>
+                                <p class="font-medium">{{ $project['creator'] }}</p>
+                                <p class="text-xs text-gray-500">
+                                    <i class="fas fa-map-marker-alt text-accent"></i> {{ $project['city'] }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Rating & CTA -->
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-600">
+                            <div class="flex items-center gap-1.5">
+                                @for($i = 1; $i <= 5; $i++)
+                                    <i class="fas fa-star {{ $i <= floor($project['rating']) ? 'text-yellow-400' : 'text-gray-300' }} text-sm"></i>
+                                @endfor
+                                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
+                                    {{ $project['rating'] }}
+                                </span>
+                                <span class="text-xs text-gray-500">({{ $project['reviews_count'] }})</span>
+                            </div>
+                            <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-1 text-primary hover:text-green-700 font-semibold text-sm group-hover:gap-2 transition-all">
+                                Voir
+                                <i class="fas fa-arrow-right"></i>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -226,27 +318,52 @@
     <!-- Recent Wastes Section -->
     <section id="dechets" class="py-16 bg-gray-50 dark:bg-gray-900">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
-                    Déchets récents ♻️
-                </h2>
-                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-                    Trouvez des matériaux près de chez vous pour vos prochains projets
-                </p>
+            <div class="flex items-center justify-between mb-12">
+                <div>
+                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                        Déchets récents ♻️
+                    </h2>
+                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl">
+                        Trouvez des matériaux près de chez vous pour vos prochains projets
+                    </p>
+                </div>
+                <a href="{{ route('dechets.index') }}" class="hidden md:inline-flex items-center gap-2 bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-all transform hover:scale-105">
+                    Voir tout
+                    <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($recentWastes as $waste)
                 <!-- Waste Item -->
-                <div class="card-hover bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
-                    <div class="h-32 bg-gradient-to-br from-primary to-neutral flex items-center justify-center">
-                        <i class="fas fa-{{ $waste['icon'] }} text-white text-2xl"></i>
+                <div class="group card-hover bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-600 hover:shadow-xl transition-all duration-300">
+                    <div class="relative h-40 bg-gradient-to-br from-primary via-green-500 to-teal-500 flex items-center justify-center overflow-hidden">
+                        <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
+                        <i class="fas fa-{{ $waste['icon'] }} text-white text-3xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
+
+                        <!-- Available Badge -->
+                        <span class="absolute top-3 right-3 bg-success text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                            <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
+                            Disponible
+                        </span>
                     </div>
-                    <div class="p-4">
-                        <h4 class="font-semibold text-gray-900 dark:text-white mb-1">{{ $waste['title'] }}</h4>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 mb-2">📍 {{ $waste['location'] }}</p>
-                        <p class="text-xs text-gray-500 mb-3">{{ $waste['time_ago'] }}</p>
-                        <button class="w-full btn-primary text-sm py-2">Voir détails</button>
+                    <div class="p-5">
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">{{ $waste['title'] }}</h4>
+
+                        <div class="space-y-2 mb-4">
+                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                <i class="fas fa-map-marker-alt text-accent"></i>
+                                <span class="font-medium">{{ $waste['location'] }}</span>
+                            </div>
+                            <div class="flex items-center gap-2 text-xs text-gray-500">
+                                <i class="fas fa-clock"></i>
+                                <span>{{ $waste['time_ago'] }}</span>
+                            </div>
+                        </div>
+
+                        <a href="{{ route('dechets.index') }}" class="block w-full bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center text-sm font-semibold py-2.5 rounded-lg transition-all transform group-hover:scale-105">
+                            Voir détails
+                        </a>
                     </div>
                 </div>
                 @endforeach

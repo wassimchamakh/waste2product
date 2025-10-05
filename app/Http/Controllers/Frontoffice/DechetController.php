@@ -18,7 +18,16 @@ class DechetController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = 4; // Replace with Auth::id() when ready
+
         $query = Dechet::with(['category', 'user'])
+                      ->withCount([
+                          'favorites',
+                          'reviews',
+                          'favorites as is_favorited' => function($query) use ($userId) {
+                              $query->where('user_id', $userId);
+                          }
+                      ])
                       ->where('is_active', true);
 
         // Filtre par catégorie
@@ -119,22 +128,48 @@ class DechetController extends Controller
      */
     public function store(DechetRequest $request)
     {
-        $data = $request->validated();
-        $data['user_id'] = 4;
-        $data['status'] = 'available';
+        try {
+            $data = $request->validated();
+            $data['user_id'] = 4;
+            $data['status'] = 'available';
+            $data['is_active'] = true;
+            $data['views_count'] = 0;
 
-        // Upload photo
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $filename = time() . '_' . uniqid() . '.' . $file->extension();
-            $file->move(public_path('uploads/dechets'), $filename);
-            $data['photo'] = $filename;
+            // Set default values for new rating columns
+            $data['average_rating'] = 0;
+            $data['reviews_count'] = 0;
+            $data['favorites_count'] = 0;
+
+            // Upload photo
+            if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+                $file = $request->file('photo');
+
+                // Ensure upload directory exists
+                $uploadPath = public_path('uploads/dechets');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                // Use move for file upload
+                $file->move($uploadPath, $filename);
+                $data['photo'] = $filename;
+            } else {
+                $data['photo'] = null; // No photo uploaded
+            }
+
+            $Dechet = Dechet::create($data);
+
+            return redirect()->route('dechets.show', $Dechet->id)
+                           ->with('success', '✅ Déchet déclaré avec succès !');
+        } catch (\Exception $e) {
+            \Log::error('Dechet creation error: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+
+            return back()->withInput()
+                        ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
         }
-
-        $Dechet = Dechet::create($data);
-
-        return redirect()->route('dechets.show', $Dechet->id)
-                       ->with('success', '✅ Déchet déclaré avec succès !');
     }
 
      /**

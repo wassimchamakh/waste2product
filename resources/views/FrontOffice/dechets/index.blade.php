@@ -40,12 +40,20 @@
         Déclarer un déchet
     </a>
     
-    <a 
-        href="{{ route('dechets.my') }}" 
+    <a
+        href="{{ route('dechets.my') }}"
         class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all"
     >
         <i class="fas fa-box-open"></i>
         Mes déchets
+    </a>
+
+    <a
+        href="{{ route('dechets.favorites') }}"
+        class="inline-flex items-center gap-2 bg-gradient-to-r from-pink-500 to-red-600 text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all"
+    >
+        <i class="fas fa-heart"></i>
+        Mes favoris
     </a>
 </div>
     </div>
@@ -213,38 +221,65 @@
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <span>{{ $dechet->location }}</span>
                             </div>
-                            
+
                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                                 <i class="fas fa-box text-secondary"></i>
                                 <span>Quantité: {{ $dechet->quantity }}</span>
                             </div>
-                            
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                <i class="fas fa-eye text-primary"></i>
-                                <span>{{ $dechet->views_count }} vues</span>
+
+                            <div class="flex items-center justify-between text-sm">
+                                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                    <i class="fas fa-eye text-primary"></i>
+                                    <span>{{ $dechet->views_count }} vues</span>
+                                </div>
+
+                                <!-- Favorites Counter -->
+                                <div class="flex items-center gap-3 text-gray-500">
+                                    @if($dechet->reviews_count > 0)
+                                        <div class="flex items-center gap-1">
+                                            <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                            <span class="text-xs font-semibold">{{ number_format($dechet->average_rating, 1) }}</span>
+                                            <span class="text-xs">({{ $dechet->reviews_count }})</span>
+                                        </div>
+                                    @endif
+                                    @if($dechet->favorites_count > 0)
+                                        <div class="flex items-center gap-1">
+                                            <i class="fas fa-heart text-red-400 text-xs"></i>
+                                            <span class="text-xs font-semibold">{{ $dechet->favorites_count }}</span>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         
                         <!-- Actions -->
-                        <div class="flex gap-3">
-                            <a 
-                                href="{{ route('dechets.show', $dechet->id) }}" 
-                                class="flex-1 bg-primary hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition-colors"
+                        <div class="flex gap-2">
+                            <a
+                                href="{{ route('dechets.show', $dechet->id) }}"
+                                class="flex-1 bg-primary hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105"
                             >
                                 <i class="fas fa-eye mr-2"></i>Voir détails
                             </a>
-                            
-                            @auth
-                                @if($dechet->user_id === Auth::id())
-                                    <a 
-                                        href="{{ route('dechets.edit', $dechet->id) }}" 
-                                        class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white p-3 rounded-lg transition-colors"
-                                        title="Modifier"
-                                    >
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                @endif
-                            @endauth
+
+                            <!-- Favorite Button -->
+                            <button
+                                onclick="toggleFavorite({{ $dechet->id }}, this)"
+                                class="favorite-btn bg-gray-100 hover:bg-red-50 dark:bg-gray-600 dark:hover:bg-red-900 text-gray-600 dark:text-gray-300 p-3 rounded-lg transition-all transform hover:scale-110"
+                                data-dechet-id="{{ $dechet->id }}"
+                                title="Ajouter aux favoris"
+                            >
+                                <i class="fas fa-heart {{ $dechet->is_favorited > 0 ? 'text-red-500' : '' }}"></i>
+                            </button>
+
+                            @if($dechet->user_id === 4)
+                                <a
+                                    href="{{ route('dechets.edit', $dechet->id) }}"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg transition-colors"
+                                    title="Modifier"
+                                >
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -278,4 +313,66 @@
         </div>
     @endif
 </div>
+
+<!-- Favorite Toggle Script -->
+<script>
+function toggleFavorite(dechetId, button) {
+    fetch(`/dechets/${dechetId}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'Accept': 'application/json'
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        const icon = button.querySelector('i');
+
+        if (data.favorited) {
+            icon.classList.add('text-red-500');
+            button.classList.add('bg-red-50', 'dark:bg-red-900');
+            button.classList.remove('bg-gray-100', 'dark:bg-gray-600');
+        } else {
+            icon.classList.remove('text-red-500');
+            button.classList.remove('bg-red-50', 'dark:bg-red-900');
+            button.classList.add('bg-gray-100', 'dark:bg-gray-600');
+        }
+
+        // Show toast notification
+        showToast(data.message, data.favorited ? 'success' : 'info');
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Une erreur s\'est produite', 'error');
+    });
+}
+
+function showToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-2xl transform transition-all duration-300 translate-x-full ${
+        type === 'success' ? 'bg-green-500' :
+        type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    } text-white font-medium flex items-center gap-3`;
+
+    toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} text-xl"></i>
+        <span>${message}</span>
+    `;
+
+    document.body.appendChild(toast);
+
+    // Animate in
+    setTimeout(() => {
+        toast.classList.remove('translate-x-full');
+    }, 100);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.classList.add('translate-x-full');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+</script>
 @endsection

@@ -3,7 +3,10 @@
 use App\Http\Controllers\Backoffice\Event1controller;
 use App\Http\Controllers\Backoffice\Project1controller;
 use App\Http\Controllers\Frontoffice\DechetController;
+use App\Http\Controllers\Frontoffice\DechetFavoriteController;
+use App\Http\Controllers\Frontoffice\DechetReviewController;
 use App\Http\Controllers\Backoffice\Dechet1Controller;
+use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Frontoffice\EventController;
 use App\Http\Controllers\Frontoffice\ProjectController;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +37,7 @@ Route::get('/register', function () {
 Route::prefix('dechets')->name('dechets.')->group(function () {
     Route::get('/', [DechetController::class, 'index'])->name('index');
     Route::get('/mesdechets', [DechetController::class, 'myDechets'])->name('my');
+    Route::get('/favoris', [DechetFavoriteController::class, 'index'])->name('favorites');
     Route::get('/create', [DechetController::class, 'create'])->name('create');
     Route::post('/', [DechetController::class, 'store'])->name('store');
     Route::get('/{id}', [DechetController::class, 'show'])->name('show');
@@ -41,6 +45,14 @@ Route::prefix('dechets')->name('dechets.')->group(function () {
     Route::put('/{id}', [DechetController::class, 'update'])->name('update');
     Route::delete('/{id}', [DechetController::class, 'destroy'])->name('destroy');
     Route::post('/{id}/reserve', [DechetController::class, 'reserve'])->name('reserve');
+
+    // Favorites
+    Route::post('/{id}/favorite', [DechetFavoriteController::class, 'toggle'])->name('favorite.toggle');
+
+    // Reviews
+    Route::post('/{id}/reviews', [DechetReviewController::class, 'store'])->name('reviews.store');
+    Route::put('/{dechetId}/reviews/{reviewId}', [DechetReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/{dechetId}/reviews/{reviewId}', [DechetReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
 Route::group(['prefix' => 'projects'], function() {
@@ -79,22 +91,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{dechet}', [Dechet1Controller::class, 'update'])->name('update');
         Route::delete('/{dechet}', [Dechet1Controller::class, 'destroy'])->name('destroy');
     });
-        Route::prefix('/projects')->name('projects.')->group(function () {
-            Route::get('/', [Project1controller::class, 'index'])->name('index');
-            Route::get('/create', [Project1controller::class, 'create'])->name('create');
-            Route::post('/', [Project1controller::class, 'store'])->name('store');
-            Route::get('/{project}/edit', [Project1controller::class, 'edit'])->name('edit');
-            Route::put('/{project}', [Project1controller::class, 'update'])->name('update');
-            Route::delete('/{project}', [Project1controller::class, 'destroy'])->name('destroy');
-        });
-        Route::prefix('/events')->name('events.')->group(function () {
-            Route::get('/', [Event1controller::class, 'index'])->name('index');
-            Route::get('/create', [Event1controller::class, 'create'])->name('create');
-            Route::post('/', [Event1controller::class, 'store'])->name('store');
-            Route::get('/{event}/edit', [Event1controller::class, 'edit'])->name('edit');
-            Route::put('/{event}', [Event1controller::class, 'update'])->name('update');
-            Route::delete('/{event}', [Event1controller::class, 'destroy'])->name('destroy');
-            Route::get('/{event}/participants', [Event1controller::class, 'participants'])->name('participants');
-            Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
-        });
+
+    Route::prefix('/categories')->name('categories.')->group(function () {
+        Route::get('/', [CategoryController::class, 'index'])->name('index');
+        Route::get('/create', [CategoryController::class, 'create'])->name('create');
+        Route::post('/', [CategoryController::class, 'store'])->name('store');
+        Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit');
+        Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+        Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('/projects')->name('projects.')->group(function () {
+        Route::get('/', [Project1controller::class, 'index'])->name('index');
+        Route::get('/create', [Project1controller::class, 'create'])->name('create');
+        Route::post('/', [Project1controller::class, 'store'])->name('store');
+        Route::get('/{project}/edit', [Project1controller::class, 'edit'])->name('edit');
+        Route::put('/{project}', [Project1controller::class, 'update'])->name('update');
+        Route::delete('/{project}', [Project1controller::class, 'destroy'])->name('destroy');
+    });
+
+    Route::prefix('/events')->name('events.')->group(function () {
+        Route::get('/', [Event1controller::class, 'index'])->name('index');
+        Route::get('/create', [Event1controller::class, 'create'])->name('create');
+        Route::post('/', [Event1controller::class, 'store'])->name('store');
+        Route::get('/{event}/edit', [Event1controller::class, 'edit'])->name('edit');
+        Route::put('/{event}', [Event1controller::class, 'update'])->name('update');
+        Route::delete('/{event}', [Event1controller::class, 'destroy'])->name('destroy');
+        Route::get('/{event}/participants', [Event1controller::class, 'participants'])->name('participants');
+        Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
+    });
 });       

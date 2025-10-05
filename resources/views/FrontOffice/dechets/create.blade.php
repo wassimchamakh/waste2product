@@ -71,28 +71,75 @@
                 @enderror
             </div>
 
-            <!-- Catégorie -->
+            <!-- Catégorie - Visual Card Selector -->
             <div>
-                <label for="category_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Catégorie <span class="text-red-500">*</span>
+                <label class="block text-lg font-bold text-gray-900 mb-4">
+                    Quelle catégorie de déchet ? <span class="text-red-500">*</span>
                 </label>
-                <select 
-                    id="category_id" 
-                    name="category_id" 
-                    class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
-                    required
-                >
-                    <option value="">Sélectionnez une catégorie</option>
+                <p class="text-sm text-gray-600 mb-6">Sélectionnez la catégorie qui correspond le mieux à votre déchet</p>
+
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     @foreach($categories as $category)
-                        <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
+                        <label class="category-card relative cursor-pointer group">
+                            <input
+                                type="radio"
+                                name="category_id"
+                                value="{{ $category->id }}"
+                                class="hidden category-radio"
+                                {{ old('category_id') == $category->id ? 'checked' : '' }}
+                                required
+                            >
+                            <div class="category-card-inner h-full bg-white border-2 border-gray-200 rounded-xl p-4 transition-all duration-300 hover:border-primary hover:shadow-lg hover:-translate-y-1">
+                                <!-- Icon/Image -->
+                                <div class="flex items-center justify-center mb-3">
+                                    @if($category->image)
+                                        <img src="{{ asset('storage/categories/' . $category->image) }}" alt="{{ $category->name }}" class="w-16 h-16 object-contain">
+                                    @else
+                                        <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl" style="background: {{ $category->color }}20; color: {{ $category->color }}">
+                                            <i class="{{ $category->icon }}"></i>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- Category Name -->
+                                <h4 class="text-center font-bold text-gray-900 text-sm mb-1">{{ $category->name }}</h4>
+
+                                <!-- Description -->
+                                @if($category->description)
+                                    <p class="text-xs text-gray-500 text-center line-clamp-2">{{ $category->description }}</p>
+                                @endif
+
+                                <!-- Selected Indicator -->
+                                <div class="category-check absolute top-2 right-2 w-6 h-6 bg-primary rounded-full items-center justify-center text-white text-xs hidden">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                            </div>
+                        </label>
                     @endforeach
-                </select>
+                </div>
+
+                <input type="hidden" id="category_id_hidden" name="category_id_old" value="{{ old('category_id') }}">
+
                 @error('category_id')
-                    <p class="mt-1 text-sm text-red-500">{{ $message }}</p>
+                    <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                 @enderror
             </div>
+
+            <style>
+                .category-card input:checked ~ .category-card-inner {
+                    border-color: var(--primary-color, #2E7D47);
+                    box-shadow: 0 0 0 3px rgba(46, 125, 71, 0.1);
+                    background: rgba(46, 125, 71, 0.02);
+                }
+
+                .category-card input:checked ~ .category-card-inner .category-check {
+                    display: flex !important;
+                }
+
+                .category-card-inner:hover {
+                    transform: translateY(-4px);
+                }
+            </style>
 
             <!-- Description -->
             <div>
@@ -157,7 +204,7 @@
             <!-- Photo -->
             <div>
                 <label for="photo" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                    Photo du déchet
+                    Photo du déchet <span class="text-gray-400 text-xs">(optionnel)</span>
                 </label>
                 <div class="mt-2 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-lg hover:border-primary transition-colors">
                     <div class="space-y-2 text-center">
@@ -175,14 +222,14 @@
                                         name="photo" 
                                         type="file" 
                                         class="sr-only" 
-                                        accept="image/jpeg,image/png,image/jpg,image/gif"
+                                        accept="image/jpeg,image/png,image/jpg,image/gif,image/webp"
                                         onchange="previewImage(event)"
                                     >
                                 </label>
                                 <p class="pl-1">ou glisser-déposer</p>
                             </div>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
-                                PNG, JPG, GIF jusqu'à 2MB
+                                PNG, JPG, GIF, WEBP jusqu'à 5MB
                             </p>
                         </div>
                     </div>
