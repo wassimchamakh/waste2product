@@ -139,15 +139,15 @@
         
         <!-- Step 1: General Information -->
         <div class="wizard-step active" data-step="1">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-info-circle mr-3 text-primary"></i>
                     Informations générales
                 </h2>
                 
                 <!-- Title -->
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                         Titre de l'événement <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="title" id="title" required
@@ -163,7 +163,7 @@
 
                 <!-- Type -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Type d'événement <span class="text-red-500">*</span>
                     </label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -199,7 +199,7 @@
 
                 <!-- Description -->
                 <div class="mb-6">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                         Description complète <span class="text-red-500">*</span>
                     </label>
                     <textarea name="description" id="description" rows="6" required
@@ -226,8 +226,8 @@
 
         <!-- Step 2: Date and Location -->
         <div class="wizard-step" data-step="2">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-calendar-map mr-3 text-primary"></i>
                     Date et lieu
                 </h2>
@@ -235,7 +235,7 @@
                 <!-- Date Start -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label for="date_start" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="date_start" class="block text-sm font-medium text-gray-700 mb-2">
                             Date et heure de début <span class="text-red-500">*</span>
                         </label>
                         <input type="datetime-local" name="date_start" id="date_start" required
@@ -246,7 +246,7 @@
                     </div>
 
                     <div>
-                        <label for="date_end" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="date_end" class="block text-sm font-medium text-gray-700 mb-2">
                             Date et heure de fin <span class="text-red-500">*</span>
                         </label>
                         <input type="datetime-local" name="date_end" id="date_end" required
@@ -257,8 +257,8 @@
                 </div>
 
                 <!-- Duration Display -->
-                <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center text-sm text-gray-600">
                         <i class="fas fa-clock mr-2"></i>
                         <span>Durée de l'événement : </span>
                         <span id="duration-display" class="font-medium ml-1">Non calculée</span>
@@ -267,7 +267,7 @@
 
                 <!-- City -->
                 <div class="mb-6">
-                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
                         Ville <span class="text-red-500">*</span>
                     </label>
                     <select name="city" id="city" required
@@ -284,7 +284,7 @@
 
                 <!-- Location -->
                 <div class="mb-6">
-                    <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                         Adresse complète <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="location" id="location" required
@@ -296,7 +296,7 @@
 
                 <!-- Google Maps Link -->
                 <div class="mb-6">
-                    <label for="maps_link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="maps_link" class="block text-sm font-medium text-gray-700 mb-2">
                         Lien Google Maps (optionnel)
                     </label>
                     <input type="url" name="maps_link" id="maps_link"
@@ -323,15 +323,15 @@
 
         <!-- Step 3: Participants and Price -->
         <div class="wizard-step" data-step="3">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-users-cog mr-3 text-primary"></i>
                     Participants et prix
                 </h2>
 
                 <!-- Max Participants -->
                 <div class="mb-6">
-                    <label for="max_participants" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="max_participants" class="block text-sm font-medium text-gray-700 mb-2">
                         Nombre maximum de participants <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -355,7 +355,7 @@
 
                 <!-- Price -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Prix de participation <span class="text-red-500">*</span>
                     </label>
                     
@@ -406,7 +406,7 @@
 
                 <!-- Options -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Options avancées
                     </label>
                     
@@ -464,15 +464,15 @@
 
         <!-- Step 4: Media and Publication -->
         <div class="wizard-step" data-step="4">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-images mr-3 text-primary"></i>
                     Média et publication
                 </h2>
 
                 <!-- Image Upload -->
                 <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Image de l'événement
                     </label>
                     
@@ -526,7 +526,7 @@
 
                 <!-- Publication Status -->
                 <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Statut de publication <span class="text-red-500">*</span>
                     </label>
                     

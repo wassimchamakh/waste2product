@@ -89,7 +89,7 @@
         <!-- Events Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($participations as $event)
-            <div class="participation-card card-hover bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 event-type-{{ $event->type }}" 
+            <div class="participation-card card-hover bg-white rounded-xl shadow-sm border border-gray-200 event-type-{{ $event->type }}" 
                  data-status="{{ \Carbon\Carbon::parse($event->date_start)->isFuture() ? 'upcoming' : 'past' }}">
                 <div class="relative">
                     <img src="{{ $event->image ?? 'https://picsum.photos/400/200?random=' . $event->id }}" 
@@ -135,7 +135,7 @@
                     
                     <h3 class="font-bold text-lg mb-2 line-clamp-2">{{ $event->title }}</h3>
                     
-                    <div class="space-y-1 mb-4 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="space-y-1 mb-4 text-sm text-gray-600">
                         <div class="flex items-center">
                             <i class="fas fa-calendar-alt mr-2 w-4"></i>
                             {{ \Carbon\Carbon::parse($event->date_start)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}
@@ -185,49 +185,49 @@
     <div id="organised" class="tab-content">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-primary rounded-lg">
                         <i class="fas fa-calendar-plus text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Événements créés</p>
+                        <p class="text-sm font-medium text-gray-600">Événements créés</p>
                         <p class="text-2xl font-bold">{{ $organizedEvents->count() }}</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-success rounded-lg">
                         <i class="fas fa-users text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Participants totaux</p>
+                        <p class="text-sm font-medium text-gray-600">Participants totaux</p>
                         <p class="text-2xl font-bold">{{ $organizedEvents->sum('current_participants') }}</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-warning rounded-lg">
                         <i class="fas fa-star text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Note moyenne</p>
+                        <p class="text-sm font-medium text-gray-600">Note moyenne</p>
                         <p class="text-2xl font-bold">4.8</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-secondary rounded-lg">
                         <i class="fas fa-percentage text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Taux de présence</p>
+                        <p class="text-sm font-medium text-gray-600">Taux de présence</p>
                         <p class="text-2xl font-bold">92%</p>
                     </div>
                 </div>
@@ -245,7 +245,7 @@
         <!-- Organized Events List -->
         <div class="space-y-4">
             @forelse($organizedEvents as $event)
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 event-type-{{ $event->type }}">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 event-type-{{ $event->type }}">
                 <div class="p-6">
                     <div class="flex flex-col md:flex-row md:items-center justify-between">
                         <div class="flex-1">
@@ -260,7 +260,7 @@
                             
                             <h3 class="text-xl font-bold mb-2">{{ $event->title }}</h3>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                                 <div class="flex items-center">
                                     <i class="fas fa-calendar-alt mr-2"></i>
                                     {{ \Carbon\Carbon::parse($event->date_start)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}
@@ -278,11 +278,11 @@
                             <!-- Progress Bar -->
                             @php $progressPercent = $event->max_participants > 0 ? ($event->current_participants / $event->max_participants) * 100 : 0; @endphp
                             <div class="mt-3">
-                                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
+                                <div class="flex justify-between text-xs text-gray-600 mb-1">
                                     <span>Inscriptions</span>
                                     <span>{{ round($progressPercent) }}%</span>
                                 </div>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-gradient-to-r from-success to-primary h-2 rounded-full transition-all duration-500" 
                                          style="width: {{ $progressPercent }}%"></div>
                                 </div>
@@ -291,7 +291,7 @@
                         
                         <!-- Actions -->
                         <div class="mt-4 md:mt-0 md:ml-6 flex flex-wrap gap-2">
-                            <a href="{{ route('Events.show', $event) }}" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <a href="{{ route('Events.show', $event) }}" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-eye mr-2"></i>Voir
                             </a>
                             

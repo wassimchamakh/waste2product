@@ -4,15 +4,15 @@
 
 @section('content')
 <!-- Hero Section with Navigation -->
-<div class="bg-gray-50 dark:bg-gray-900 py-8">
+<div class="bg-gray-50 py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
-        <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-6">
+        <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-6">
             <a href="{{ route('dechets.index') }}" class="hover:text-primary transition-colors">
                 <i class="fas fa-home mr-1"></i>Déchets
             </a>
             <i class="fas fa-chevron-right text-xs"></i>
-            <span class="text-gray-900 dark:text-white">{{ Str::limit($Dechet->title, 30) }}</span>
+            <span class="text-gray-900">{{ Str::limit($Dechet->title, 30) }}</span>
         </nav>
         
         <!-- Quick Actions -->
@@ -20,7 +20,7 @@
             <div class="flex items-center gap-3">
                 <a 
                     href="{{ route('dechets.index') }}" 
-                    class="inline-flex items-center gap-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm border border-gray-200 dark:border-gray-700"
+                    class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm border border-gray-200"
                 >
                     <i class="fas fa-arrow-left"></i>
                     Retour à la liste
@@ -55,7 +55,7 @@
         
         <!-- Main Content Column -->
         <div class="lg:col-span-2">
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
                 
                 <!-- Image Section -->
                 <div class="relative h-96 md:h-[28rem] overflow-hidden">
@@ -66,10 +66,10 @@
                             class="w-full h-full object-cover"
                         >
                     @else
-                        <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                        <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                             <div class="text-center">
                                 <i class="fas fa-image text-8xl text-gray-400 mb-4"></i>
-                                <p class="text-gray-500 dark:text-gray-400 text-lg">Aucune photo disponible</p>
+                                <p class="text-gray-500 text-lg">Aucune photo disponible</p>
                             </div>
                         </div>
                     @endif
@@ -98,7 +98,7 @@
                     <div class="mb-8">
                         <div class="flex items-start justify-between mb-4">
                             <div class="flex-1">
-                                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
                                     {{ $Dechet->title }}
                                 </h1>
                                 
@@ -111,7 +111,7 @@
                         </div>
                         
                         <!-- Meta Information -->
-                        <div class="flex flex-wrap items-center gap-6 text-sm text-gray-600 dark:text-gray-400">
+                        <div class="flex flex-wrap items-center gap-6 text-sm text-gray-600">
                             <div class="flex items-center gap-2">
                                 <i class="fas fa-calendar text-primary"></i>
                                 <span>{{ $Dechet->created_at->format('d/m/Y à H:i') }}</span>
@@ -129,35 +129,35 @@
 
                     <!-- Description -->
                     <div class="mb-8">
-                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <h2 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
                             <i class="fas fa-info-circle text-primary"></i>
                             Description
                         </h2>
-                        <div class="prose prose-gray dark:prose-invert max-w-none">
-                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">{{ $Dechet->description }}</p>
+                        <div class="prose prose-gray max-w-none">
+                            <p class="text-gray-700 leading-relaxed whitespace-pre-line">{{ $Dechet->description }}</p>
                         </div>
                     </div>
 
                     <!-- Details Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                        <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                        <div class="bg-gray-50 rounded-xl p-6">
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-10 h-10 bg-secondary rounded-lg flex items-center justify-center">
                                     <i class="fas fa-box text-white"></i>
                                 </div>
-                                <h3 class="font-bold text-gray-900 dark:text-white">Quantité</h3>
+                                <h3 class="font-bold text-gray-900">Quantité</h3>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-lg">{{ $Dechet->quantity }}</p>
+                            <p class="text-gray-600 text-lg">{{ $Dechet->quantity }}</p>
                         </div>
 
-                        <div class="bg-gray-50 dark:bg-gray-700 rounded-xl p-6">
+                        <div class="bg-gray-50 rounded-xl p-6">
                             <div class="flex items-center gap-3 mb-3">
                                 <div class="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
                                     <i class="fas fa-map-marker-alt text-white"></i>
                                 </div>
-                                <h3 class="font-bold text-gray-900 dark:text-white">Localisation</h3>
+                                <h3 class="font-bold text-gray-900">Localisation</h3>
                             </div>
-                            <p class="text-gray-600 dark:text-gray-300 text-lg">{{ $Dechet->location }}</p>
+                            <p class="text-gray-600 text-lg">{{ $Dechet->location }}</p>
                         </div>
                     </div>
 
@@ -188,8 +188,8 @@
                         </div>
                     </div>
                     @elseif($Dechet->status === 'reserved')
-                    <div class="bg-orange-50 dark:bg-orange-900 dark:bg-opacity-20 border border-orange-200 dark:border-orange-800 rounded-xl p-6">
-                        <div class="flex items-center gap-3 text-orange-700 dark:text-orange-300">
+                    <div class="bg-orange-50 border border-orange-200 rounded-xl p-6">
+                        <div class="flex items-center gap-3 text-orange-700">
                             <i class="fas fa-info-circle text-2xl"></i>
                             <div>
                                 <h3 class="font-bold text-lg">Déchet réservé</h3>
@@ -205,8 +205,8 @@
         <!-- Sidebar -->
         <div class="space-y-6">
             <!-- User Info Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <i class="fas fa-user text-primary"></i>
                     Publié par
                 </h3>
@@ -216,22 +216,22 @@
                         {{ strtoupper(substr($Dechet->user->name, 0, 1)) }}
                     </div>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-lg">{{ $Dechet->user->name }}</h4>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                        <h4 class="font-bold text-gray-900 text-lg">{{ $Dechet->user->name }}</h4>
+                        <p class="text-gray-600 text-sm">
                             Membre depuis {{ $Dechet->user->created_at->format('Y') }}
                         </p>
                     </div>
                 </div>
                 
                 <!-- User Stats -->
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t dark:border-gray-700">
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t">
                     <div class="text-center">
                         <div class="text-2xl font-bold text-primary">{{ $Dechet->user->dechets()->where('is_active', true)->count() }}</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400">Déchets publiés</div>
+                        <div class="text-xs text-gray-600">Déchets publiés</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-secondary">{{ $Dechet->user->created_at->diffInMonths() ?? 0 }}</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400">Mois d'ancienneté</div>
+                        <div class="text-xs text-gray-600">Mois d'ancienneté</div>
                     </div>
                 </div>
             </div>
@@ -265,8 +265,8 @@
             </div>
 
             <!-- Share -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-2xl shadow-xl p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <i class="fas fa-share-alt text-primary"></i>
                     Partager
                 </h3>
@@ -304,17 +304,17 @@
     @if($similarDechets->count() > 0)
     <div class="mt-16">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
                 Déchets similaires
             </h2>
-            <p class="text-gray-600 dark:text-gray-400 text-lg">
+            <p class="text-gray-600 text-lg">
                 Découvrez d'autres déchets de la même catégorie
             </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @foreach($similarDechets as $similar)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
                     <div class="h-48 overflow-hidden">
                         @if($similar->photo)
                             <img 
@@ -323,22 +323,22 @@
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                             >
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                                 <i class="fas fa-image text-4xl text-gray-400"></i>
                             </div>
                         @endif
                     </div>
                     
                     <div class="p-6">
-                        <h3 class="font-bold text-gray-900 dark:text-white mb-2 line-clamp-1">
+                        <h3 class="font-bold text-gray-900 mb-2 line-clamp-1">
                             {{ $similar->title }}
                         </h3>
-                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
                             {{ Str::limit($similar->description, 80) }}
                         </p>
                         
                         <div class="flex items-center justify-between">
-                            <span class="text-sm text-gray-500 dark:text-gray-400">
+                            <span class="text-sm text-gray-500">
                                 <i class="fas fa-map-marker-alt mr-1"></i>
                                 {{ $similar->location }}
                             </span>
@@ -360,13 +360,13 @@
 <!-- Delete Confirmation Modal -->
 @if($Dechet->user_id === 4)
 <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
         <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Confirmer la suppression</h3>
-            <p class="text-gray-600 dark:text-gray-300">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer la suppression</h3>
+            <p class="text-gray-600">
                 Êtes-vous sûr de vouloir supprimer ce déchet ? Cette action est irréversible.
             </p>
         </div>
@@ -374,7 +374,7 @@
         <div class="flex gap-4">
             <button 
                 onclick="hideDeleteModal()" 
-                class="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
             >
                 Annuler
             </button>

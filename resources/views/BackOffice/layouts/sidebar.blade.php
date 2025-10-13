@@ -107,11 +107,16 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/logout" class="nav-link">
-                        <i class="fas fa-sign-out-alt nav-icon"></i>
-                        <span class="nav-text">Déconnexion</span>
-                    </a>
+                <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-link w-full text-left">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span class="nav-text">Déconnexion</span>
+                        </button>
+                    </form>
                 </li>
+    
+
             </ul>
         </div>
     </nav>

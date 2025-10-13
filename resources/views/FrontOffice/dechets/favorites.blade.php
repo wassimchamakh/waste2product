@@ -49,7 +49,7 @@
     @if($favorites->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($favorites as $dechet)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover relative">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover relative">
                     <!-- Remove from Favorites Badge -->
                     <button
                         onclick="toggleFavorite({{ $dechet->id }}, this)"
@@ -69,7 +69,7 @@
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             >
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                                 <i class="fas fa-image text-6xl text-gray-400"></i>
                             </div>
                         @endif
@@ -83,7 +83,7 @@
 
                         <!-- Category Badge -->
                         <div class="absolute bottom-4 left-4">
-                            <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white dark:bg-gray-800 text-primary backdrop-blur-sm flex items-center gap-2">
+                            <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white text-primary backdrop-blur-sm flex items-center gap-2">
                                 <i class="{{ $dechet->category->icon ?? 'fas fa-tag' }}"></i>
                                 {{ $dechet->category->name }}
                             </span>
@@ -92,28 +92,28 @@
 
                     <!-- Content -->
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                             {{ $dechet->title }}
                         </h3>
 
-                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
                             {{ Str::limit($dechet->description, 100) }}
                         </p>
 
                         <!-- Meta Info -->
                         <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <span>{{ $dechet->location }}</span>
                             </div>
 
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-box text-secondary"></i>
                                 <span>Quantité: {{ $dechet->quantity }}</span>
                             </div>
 
                             <div class="flex items-center justify-between text-sm">
-                                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-eye text-primary"></i>
                                     <span>{{ $dechet->views_count }} vues</span>
                                 </div>
@@ -150,15 +150,15 @@
     @else
         <!-- Empty State -->
         <div class="text-center py-20">
-            <div class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-pink-100 to-red-100 dark:from-pink-900 dark:to-red-900 rounded-full mb-8">
-                <i class="fas fa-heart text-6xl text-pink-400 dark:text-pink-300"></i>
+            <div class="inline-flex items-center justify-center w-32 h-32 bg-gradient-to-br from-pink-100 to-red-100 rounded-full mb-8">
+                <i class="fas fa-heart text-6xl text-pink-400"></i>
             </div>
 
-            <h3 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">
                 Aucun favori pour le moment
             </h3>
 
-            <p class="text-gray-600 dark:text-gray-400 mb-8 max-w-md mx-auto text-lg">
+            <p class="text-gray-600 mb-8 max-w-md mx-auto text-lg">
                 Commencez à sauvegarder des déchets qui vous intéressent en cliquant sur le cœur
                 <i class="fas fa-heart text-red-500"></i>
             </p>

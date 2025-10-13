@@ -125,7 +125,7 @@
                 <div class="flex items-center">
                     <i class="fas fa-user mr-3 text-xl"></i>
                     <div>
-                        <div class="font-medium">{{ $event->organizer ?? $event->user->name ?? 'Organisateur' }}</div>
+                        <div class="font-medium">{{ $event->organizer->name ?? $event->user->name ?? 'Organisateur' }}</div>
                         <div class="text-sm opacity-90">Organisateur</div>
                     </div>
                 </div>
@@ -175,12 +175,12 @@
             <div id="about" class="tab-content active">
                 <div class="prose max-w-none">
                     <h3 class="text-xl font-bold mb-4">Description de l'événement</h3>
-                    <div class="text-gray-700 dark:text-gray-300 mb-6">
+                    <div class="text-gray-700 mb-6">
                         {{ $event->description ?? "Rejoignez-nous pour cet événement exceptionnel dans le cadre de l'économie circulaire. Une occasion unique d'apprendre, de partager et de contribuer à un avenir plus durable pour la Tunisie." }}
                     </div>
                     
                     <h4 class="text-lg font-semibold mb-3">Ce que vous allez apprendre/faire :</h4>
-                    <ul class="list-disc pl-5 space-y-2 text-gray-700 dark:text-gray-300 mb-6">
+                    <ul class="list-disc pl-5 space-y-2 text-gray-700 mb-6">
                         @if($event->type == 'workshop')
                             <li>Techniques pratiques de transformation et d'upcycling</li>
                             <li>Utilisation d'outils et de matériaux récupérés</li>
@@ -201,7 +201,7 @@
                     </ul>
                     
                     <h4 class="text-lg font-semibold mb-3">Matériel nécessaire :</h4>
-                    <p class="text-gray-700 dark:text-gray-300 mb-6">
+                    <p class="text-gray-700 mb-6">
                         @if($event->type == 'workshop' || $event->type == 'repair_cafe')
                             Apportez vos objets à réparer ou transformer. Outils de base fournis sur place.
                         @else
@@ -232,15 +232,15 @@
                     @endphp
                     
                     @foreach($segments as $segment)
-                    <div class="flex items-start space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
                         <div class="flex-shrink-0 w-16 text-center">
                             <div class="bg-primary text-white px-3 py-1 rounded text-sm font-medium">
                                 {{ $segment['time'] }}
                             </div>
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-medium text-gray-900 dark:text-white">{{ $segment['title'] }}</h4>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Durée : {{ $segment['duration'] }} minutes</p>
+                            <h4 class="font-medium text-gray-900">{{ $segment['title'] }}</h4>
+                            <p class="text-sm text-gray-600">Durée : {{ $segment['duration'] }} minutes</p>
                         </div>
                     </div>
                     @endforeach
@@ -252,7 +252,7 @@
                 <h3 class="text-xl font-bold mb-6">Lieu de l'événement</h3>
                 
                 <!-- Map Placeholder -->
-                <div class="bg-gray-200 dark:bg-gray-700 h-64 rounded-lg mb-6 flex items-center justify-center">
+                <div class="bg-gray-200 h-64 rounded-lg mb-6 flex items-center justify-center">
                     <div class="text-center text-gray-500">
                         <i class="fas fa-map-marked-alt text-4xl mb-2"></i>
                         <p>Carte Google Maps</p>
@@ -263,16 +263,16 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <h4 class="font-semibold mb-3">Adresse complète</h4>
-                        <p class="text-gray-700 dark:text-gray-300 mb-4">{{ $event->location }}</p>
+                        <p class="text-gray-700 mb-4">{{ $event->location }}</p>
                         
                         <h4 class="font-semibold mb-3">Instructions d'accès</h4>
-                        <p class="text-gray-700 dark:text-gray-300">
+                        <p class="text-gray-700">
                             Accessible en transport en commun. Station de métro/bus la plus proche à 5 minutes à pied.
                         </p>
                     </div>
                     <div>
                         <h4 class="font-semibold mb-3">Informations pratiques</h4>
-                        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+                        <ul class="space-y-2 text-gray-700">
                             <li class="flex items-center">
                                 <i class="fas fa-car mr-2 text-primary"></i>
                                 Parking disponible
@@ -297,7 +297,7 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                     @for($i = 1; $i <= min($event->current_participants, 12); $i++)
-                    <div class="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                    <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                         <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">
                             {{ chr(64 + $i) }}
                         </div>
@@ -309,7 +309,7 @@
                     @endfor
                     
                     @if($event->current_participants > 12)
-                    <div class="flex items-center justify-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border-2 border-dashed border-gray-300">
+                    <div class="flex items-center justify-center p-3 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
                         <span class="text-gray-500 text-sm">
                             +{{ $event->current_participants - 12 }} autres participants
                         </span>
@@ -349,7 +349,7 @@
                 <!-- Sample Reviews -->
                 <div class="space-y-4">
                     @for($i = 1; $i <= 3; $i++)
-                    <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <div class="border-b border-gray-200 pb-4">
                         <div class="flex items-start space-x-3">
                             <div class="w-10 h-10 bg-secondary rounded-full flex items-center justify-center text-white font-bold">
                                 {{ chr(64 + $i) }}
@@ -363,7 +363,7 @@
                                         @endfor
                                     </div>
                                 </div>
-                                <p class="text-gray-700 dark:text-gray-300 text-sm">
+                                <p class="text-gray-700 text-sm">
                                     Excellent événement ! J'ai beaucoup appris et l'ambiance était très conviviale. Je recommande vivement.
                                 </p>
                             </div>
@@ -378,7 +378,7 @@
         <!-- Sidebar -->
         <div class="lg:col-span-1">
             <!-- Registration Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 sticky top-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sticky top-8">
                 <!-- Price -->
                 <div class="text-center mb-6">
                     @if($event->price == 0)
@@ -386,7 +386,7 @@
                     @else
                         <div class="text-3xl font-bold text-primary mb-2">{{ number_format($event->price, 2) }} DT</div>
                     @endif
-                    <div class="text-sm text-gray-600 dark:text-gray-300">Par participant</div>
+                    <div class="text-sm text-gray-600">Par participant</div>
                 </div>
 
                 <!-- Participants Progress -->
@@ -396,14 +396,14 @@
                     @endphp
                     
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        <span class="text-sm font-medium text-gray-700">
                             <i class="fas fa-users mr-1"></i>
                             {{ $event->current_participants }}/{{ $event->max_participants }} inscrits
                         </span>
                         <span class="text-sm font-bold">{{ round($progressPercent) }}%</span>
                     </div>
                     
-                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 mb-4">
+                    <div class="w-full bg-gray-200 rounded-full h-3 mb-4">
                         <div class="bg-gradient-to-r from-success to-primary h-3 rounded-full transition-all duration-500" 
                              style="width: {{ $progressPercent }}%"></div>
                     </div>
@@ -411,7 +411,7 @@
                     <!-- Countdown -->
                     @if(\Carbon\Carbon::parse($event->date_start)->isFuture())
                         <div class="text-center">
-                            <div class="text-sm text-gray-600 dark:text-gray-300 mb-1">Commence dans</div>
+                            <div class="text-sm text-gray-600 mb-1">Commence dans</div>
                             <div class="text-lg font-bold text-accent" id="countdown">
                                 {{ \Carbon\Carbon::parse($event->date_start)->diffForHumans() }}
                             </div>
@@ -426,7 +426,7 @@
                     @if(auth()->user()->id == $event->user_id)
                         <!-- Owner Actions -->
                         <div class="space-y-3">
-                            <div class="text-center text-sm text-gray-600 dark:text-gray-300 mb-4">
+                            <div class="text-center text-sm text-gray-600 mb-4">
                                 <i class="fas fa-crown mr-1 text-warning"></i>
                                 Vous êtes l'organisateur
                             </div>
@@ -447,7 +447,7 @@
                                 <i class="fas fa-check-circle mr-1"></i>
                                 Vous êtes inscrit(e)
                             </div>
-                            <div class="text-sm text-gray-600 dark:text-gray-300">
+                            <div class="text-sm text-gray-600">
                                 Confirmation envoyée par email
                             </div>
                         </div>
@@ -467,7 +467,7 @@
                         <button disabled class="w-full bg-gray-300 text-gray-500 px-4 py-3 rounded-lg cursor-not-allowed font-medium">
                             <i class="fas fa-users mr-2"></i>Événement complet
                         </button>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
+                        <p class="text-sm text-gray-600 text-center mt-2">
                             <i class="fas fa-info-circle mr-1"></i>
                             Contactez l'organisateur pour la liste d'attente
                         </p>
@@ -484,7 +484,7 @@
                                 <i class="fas fa-user-plus mr-2"></i>S'inscrire maintenant
                             </button>
                         </form>
-                        <p class="text-sm text-gray-600 dark:text-gray-300 text-center mt-2">
+                        <p class="text-sm text-gray-600 text-center mt-2">
                             <i class="fas fa-envelope mr-1"></i>
                             Confirmation par email
                         </p>
@@ -498,15 +498,15 @@
             </div>
 
             <!-- Organizer Info -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mt-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
                 <h4 class="font-bold mb-4">Organisateur</h4>
                 <div class="flex items-center space-x-3 mb-4">
                     <div class="w-12 h-12 bg-gradient-to-r from-primary to-success rounded-full flex items-center justify-center text-white font-bold text-lg">
-                        {{ substr($event->organizer ?? 'O', 0, 1) }}
+                        {{ substr($event->organizer->name ?? 'O', 0, 1) }}
                     </div>
                     <div>
-                        <div class="font-medium">{{ $event->organizer ?? $event->user->name ?? 'Organisateur' }}</div>
-                        <div class="text-sm text-gray-600 dark:text-gray-300">{{ rand(3, 15) }} événements organisés</div>
+                        <div class="font-medium">{{ $event->organizer->name ?? $event->user->name ?? 'Organisateur' }}</div>
+                        <div class="text-sm text-gray-600">{{ rand(3, 15) }} événements organisés</div>
                     </div>
                 </div>
                 
@@ -514,7 +514,7 @@
                     @for($i = 1; $i <= 5; $i++)
                         <i class="fas fa-star text-sm"></i>
                     @endfor
-                    <span class="ml-2 text-sm text-gray-600 dark:text-gray-300">4.9 ({{ rand(20, 50) }} avis)</span>
+                    <span class="ml-2 text-sm text-gray-600">4.9 ({{ rand(20, 50) }} avis)</span>
                 </div>
                 
                 <button class="w-full border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium">
@@ -523,15 +523,15 @@
             </div>
 
             <!-- Similar Events -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mt-6">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-6">
                 <h4 class="font-bold mb-4">Événements similaires</h4>
                 <div class="space-y-3">
                     @for($i = 1; $i <= 3; $i++)
-                    <div class="flex space-x-3 p-3 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                    <div class="flex space-x-3 p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                         <img src="https://picsum.photos/60/60?random={{ $i + 10 }}" alt="Event" class="w-15 h-15 object-cover rounded">
                         <div class="flex-1 min-w-0">
                             <h5 class="font-medium text-sm truncate">Événement {{ $event->type }} #{{ $i }}</h5>
-                            <p class="text-xs text-gray-600 dark:text-gray-300">{{ \Carbon\Carbon::now()->addDays($i * 7)->format('d M') }}</p>
+                            <p class="text-xs text-gray-600">{{ \Carbon\Carbon::now()->addDays($i * 7)->format('d M') }}</p>
                             <p class="text-xs text-success font-medium">{{ $i * 5 }} DT</p>
                         </div>
                     </div>
@@ -550,18 +550,18 @@
 <!-- Delete Confirmation Modal -->
 @if(auth()->check() && auth()->user()->id == $event->user_id)
 <div id="deleteModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 opacity-0 pointer-events-none flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
         <div class="text-center">
             <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
             </div>
             <h3 class="text-xl font-bold mb-2">Supprimer l'événement ?</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">
+            <p class="text-gray-600 mb-6">
                 Cette action est irréversible. Les participants inscrits seront automatiquement notifiés.
             </p>
             
             <div class="flex space-x-3">
-                <button onclick="hideDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <button onclick="hideDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                     Annuler
                 </button>
                 <form action="{{ route('Events.destroy', $event) }}" method="POST" class="flex-1">

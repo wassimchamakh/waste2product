@@ -1,5 +1,6 @@
 <?php
 
+
 use App\Http\Controllers\Backoffice\Event1controller;
 use App\Http\Controllers\Backoffice\Project1controller;
 use App\Http\Controllers\Frontoffice\DechetController;
@@ -10,30 +11,49 @@ use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Frontoffice\EventController;
 use App\Http\Controllers\Frontoffice\ProjectController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+/*Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');*/
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+require __DIR__.'/auth.php';
+
+
 
 Route::get('/admin', function () {
     return view('BackOffice.home');
-})->name('home');
+})->name('admin');
 
 Route::get('/', function () {
     return view('FrontOffice.home');
-})->name('home');
+})->middleware('guest')->name('homee');
 
 Route::get('/home', function () {
     return view('FrontOffice.pages.homestats');
-})->name('home');
+})->middleware(['auth', 'verified'])->name('home');
 
-
+/*
 Route::get('/login', function () {
     return view('FrontOffice.auth.login');
 })->name('login');
 
 Route::get('/register', function () {
     return view('FrontOffice.auth.register');
-})->name('register');
+})->name('register');*/
 
 
-
+Route::middleware('auth')->group(function () {
 Route::prefix('dechets')->name('dechets.')->group(function () {
     Route::get('/', [DechetController::class, 'index'])->name('index');
     Route::get('/mesdechets', [DechetController::class, 'myDechets'])->name('my');
@@ -81,8 +101,9 @@ Route::prefix('events')->name('Events.')->group(function () {
     Route::delete('/{id}/unregister', [EventController::class, 'unregister'])->name('unregister');
     Route::get('/{id}/participants', [EventController::class, 'participants'])->name('participants');
 });
-
+                            // PARTIE BACK OFFICE ADMIIIINN //
 Route::prefix('admin')->name('admin.')->group(function () {
+    
     Route::prefix('/dechets')->name('dechets.')->group(function () {
         Route::get('/', [Dechet1Controller::class, 'index'])->name('index');
         Route::get('/create', [Dechet1Controller::class, 'create'])->name('create');
@@ -120,4 +141,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{event}/participants', [Event1controller::class, 'participants'])->name('participants');
         Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
     });
-});       
+});     
+}); 

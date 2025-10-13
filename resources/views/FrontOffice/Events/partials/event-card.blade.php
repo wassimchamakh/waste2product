@@ -5,7 +5,7 @@
     $daysUntil = \Carbon\Carbon::parse($event->date_start)->diffForHumans();
 @endphp
 
-<div class="event-card card-hover bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 event-type-{{ $event->type }}">
+<div class="event-card card-hover bg-white shadow-sm border border-gray-200 event-type-{{ $event->type }}">
     <div class="relative">
         <img src="{{ $event->image ?? 'https://picsum.photos/400/200?random=' . $event->id }}" 
              alt="{{ $event->title }}" 
@@ -45,19 +45,19 @@
     </div>
     
     <div class="p-6">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
             {{ $event->title }}
         </h3>
         
         <!-- Date and Location -->
         <div class="space-y-2 mb-4">
-            <div class="flex items-center text-gray-600 dark:text-gray-300">
+            <div class="flex items-center text-gray-600">
                 <i class="fas fa-calendar-alt mr-2 text-primary"></i>
                 <span class="text-sm">
                     {{ \Carbon\Carbon::parse($event->date_start)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}-{{ \Carbon\Carbon::parse($event->date_end)->format('H:i') }}
                 </span>
             </div>
-            <div class="flex items-center text-gray-600 dark:text-gray-300">
+            <div class="flex items-center text-gray-600">
                 <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
                 <span class="text-sm">{{ $event->location }}</span>
             </div>
@@ -66,13 +66,13 @@
         <!-- Participants Progress -->
         <div class="mb-4">
             <div class="flex justify-between items-center mb-2">
-                <span class="text-sm text-gray-600 dark:text-gray-300">
+                <span class="text-sm text-gray-600">
                     <i class="fas fa-users mr-1"></i>
                     {{ $event->current_participants }}/{{ $event->max_participants }} inscrits
                 </span>
                 <span class="text-sm font-medium">{{ round($progressPercent) }}%</span>
             </div>
-            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+            <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="progress-bar {{ $progressColor }} h-2 rounded-full" style="width: {{ $progressPercent }}%"></div>
             </div>
         </div>
@@ -91,7 +91,7 @@
         </div>
         
         <!-- Organizer -->
-        <div class="mb-4 text-sm text-gray-600 dark:text-gray-300">
+        <div class="mb-4 text-sm text-gray-600">
             <i class="fas fa-user mr-1"></i>
             Organisé par {{ $event->organizer ?? $event->user->name ?? 'Organisateur' }}
         </div>

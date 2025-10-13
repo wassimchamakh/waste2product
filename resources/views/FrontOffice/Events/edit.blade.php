@@ -115,15 +115,15 @@
             <div class="lg:col-span-2 space-y-8">
                 
                 <!-- Basic Information -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold mb-6 text-gray-900 flex items-center">
                         <i class="fas fa-info-circle mr-3 text-primary"></i>
                         Informations générales
                     </h2>
                     
                     <!-- Title -->
                     <div class="mb-6">
-                        <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                             Titre de l'événement <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="title" id="title" required
@@ -140,7 +140,7 @@
 
                     <!-- Type -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
                             Type d'événement <span class="text-red-500">*</span>
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -167,7 +167,7 @@
 
                     <!-- Description -->
                     <div class="mb-6">
-                        <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                             Description complète <span class="text-red-500">*</span>
                         </label>
                         <textarea name="description" id="description" rows="6" required
@@ -183,8 +183,8 @@
                 </div>
 
                 <!-- Date and Location -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold mb-6 text-gray-900 flex items-center">
                         <i class="fas fa-calendar-map mr-3 text-primary"></i>
                         Date et lieu
                     </h2>
@@ -192,7 +192,7 @@
                     <!-- Dates -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label for="date_start" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="date_start" class="block text-sm font-medium text-gray-700 mb-2">
                                 Date et heure de début <span class="text-red-500">*</span>
                             </label>
                             <input type="datetime-local" name="date_start" id="date_start" required
@@ -204,7 +204,7 @@
                         </div>
 
                         <div>
-                            <label for="date_end" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label for="date_end" class="block text-sm font-medium text-gray-700 mb-2">
                                 Date et heure de fin <span class="text-red-500">*</span>
                             </label>
                             <input type="datetime-local" name="date_end" id="date_end" required
@@ -218,7 +218,7 @@
 
                     <!-- City -->
                     <div class="mb-6">
-                        <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
                             Ville <span class="text-red-500">*</span>
                         </label>
                         <select name="city" id="city" required
@@ -237,7 +237,7 @@
 
                     <!-- Location -->
                     <div class="mb-6">
-                        <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                             Adresse complète <span class="text-red-500">*</span>
                         </label>
                         <input type="text" name="location" id="location" required
@@ -250,15 +250,15 @@
                 </div>
 
                 <!-- Participants and Price -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold mb-6 text-gray-900 flex items-center">
                         <i class="fas fa-users-cog mr-3 text-primary"></i>
                         Participants et prix
                     </h2>
 
                     <!-- Max Participants -->
                     <div class="mb-6">
-                        <label for="max_participants" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="max_participants" class="block text-sm font-medium text-gray-700 mb-2">
                             Nombre maximum de participants <span class="text-red-500">*</span>
                         </label>
                         
@@ -293,7 +293,7 @@
 
                     <!-- Price -->
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
                             Prix de participation <span class="text-red-500">*</span>
                         </label>
                         
@@ -343,8 +343,8 @@
                 </div>
 
                 <!-- Image -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                    <h2 class="text-xl font-bold mb-6 text-gray-900 dark:text-white flex items-center">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                    <h2 class="text-xl font-bold mb-6 text-gray-900 flex items-center">
                         <i class="fas fa-image mr-3 text-primary"></i>
                         Image de l'événement
                     </h2>
@@ -388,7 +388,7 @@
             <!-- Sidebar -->
             <div class="lg:col-span-1">
                 <!-- Status -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="font-bold mb-4">Statut de l'événement</h3>
                     
                     <div class="space-y-3">
@@ -415,7 +415,7 @@
                 </div>
 
                 <!-- Quick Stats -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
                     <h3 class="font-bold mb-4">Statistiques</h3>
                     
                     <div class="space-y-3">
@@ -479,13 +479,13 @@
 
 <!-- Delete Confirmation Modal -->
 <div id="deleteModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 opacity-0 pointer-events-none flex items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-md w-full mx-4">
+    <div class="bg-white rounded-xl p-6 max-w-md w-full mx-4">
         <div class="text-center">
             <div class="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
             </div>
             <h3 class="text-xl font-bold mb-2">Supprimer l'événement ?</h3>
-            <p class="text-gray-600 dark:text-gray-300 mb-6">
+            <p class="text-gray-600 mb-6">
                 Cette action est irréversible. 
                 @if($event->current_participants > 0)
                     Les {{ $event->current_participants }} participants inscrits seront automatiquement notifiés par email.
@@ -493,7 +493,7 @@
             </p>
             
             <div class="flex space-x-3">
-                <button onclick="hideDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                <button onclick="hideDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                     Annuler
                 </button>
                 <form action="{{ route('evenements.destroy', $event) }}" method="POST" class="flex-1">

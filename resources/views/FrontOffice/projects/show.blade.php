@@ -95,21 +95,21 @@
         <div class="lg:col-span-2 space-y-12">
             
             <!-- Description -->
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+            <section class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                     <i class="fas fa-info-circle text-primary"></i>
                     Description du projet
                 </h2>
-                <div class="prose prose-gray dark:prose-invert max-w-none">
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                <div class="prose prose-gray max-w-none">
+                    <p class="text-gray-700 leading-relaxed whitespace-pre-line">
                         {{ $project->description }}
                     </p>
                 </div>
             </section>
             
             <!-- Project Steps -->
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
+            <section class="bg-white rounded-2xl shadow-lg p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
                     <i class="fas fa-list-ol text-primary"></i>
                     Étapes de réalisation
                     <span class="text-lg font-normal text-gray-500">({{ $project->steps->count() }} étapes)</span>
@@ -128,11 +128,11 @@
                                     <div class="flex-1">
                                         <!-- Step Header -->
                                         <div class="mb-4">
-                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                                            <h3 class="text-xl font-bold text-gray-900 mb-2">
                                                 {{ $step->title }}
                                             </h3>
                                             @if($step->duration)
-                                                <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                                                <p class="text-sm text-gray-600 flex items-center gap-2">
                                                     <i class="fas fa-clock text-secondary"></i>
                                                     Durée estimée: {{ $step->duration }}
                                                 </p>
@@ -141,7 +141,7 @@
                                         
                                         <!-- Step Description -->
                                         <div class="mb-6">
-                                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+                                            <p class="text-gray-700 leading-relaxed">
                                                 {{ $step->description }}
                                             </p>
                                         </div>
@@ -149,24 +149,24 @@
                                         <!-- Materials and Tools -->
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             @if($step->materials_needed)
-                                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                <div class="bg-gray-50 rounded-lg p-4">
+                                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                                                         <i class="fas fa-cube text-accent"></i>
                                                         Matériaux nécessaires
                                                     </h4>
-                                                    <div class="prose prose-sm prose-gray dark:prose-invert">
+                                                    <div class="prose prose-sm prose-gray">
                                                         {!! nl2br(e($step->materials_needed)) !!}
                                                     </div>
                                                 </div>
                                             @endif
                                             
                                             @if($step->tools_required)
-                                                <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                <div class="bg-gray-50 rounded-lg p-4">
+                                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
                                                         <i class="fas fa-wrench text-secondary"></i>
                                                         Outils requis
                                                     </h4>
-                                                    <div class="prose prose-sm prose-gray dark:prose-invert">
+                                                    <div class="prose prose-sm prose-gray">
                                                         {!! nl2br(e($step->tools_required)) !!}
                                                     </div>
                                                 </div>
@@ -177,7 +177,7 @@
                                 
                                 <!-- Connector Line -->
                                 @if(!$loop->last)
-                                    <div class="absolute left-6 top-12 w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
+                                    <div class="absolute left-6 top-12 w-0.5 h-8 bg-gray-300"></div>
                                 @endif
                             </div>
                         @endforeach
@@ -185,7 +185,7 @@
                 @else
                     <div class="text-center py-12">
                         <i class="fas fa-list-ol text-4xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-600 dark:text-gray-400">Aucune étape définie pour ce projet</p>
+                        <p class="text-gray-600">Aucune étape définie pour ce projet</p>
                     </div>
                 @endif
             </section>
@@ -196,8 +196,8 @@
         <div class="space-y-8">
             
             <!-- Author Card -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <i class="fas fa-user text-primary"></i>
                     Créateur du projet
                 </h3>
@@ -207,24 +207,24 @@
                         {{ strtoupper(substr($project->user->name ?? 'A', 0, 1)) }}
                     </div>
                     <div>
-                        <h4 class="font-bold text-gray-900 dark:text-white text-lg">
+                        <h4 class="font-bold text-gray-900 text-lg">
                             {{ $project->user->name ?? 'Anonyme' }}
                         </h4>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">
+                        <p class="text-gray-600 text-sm">
                             Membre depuis {{ $project->user->created_at->format('Y') ?? 'N/A' }}
                         </p>
                     </div>
                 </div>
                 
                 <!-- Author Stats -->
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t dark:border-gray-700">
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t">
                     <div class="text-center">
                         <div class="text-2xl font-bold text-primary">{{ $project->user->projects_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400">Projets</div>
+                        <div class="text-xs text-gray-600">Projets</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-secondary">{{ $project->user->followers_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-600 dark:text-gray-400">Abonnés</div>
+                        <div class="text-xs text-gray-600">Abonnés</div>
                     </div>
                 </div>
             </div>
@@ -257,8 +257,8 @@
             </div>
             
             <!-- Actions -->
-            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+            <div class="bg-white rounded-2xl shadow-lg p-6">
+                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     <i class="fas fa-tools text-primary"></i>
                     Actions
                 </h3>
@@ -293,7 +293,7 @@
                     </button>
                     
                     @if(auth()->check() && $project->user_id === auth()->id())
-                        <div class="pt-4 border-t dark:border-gray-700">
+                        <div class="pt-4 border-t">
                             <a 
                                 href="{{ route('projects.edit', $project->id) }}" 
                                 class="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mb-3"
@@ -316,8 +316,8 @@
             
             <!-- Materials Summary -->
             @if($project->steps->whereNotNull('materials_needed')->count() > 0)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                         <i class="fas fa-shopping-list text-primary"></i>
                         Liste complète des matériaux
                     </h3>
@@ -325,10 +325,10 @@
                     <div class="space-y-3">
                         @foreach($project->steps->whereNotNull('materials_needed') as $step)
                             <div class="text-sm">
-                                <div class="font-medium text-gray-900 dark:text-white mb-1">
+                                <div class="font-medium text-gray-900 mb-1">
                                     Étape {{ $step->step_number }}:
                                 </div>
-                                <div class="text-gray-600 dark:text-gray-400 pl-4">
+                                <div class="text-gray-600 pl-4">
                                     {!! nl2br(e($step->materials_needed)) !!}
                                 </div>
                             </div>
@@ -343,13 +343,13 @@
 
 <!-- Similar Projects -->
 @if(isset($similarProjects) && $similarProjects->count() > 0)
-<div class="bg-gray-50 dark:bg-gray-900 py-16">
+<div class="bg-gray-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 class="text-3xl font-bold text-gray-900 mb-4">
                 Projets similaires
             </h2>
-            <p class="text-gray-600 dark:text-gray-400 text-lg">
+            <p class="text-gray-600 text-lg">
                 Découvrez d'autres projets qui pourraient vous intéresser
             </p>
         </div>
@@ -366,13 +366,13 @@
 <!-- Delete Modal -->
 @if(auth()->check() && $project->user_id === auth()->id())
 <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
         <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Confirmer la suppression</h3>
-            <p class="text-gray-600 dark:text-gray-300">
+            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer la suppression</h3>
+            <p class="text-gray-600">
                 Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.
             </p>
         </div>
@@ -380,7 +380,7 @@
         <div class="flex gap-4">
             <button 
                 onclick="hideDeleteModal()" 
-                class="flex-1 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
             >
                 Annuler
             </button>

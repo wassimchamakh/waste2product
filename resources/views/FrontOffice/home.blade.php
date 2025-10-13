@@ -233,14 +233,14 @@
     </section>
 
     <!-- Popular Projects Section -->
-    <section id="projets" class="py-16 bg-white dark:bg-gray-800">
+    <section id="projets" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between mb-12">
                 <div>
-                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-3">
                         Projets populaires 🔥
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl">
+                    <p class="text-gray-600 max-w-2xl">
                         Découvrez les créations les plus appréciées par notre communauté tunisienne
                     </p>
                 </div>
@@ -253,7 +253,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($popularProjects as $project)
                 <!-- Project Card -->
-                <div class="group relative card-hover bg-white dark:bg-gray-700 rounded-2xl shadow-lg overflow-hidden border border-gray-100 dark:border-gray-600 hover:shadow-2xl transition-all duration-300">
+                <div class="group relative card-hover bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300">
                     <!-- Image/Icon Section with Overlay -->
                     <div class="relative h-56 bg-gradient-to-br from-primary via-green-600 to-success flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
@@ -273,12 +273,12 @@
 
                     <!-- Content -->
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-primary transition-colors">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2 group-hover:text-primary transition-colors">
                             {{ $project['title'] }}
                         </h3>
 
                         <!-- Creator Info -->
-                        <div class="flex items-center gap-2 mb-4 text-sm text-gray-600 dark:text-gray-300">
+                        <div class="flex items-center gap-2 mb-4 text-sm text-gray-600">
                             <div class="w-8 h-8 bg-gradient-to-br from-primary to-green-600 rounded-full flex items-center justify-center text-white font-bold text-xs">
                                 {{ strtoupper(substr($project['creator'], 0, 1)) }}
                             </div>
@@ -291,12 +291,12 @@
                         </div>
 
                         <!-- Rating & CTA -->
-                        <div class="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-600">
+                        <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                             <div class="flex items-center gap-1.5">
                                 @for($i = 1; $i <= 5; $i++)
                                     <i class="fas fa-star {{ $i <= floor($project['rating']) ? 'text-yellow-400' : 'text-gray-300' }} text-sm"></i>
                                 @endfor
-                                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 ml-1">
+                                <span class="text-sm font-semibold text-gray-700 ml-1">
                                     {{ $project['rating'] }}
                                 </span>
                                 <span class="text-xs text-gray-500">({{ $project['reviews_count'] }})</span>
@@ -316,14 +316,14 @@
     </section>
 
     <!-- Recent Wastes Section -->
-    <section id="dechets" class="py-16 bg-gray-50 dark:bg-gray-900">
+    <section id="dechets" class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between mb-12">
                 <div>
-                    <h2 class="text-4xl font-bold text-gray-900 dark:text-white mb-3">
+                    <h2 class="text-4xl font-bold text-gray-900 mb-3">
                         Déchets récents ♻️
                     </h2>
-                    <p class="text-gray-600 dark:text-gray-300 max-w-2xl">
+                    <p class="text-gray-600 max-w-2xl">
                         Trouvez des matériaux près de chez vous pour vos prochains projets
                     </p>
                 </div>
@@ -336,7 +336,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 @foreach($recentWastes as $waste)
                 <!-- Waste Item -->
-                <div class="group card-hover bg-white dark:bg-gray-700 rounded-xl shadow-md overflow-hidden border border-gray-100 dark:border-gray-600 hover:shadow-xl transition-all duration-300">
+                <div class="group card-hover bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
                     <div class="relative h-40 bg-gradient-to-br from-primary via-green-500 to-teal-500 flex items-center justify-center overflow-hidden">
                         <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
                         <i class="fas fa-{{ $waste['icon'] }} text-white text-3xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
@@ -348,10 +348,10 @@
                         </span>
                     </div>
                     <div class="p-5">
-                        <h4 class="font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary transition-colors">{{ $waste['title'] }}</h4>
+                        <h4 class="font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors">{{ $waste['title'] }}</h4>
 
                         <div class="space-y-2 mb-4">
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <span class="font-medium">{{ $waste['location'] }}</span>
                             </div>
@@ -374,13 +374,13 @@
     </section>
 
     <!-- Upcoming Events Section -->
-    <section id="evenements" class="py-16 bg-white dark:bg-gray-800">
+    <section id="evenements" class="py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">
                     Événements à venir 📅
                 </h2>
-                <p class="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                <p class="text-gray-600 max-w-2xl mx-auto">
                     Participez aux ateliers et événements de votre région
                 </p>
             </div>
@@ -388,7 +388,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 @foreach($upcomingEvents as $event)
                 <!-- Event -->
-                <div class="card-hover bg-white dark:bg-gray-700 rounded-xl shadow-lg p-6">
+                <div class="card-hover bg-white rounded-xl shadow-lg p-6">
                     <div class="flex items-start space-x-4">
                         <div class="bg-{{ $event['color'] }} text-white rounded-lg p-3 flex-shrink-0">
                             <div class="text-center">
@@ -397,10 +397,10 @@
                             </div>
                         </div>
                         <div class="flex-1">
-                            <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">
                                 {{ $event['title'] }}
                             </h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-300 mb-3">
+                            <p class="text-sm text-gray-600 mb-3">
                                 {{ $event['time_location'] }}
                             </p>
                             <div class="flex items-center justify-between">
@@ -462,7 +462,7 @@
     </section>
 
     <!-- Call to Actions -->
-    <section class="py-16 bg-gray-50 dark:bg-gray-900">
+    <section class="py-16 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- CTA 1 -->
@@ -470,10 +470,10 @@
                     <div class="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon">
                         <i class="fas fa-plus text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">
                         Déclarer un déchet
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    <p class="text-gray-600 mb-6">
                         Partagez vos matériaux inutilisés avec la communauté
                     </p>
                     <a href="/dechets/nouveau" class="btn-primary px-6 py-3">Commencer 🚀</a>
@@ -484,10 +484,10 @@
                     <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon" style="animation-delay: -1s;">
                         <i class="fas fa-lightbulb text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">
                         Créer un projet
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    <p class="text-gray-600 mb-6">
                         Partagez vos idées créatives de transformation
                     </p>
                     <a href="/projets/nouveau" class="btn-secondary px-6 py-3">Créer 💡</a>
@@ -498,10 +498,10 @@
                     <div class="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4 floating-icon" style="animation-delay: -2s;">
                         <i class="fas fa-users text-white text-2xl"></i>
                     </div>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-3">
                         Rejoindre la communauté
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 mb-6">
+                    <p class="text-gray-600 mb-6">
                         Connectez-vous avec d'autres passionnés
                     </p>
                     <a href="/register" class="btn-accent px-6 py-3">Rejoindre 🤝</a>

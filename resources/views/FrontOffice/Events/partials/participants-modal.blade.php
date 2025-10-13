@@ -1,5 +1,5 @@
 <div id="participantsModal" class="modal fixed inset-0 bg-black bg-opacity-50 z-50 opacity-0 pointer-events-none hidden">
-    <div class="bg-white dark:bg-gray-800 w-full h-full overflow-y-auto">
+    <div class="bg-white w-full h-full overflow-y-auto">
         <!-- Modal Header -->
         <div class="bg-gradient-to-r from-primary to-success text-white py-6 px-6 sticky top-0 z-10">
             <div class="flex items-center justify-between">
@@ -28,10 +28,10 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Confirmés</p>
+                            <p class="text-sm text-gray-600">Confirmés</p>
                             <p class="text-3xl font-bold text-success">{{ floor($event->current_participants * 0.8) }}</p>
                         </div>
                         <div class="p-3 bg-success/10 rounded-lg">
@@ -40,10 +40,10 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">En attente</p>
+                            <p class="text-sm text-gray-600">En attente</p>
                             <p class="text-3xl font-bold text-warning">{{ floor($event->current_participants * 0.15) }}</p>
                         </div>
                         <div class="p-3 bg-warning/10 rounded-lg">
@@ -52,10 +52,10 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-gray-600 dark:text-gray-300">Places restantes</p>
+                            <p class="text-sm text-gray-600">Places restantes</p>
                             <p class="text-3xl font-bold text-primary">{{ $event->max_participants - $event->current_participants }}</p>
                         </div>
                         <div class="p-3 bg-primary/10 rounded-lg">
@@ -66,7 +66,7 @@
             </div>
 
             <!-- Search and Filters -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
                 <div class="flex flex-col md:flex-row gap-4">
                     <!-- Search -->
                     <div class="flex-1">
@@ -93,14 +93,14 @@
                         <button id="export-btn-modal" class="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-orange-500 transition-colors">
                             <i class="fas fa-download mr-2"></i>Exporter
                         </button>
-                        <div id="export-menu-modal" class="export-menu absolute right-0 top-12 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg py-2 min-w-48 z-10" style="transform: translateY(-10px); opacity: 0; visibility: hidden;">
-                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <div id="export-menu-modal" class="export-menu absolute right-0 top-12 bg-white border border-gray-200 rounded-lg shadow-lg py-2 min-w-48 z-10" style="transform: translateY(-10px); opacity: 0; visibility: hidden;">
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-file-csv mr-2 text-success"></i>CSV
                             </button>
-                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-file-excel mr-2 text-success"></i>Excel
                             </button>
-                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <button class="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-file-pdf mr-2 text-accent"></i>PDF
                             </button>
                         </div>
@@ -108,22 +108,22 @@
                 </div>
 
                 <!-- Results counter -->
-                <div class="mt-4 text-sm text-gray-600 dark:text-gray-300">
+                <div class="mt-4 text-sm text-gray-600">
                     <span id="results-count-modal">{{ $event->current_participants }} participants</span>
                 </div>
             </div>
 
             <!-- Participants Table -->
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <!-- Table Header -->
-                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <label class="flex items-center">
                                 <input type="checkbox" id="select-all-modal" class="text-primary focus:ring-primary">
                                 <span class="ml-2 text-sm font-medium">Tout sélectionner</span>
                             </label>
-                            <span id="selected-count-modal" class="text-sm text-gray-600 dark:text-gray-300 hidden">
+                            <span id="selected-count-modal" class="text-sm text-gray-600 hidden">
                                 <span id="selected-number-modal">0</span> sélectionné(s)
                             </span>
                         </div>
@@ -145,27 +145,27 @@
                 <!-- Table Content -->
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                        <thead class="bg-gray-50">
                             <tr>
                                 <th class="w-12 px-6 py-3"></th>
-                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Participant
                                 </th>
-                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Date d'inscription
                                 </th>
-                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Statut
                                 </th>
-                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Contact
                                 </th>
-                                <th class="text-right px-6 py-3 text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-right px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-200 dark:divide-gray-600" id="participants-tbody-modal">
+                        <tbody class="divide-y divide-gray-200" id="participants-tbody-modal">
                             <!-- Participants will be populated by JavaScript -->
                         </tbody>
                     </table>
@@ -181,7 +181,7 @@
 
             <!-- Pagination -->
             <div class="mt-6 flex items-center justify-between">
-                <div class="text-sm text-gray-600 dark:text-gray-300">
+                <div class="text-sm text-gray-600">
                     Affichage de <span id="showing-from-modal">1</span> à <span id="showing-to-modal">10</span> sur <span id="total-results-modal">{{ $event->current_participants }}</span> résultats
                 </div>
                 <div class="flex space-x-1">
@@ -201,7 +201,7 @@
 
 <!-- Email Modal -->
 <div id="emailModalModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center">
-    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="bg-white rounded-xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
         <div class="flex items-center justify-between mb-6">
             <h3 class="text-xl font-bold">Envoyer un email</h3>
             <button onclick="hideEmailModalModal()" class="text-gray-400 hover:text-gray-600">
@@ -211,16 +211,16 @@
 
         <form id="email-form-modal">
             <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
                     Destinataires
                 </label>
-                <div id="recipients-list-modal" class="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg text-sm">
+                <div id="recipients-list-modal" class="p-3 bg-gray-50 rounded-lg text-sm">
                     <!-- Recipients will be populated here -->
                 </div>
             </div>
 
             <div class="mb-4">
-                <label for="email-subject-modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label for="email-subject-modal" class="block text-sm font-medium text-gray-700 mb-2">
                     Sujet
                 </label>
                 <input type="text" id="email-subject-modal" value="[{{ $event->title }}] " 
@@ -228,7 +228,7 @@
             </div>
 
             <div class="mb-6">
-                <label for="email-message-modal" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label for="email-message-modal" class="block text-sm font-medium text-gray-700 mb-2">
                     Message
                 </label>
                 <textarea id="email-message-modal" rows="6" 
@@ -431,7 +431,7 @@
                                 ${participant.name.charAt(0)}
                             </div>
                             <div>
-                                <div class="font-medium text-gray-900 dark:text-white">${participant.name}</div>
+                                <div class="font-medium text-gray-900">${participant.name}</div>
                                 <div class="text-sm text-gray-500">${participant.email}</div>
                                 ${participant.notes ? `<div class="text-xs text-gray-400 italic">${participant.notes}</div>` : ''}
                             </div>

@@ -36,7 +36,7 @@
                     <li><a href="/" class="hover:opacity-100 transition-opacity">Accueil</a></li>
                     <li><a href="/dechets" class="hover:opacity-100 transition-opacity">Déchets</a></li>
                     <li><a href="/projets" class="hover:opacity-100 transition-opacity">Projets</a></li>
-                    <li><a href="/evenements" class="hover:opacity-100 transition-opacity">Événements</a></li>
+                    <li><a href="/events" class="hover:opacity-100 transition-opacity">Événements</a></li>
                     <li><a href="/tutoriels" class="hover:opacity-100 transition-opacity">Tutoriels</a></li>
                 </ul>
             </div>

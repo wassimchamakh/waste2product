@@ -38,7 +38,7 @@
 </div>
 
 <!-- Filters Section -->
-<div class="bg-white dark:bg-gray-800 shadow-lg sticky top-16 z-40">
+<div class="bg-white shadow-lg sticky top-16 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <form method="GET" action="{{ route('projects.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -50,7 +50,7 @@
                             name="search" 
                             value="{{ request('search') }}"
                             placeholder="Rechercher un projet..." 
-                            class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                            class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-base"
                         >
                         <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
@@ -60,7 +60,7 @@
                 <div>
                     <select 
                         name="category" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-base"
                     >
                         <option value="">Toutes les catégories</option>
                         @foreach($categories ?? [] as $category)
@@ -75,7 +75,7 @@
                 <div>
                     <select 
                         name="difficulty" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-base"
                     >
                         <option value="">Toutes difficultés</option>
                         <option value="easy" {{ request('difficulty') == 'easy' ? 'selected' : '' }}>Facile</option>
@@ -88,7 +88,7 @@
                 <div>
                     <select 
                         name="duration" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent text-base"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-base"
                     >
                         <option value="">Toutes durées</option>
                         <option value="short" {{ request('duration') == 'short' ? 'selected' : '' }}>< 2h</option>
@@ -110,7 +110,7 @@
                     
                     <a 
                         href="{{ route('projects.index') }}" 
-                        class="flex-1 sm:flex-initial bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                        class="flex-1 sm:flex-initial bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
                     >
                         <i class="fas fa-redo"></i>
                     </a>
@@ -132,10 +132,10 @@
 @if(isset($featuredProjects) && $featuredProjects->count() > 0)
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
-        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h2 class="text-2xl font-bold text-gray-900 mb-2">
             <i class="fas fa-star text-warning mr-2"></i>Projets vedettes
         </h2>
-        <p class="text-gray-600 dark:text-gray-400">Les projets les plus populaires de la communauté</p>
+        <p class="text-gray-600">Les projets les plus populaires de la communauté</p>
     </div>
     
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
@@ -150,18 +150,18 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     @if(isset($projects) && $projects->count() > 0)
         <div class="mb-8 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+            <h2 class="text-2xl font-bold text-gray-900">
                 Tous les projets
                 <span class="text-lg font-normal text-gray-500">({{ $projects->total() }} résultats)</span>
             </h2>
             
             <!-- Sort Options -->
             <div class="flex items-center gap-4">
-                <label class="text-sm text-gray-600 dark:text-gray-400">Trier par :</label>
+                <label class="text-sm text-gray-600">Trier par :</label>
                 <select 
                     name="sort" 
                     onchange="this.form.submit()"
-                    class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white text-sm"
+                    class="px-3 py-2 rounded-lg border border-gray-300 text-sm"
                 >
                     <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Plus récents</option>
                     <option value="popular" {{ request('sort') == 'popular' ? 'selected' : '' }}>Plus populaires</option>
@@ -183,11 +183,11 @@
         </div>
     @else
         <div class="text-center py-16">
-            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full mb-6">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
                 <i class="fas fa-search text-4xl text-gray-400"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Aucun projet trouvé</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun projet trouvé</h3>
+            <p class="text-gray-600 mb-6">
                 Essayez de modifier vos filtres ou 
                 <a href="{{ route('projects.index') }}" class="text-primary font-medium hover:underline">réinitialisez la recherche</a>
             </p>

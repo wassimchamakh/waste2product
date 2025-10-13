@@ -88,7 +88,7 @@
 </section>
 
 <!-- Navigation Tabs -->
-<section class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+<section class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav class="flex space-x-4 py-4">
             <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-lg transition-all" data-view="list">
@@ -108,7 +108,7 @@
 </section>
 
 <!-- Filters -->
-<section class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4">
+<section class="bg-white border-b border-gray-200 py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <form method="GET" action="{{ route('Events.index') }}" id="filters-form">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -117,14 +117,14 @@
                     <div class="relative">
                         <input type="text" name="search" id="search-input" placeholder="Rechercher un événement..." 
                             value="{{ request('search') }}"
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
                         <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
                     </div>
                 </div>
                 
                 <!-- Type Filter -->
                 <div>
-                    <select name="type" id="filter-type" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <select name="type" id="filter-type" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                         <option value="">Tous les types</option>
                         @foreach($types as $key => $type)
                             <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
@@ -136,7 +136,7 @@
                 
                 <!-- City Filter -->
                 <div>
-                    <select name="city" id="filter-city" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <select name="city" id="filter-city" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                         <option value="">Toutes les villes</option>
                         @foreach($cities as $cityKey => $cityName)
                             <option value="{{ $cityKey }}" {{ request('city') == $cityKey ? 'selected' : '' }}>
@@ -153,18 +153,18 @@
                     <input type="checkbox" name="free_only" value="1" id="filter-free" 
                         {{ request('free_only') ? 'checked' : '' }}
                         class="mr-2 text-primary focus:ring-primary rounded">
-                    <span class="text-sm dark:text-gray-300">Gratuit uniquement</span>
+                    <span class="text-sm">Gratuit uniquement</span>
                 </label>
                 <label class="flex items-center cursor-pointer">
                     <input type="checkbox" name="hide_full" value="1" id="filter-hide-full" 
                         {{ request('hide_full') ? 'checked' : '' }}
                         class="mr-2 text-primary focus:ring-primary rounded">
-                    <span class="text-sm dark:text-gray-300">Masquer les complets</span>
+                    <span class="text-sm">Masquer les complets</span>
                 </label>
                 <button type="button" id="reset-filters" class="text-sm text-primary hover:text-green-700">
                     <i class="fas fa-redo mr-1"></i>Réinitialiser
                 </button>
-                <div class="ml-auto text-sm text-gray-600 dark:text-gray-300">
+                <div class="ml-auto text-sm text-gray-600">
                     <span id="results-count">{{ $events->count() }} événements trouvés</span>
                 </div>
             </div>
@@ -184,7 +184,7 @@
                     $progressColor = $progressPercent < 50 ? 'bg-success' : ($progressPercent < 80 ? 'bg-warning' : 'bg-accent');
                 @endphp
 
-                <div class="event-card card-hover bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden event-type-{{ $event->type }}">
+                <div class="event-card card-hover bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden event-type-{{ $event->type }}">
                     <div class="relative">
                         <img src="{{ $event->image ? asset('storage/' . $event->image) : 'https://picsum.photos/400/200?random=' . $event->id }}" 
                              alt="{{ $event->title }}" 
@@ -216,19 +216,19 @@
                     </div>
                     
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                             {{ $event->title }}
                         </h3>
                         
                         <!-- Date and Location -->
                         <div class="space-y-2 mb-4">
-                            <div class="flex items-center text-gray-600 dark:text-gray-300">
+                            <div class="flex items-center text-gray-600">
                                 <i class="fas fa-calendar-alt mr-2 text-primary"></i>
                                 <span class="text-sm">
                                     {{ $event->date_start->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}-{{ $event->date_end->format('H:i') }}
                                 </span>
                             </div>
-                            <div class="flex items-center text-gray-600 dark:text-gray-300">
+                            <div class="flex items-center text-gray-600">
                                 <i class="fas fa-map-marker-alt mr-2 text-primary"></i>
                                 <span class="text-sm line-clamp-1">{{ $event->location }}</span>
                             </div>
@@ -237,13 +237,13 @@
                         <!-- Participants Progress -->
                         <div class="mb-4">
                             <div class="flex justify-between items-center mb-2">
-                                <span class="text-sm text-gray-600 dark:text-gray-300">
+                                <span class="text-sm text-gray-600">
                                     <i class="fas fa-users mr-1"></i>
                                     {{ $currentParticipants }}/{{ $event->max_participants }} inscrits
                                 </span>
-                                <span class="text-sm font-medium dark:text-gray-300">{{ round($progressPercent) }}%</span>
+                                <span class="text-sm font-medium">{{ round($progressPercent) }}%</span>
                             </div>
-                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div class="progress-bar {{ $progressColor }} h-2 rounded-full" style="width: {{ $progressPercent }}%"></div>
                             </div>
                         </div>
@@ -262,7 +262,7 @@
                         </div>
                         
                         <!-- Organizer -->
-                        <div class="mb-4 text-sm text-gray-600 dark:text-gray-300">
+                        <div class="mb-4 text-sm text-gray-600">
                             <i class="fas fa-user mr-1"></i>
                             Organisé par {{ $event->user->name ?? 'Organisateur' }}
                         </div>
@@ -304,10 +304,10 @@
 <!-- Calendar View -->
 <section id="calendar-view" class="view-section py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
             <!-- Calendar Header -->
-            <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700">
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white" id="calendar-month"></h2>
+            <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-gray-900" id="calendar-month"></h2>
                 <div class="flex space-x-2">
                     <button id="prev-month" class="p-2 text-gray-400 hover:text-primary rounded-lg hover:bg-gray-100">
                         <i class="fas fa-chevron-left"></i>
@@ -323,7 +323,7 @@
                 <!-- Days of week -->
                 <div class="grid grid-cols-7 gap-2 mb-4">
                     @foreach(['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'] as $day)
-                        <div class="p-3 text-center text-sm font-medium text-gray-500 dark:text-gray-400">{{ $day }}</div>
+                        <div class="p-3 text-center text-sm font-medium text-gray-500">{{ $day }}</div>
                     @endforeach
                 </div>
                 
@@ -338,8 +338,8 @@
 <section id="popular-view" class="view-section py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Événements Populaires</h2>
-            <p class="text-gray-600 dark:text-gray-400">Les événements avec le plus fort taux de remplissage</p>
+            <h2 class="text-2xl font-bold text-gray-900">Événements Populaires</h2>
+            <p class="text-gray-600">Les événements avec le plus fort taux de remplissage</p>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($popularEvents as $event)
@@ -347,15 +347,15 @@
                     $currentParticipants = $event->participants->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])->count();
                     $progressPercent = $event->max_participants > 0 ? ($currentParticipants / $event->max_participants) * 100 : 0;
                 @endphp
-                <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+                <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                     <div class="flex items-start justify-between mb-4">
                         <span class="badge-{{ $event->type }} text-white px-3 py-1 rounded-full text-sm">
                             {{ $types[$event->type]['label'] }}
                         </span>
                         <span class="text-2xl font-bold text-primary">{{ round($progressPercent) }}%</span>
                     </div>
-                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">{{ $event->title }}</h3>
-                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">{{ $event->title }}</h3>
+                    <p class="text-sm text-gray-600 mb-4">
                         <i class="fas fa-users mr-1"></i>
                         {{ $currentParticipants }}/{{ $event->max_participants }} inscrits
                     </p>
@@ -495,8 +495,8 @@
             
             const dayElement = document.createElement('div');
             dayElement.className = `calendar-day p-2 min-h-[80px] border rounded-lg ${
-                isCurrentMonth ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700' : 
-                'bg-gray-50 dark:bg-gray-700 text-gray-400 border-gray-100 dark:border-gray-600'
+                isCurrentMonth ? 'bg-white border-gray-200' : 
+                'bg-gray-50 text-gray-400 border-gray-100'
             } ${isToday ? '!bg-primary text-white border-primary' : ''}`;
             
             dayElement.innerHTML = `

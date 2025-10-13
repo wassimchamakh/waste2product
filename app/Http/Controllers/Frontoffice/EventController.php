@@ -231,7 +231,7 @@ public function myEvents(Request $request)
         'repair_cafe' => ['label' => '☕ Repair Café', 'icon' => 'fas fa-coffee']
     ];
 
-    $userId = 6; // Temporaire pour les tests
+    $userId = auth()->id(); // Temporaire pour les tests
     $tab = $request->get('tab', 'participating');
 
     // Événements auxquels je participe
@@ -375,7 +375,7 @@ private function calculateAverageAttendance($userId)
     public function store(EventRequest $request)
     {
         $data = $request->validated();
-        $data['user_id'] = 6;
+        $data['user_id'] = auth()->id(); // Utilisateur actuellement connecté
         
         // Gestion de l'upload d'image
         if ($request->hasFile('image')) {

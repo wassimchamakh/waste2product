@@ -114,13 +114,13 @@
     </style>
 </head>
 <body class="bg-white">
-    @unless(Request::is('login') || Request::is('register'))
+    @unless(Request::is('login') || Request::is('register')  || Request::is('forgot-password') || Request::is('reset-password/*'))
         @include('FrontOffice.layout.navbar')
     @endunless
 
     @yield('content')
 
-    @unless(Request::is('login') || Request::is('register'))
+    @unless(Request::is('login') || Request::is('register') || Request::is('forgot-password') || Request::is('reset-password/*'))
         @include('FrontOffice.layout.footer')
     @endunless
 
