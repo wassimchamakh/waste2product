@@ -299,9 +299,9 @@
                                 <i class="fas fa-edit mr-2"></i>Modifier
                             </a>
                             
-                            <a href="{{ route('Events.participants', $event) }}" class="inline-flex items-center px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary hover:text-white transition-colors">
+                            <button onclick="openParticipantsModal({{ $event->id }})" class="inline-flex items-center px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary hover:text-white transition-colors">
                                 <i class="fas fa-users mr-2"></i>Participants
-                            </a>
+                            </button>
                             
                             <button onclick="showDuplicateModal({{ $event->id }})" class="inline-flex items-center px-3 py-2 border border-success text-success rounded-lg text-sm font-medium hover:bg-success hover:text-white transition-colors">
                                 <i class="fas fa-copy mr-2"></i>Dupliquer
@@ -332,6 +332,10 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div id="participantsModalContainer"></div>
+
 @endsection
 
 @push('scripts')
@@ -381,6 +385,131 @@
                 }
             });
         });
+    });
+
+    // Open participants modal
+    function openParticipantsModal(eventId) {
+        // Show loading state
+        const container = document.getElementById('participantsModalContainer');
+        container.innerHTML = `
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg p-8 text-center">
+                    <i class="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
+                    <p class="text-gray-600">Chargement des participants...</p>
+                </div>
+            </div>
+        `;
+        
+        // Load modal content via AJAX
+        fetch(`/events/${eventId}/participants-modal-content`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load modal');
+                return response.text();
+            })
+            .then(html => {
+                container.innerHTML = html;
+                console.log('Modal HTML loaded successfully');
+                
+                // Execute any scripts in the loaded HTML
+                const scripts = container.querySelectorAll('script');
+                console.log(`Found ${scripts.length} script tags in modal`);
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    if (script.src) {
+                        newScript.src = script.src;
+                    } else {
+                        newScript.textContent = script.textContent;
+                    }
+                    document.body.appendChild(newScript);
+                    // Remove after execution
+                    setTimeout(() => document.body.removeChild(newScript), 100);
+                });
+                
+                // Show the modal with animation
+                setTimeout(() => {
+                    const modal = document.getElementById('participantsModal');
+                    const dialog = document.getElementById('participantsDialog');
+                    console.log('Modal element found:', modal ? 'Yes' : 'No');
+                    
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        
+                        // Trigger animations
+                        requestAnimationFrame(() => {
+                            modal.classList.add('show');
+                            modal.style.opacity = '1';
+                            modal.style.pointerEvents = 'auto';
+                            
+                            if (dialog) {
+                                dialog.style.transform = 'scale(1)';
+                            }
+                        });
+                        
+                        // Prevent body scroll
+                        document.body.style.overflow = 'hidden';
+                        
+                        // Initialize participants data if the function exists
+                        setTimeout(() => {
+                            console.log('Checking for loadParticipantsData function:', typeof loadParticipantsData);
+                            if (typeof loadParticipantsData === 'function') {
+                                console.log('Calling loadParticipantsData()');
+                                loadParticipantsData();
+                            } else {
+                                console.error('loadParticipantsData function not found!');
+                            }
+                        }, 200);
+                    }
+                }, 100);
+            })
+            .catch(error => {
+                console.error('Error loading modal:', error);
+                container.innerHTML = '';
+                alert('Erreur lors du chargement des participants. Veuillez réessayer.');
+            });
+    }
+
+    // Close participants modal - make it globally available
+    window.hideParticipantsModal = function() {
+        const modal = document.getElementById('participantsModal');
+        const dialog = document.getElementById('participantsDialog');
+        
+        if (modal) {
+            // Scale down and fade out
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            
+            if (dialog) {
+                dialog.style.transform = 'scale(0.95)';
+            }
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                modal.classList.remove('show', 'flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                
+                // Clear the modal container
+                document.getElementById('participantsModalContainer').innerHTML = '';
+            }, 300);
+        }
+    }
+
+    // Close modal when clicking outside or ESC key
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('participantsModal');
+        if (modal && e.target === modal) {
+            hideParticipantsModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('participantsModal');
+            if (modal && !modal.classList.contains('hidden')) {
+                hideParticipantsModal();
+            }
+        }
     });
 
     function showDuplicateModal(eventId) {

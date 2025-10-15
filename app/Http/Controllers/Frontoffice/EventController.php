@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Participant;
 use App\Http\Requests\EventRequest;
+use App\Mail\ParticipantNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -156,6 +158,14 @@ class EventController extends Controller
  * Afficher les détails d'un événement
  * GET /evenements/{id}
  */
+/**
+ * Afficher les détails d'un événement
+ * GET /evenements/{id}
+ */
+/**
+ * Afficher les détails d'un événement
+ * GET /evenements/{id}
+ */
 public function show($id)
 {
     $types = [
@@ -165,33 +175,37 @@ public function show($id)
         'repair_cafe' => ['label' => '☕ Repair Café', 'icon' => 'fas fa-coffee']
     ];
 
-    // Récupérer l'événement avec ses relations
+    // Load ALL participants including cancelled
     $event = Event::with(['organizer', 'participants.user'])
         ->findOrFail($id);
 
-    // Vérifier si l'utilisateur (ID = 6 pour les tests) est déjà inscrit
-    $userId = 6; // Temporaire pour les tests
+    $userId = auth()->id();
+    
     $isParticipant = $event->participants()
         ->where('user_id', $userId)
         ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
         ->exists();
 
-    // Récupérer la participation de l'utilisateur si elle existe
     $userParticipation = $event->participants()
         ->where('user_id', $userId)
         ->first();
 
-    // Calculer les statistiques de l'événement
-    $stats = [
+    // Convert to object so you can use -> notation
+    $stats = (object) [
         'current_participants' => $event->participants()
             ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
             ->count(),
+        'confirmed' => $event->participants()->where('attendance_status', 'confirmed')->count(),
+        'registered' => $event->participants()->where('attendance_status', 'registered')->count(),
+        'attended' => $event->participants()->where('attendance_status', 'attended')->count(),
+        'cancelled' => $event->participants()->where('attendance_status', 'cancelled')->count(),
+        'remaining_seats' => $event->max_participants - $event->participants()
+            ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+            ->count(),
         'is_full' => $event->isFull(),
-        'remaining_seats' => $event->remaining_seats,
         'fill_percentage' => $event->fill_percentage
     ];
 
-    // Événements similaires (même type, excluant l'événement actuel)
     $similarEvents = Event::with(['organizer'])
         ->where('type', $event->type)
         ->where('id', '!=', $id)
@@ -200,8 +214,21 @@ public function show($id)
         ->take(3)
         ->get();
 
-    // Vérifier si l'utilisateur est l'organisateur
     $isOrganizer = $event->user_id == $userId;
+
+    // Prepare participants data for JavaScript - include ALL participants
+    $participantsData = $event->participants->map(function($participant) {
+        return [
+            'id' => $participant->id,
+            'name' => $participant->user->name ?? 'Utilisateur inconnu',
+            'email' => $participant->user->email ?? 'N/A',
+            'phone' => $participant->user->phone ?? 'N/A',
+            'registration_date' => $participant->registration_date->toISOString(),
+            'status' => $participant->attendance_status,
+            'rating' => $participant->rating,
+            'feedback' => $participant->feedback,
+        ];
+    });
 
     return view('FrontOffice.Events.show', compact(
         'event',
@@ -210,7 +237,66 @@ public function show($id)
         'userParticipation',
         'stats',
         'similarEvents',
-        'isOrganizer'
+        'isOrganizer',
+        'participantsData'
+    ));
+}
+
+/**
+ * Get participants modal content for AJAX loading
+ */
+public function getParticipantsModalContent($id)
+{
+    $types = [
+        'workshop' => ['label' => '🛠️ Workshop', 'icon' => 'fas fa-tools'],
+        'collection' => ['label' => '🌱 Collection', 'icon' => 'fas fa-recycle'],
+        'training' => ['label' => '📚 Formation', 'icon' => 'fas fa-graduation-cap'],
+        'repair_cafe' => ['label' => '☕ Repair Café', 'icon' => 'fas fa-coffee']
+    ];
+
+    $event = Event::with(['organizer', 'participants.user'])->findOrFail($id);
+    
+    $userId = auth()->id();
+    $isOrganizer = $event->user_id == $userId;
+    
+    // Check if user is organizer
+    if (!$isOrganizer) {
+        return response()->json(['error' => 'Non autorisé'], 403);
+    }
+
+    $stats = (object) [
+        'current_participants' => $event->participants()
+            ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+            ->count(),
+        'confirmed' => $event->participants()->where('attendance_status', 'confirmed')->count(),
+        'registered' => $event->participants()->where('attendance_status', 'registered')->count(),
+        'attended' => $event->participants()->where('attendance_status', 'attended')->count(),
+        'cancelled' => $event->participants()->where('attendance_status', 'cancelled')->count(),
+        'remaining_seats' => $event->max_participants - $event->participants()
+            ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+            ->count(),
+        'is_full' => $event->isFull(),
+        'fill_percentage' => $event->fill_percentage
+    ];
+
+    $participantsData = $event->participants->map(function($participant) {
+        return [
+            'id' => $participant->id,
+            'name' => $participant->user->name ?? 'Utilisateur inconnu',
+            'email' => $participant->user->email ?? 'N/A',
+            'phone' => $participant->user->phone ?? 'N/A',
+            'registration_date' => $participant->registration_date->toISOString(),
+            'status' => $participant->attendance_status,
+            'rating' => $participant->rating,
+            'feedback' => $participant->feedback,
+        ];
+    });
+
+    return view('FrontOffice.Events.partials.participants-modal', compact(
+        'event',
+        'types',
+        'stats',
+        'participantsData'
     ));
 }
 
@@ -409,12 +495,24 @@ private function calculateAverageAttendance($userId)
             abort(403, 'Vous n\'êtes pas autorisé à modifier cet événement.');
         }
 
-        $types = [
-            'workshop' => 'Workshop',
-            'collection' => 'Collection',
-            'training' => 'Formation',
-            'repair_cafe' => 'Repair Café'
-        ];
+       $types = [
+        'workshop' => [
+            'label' => 'Workshop',
+            'icon' => 'fas fa-tools'
+        ],
+        'collection' => [
+            'label' => 'Collection',
+            'icon' => 'fas fa-recycle'
+        ],
+        'training' => [
+            'label' => 'Formation',
+            'icon' => 'fas fa-graduation-cap'
+        ],
+        'repair_cafe' => [
+            'label' => 'Repair Café',
+            'icon' => 'fas fa-coffee'
+        ]
+    ];
 
         $cities = [
             'tunis', 'ariana', 'ben_arous', 'la_manouba', 'la_marsa',
@@ -461,7 +559,7 @@ private function calculateAverageAttendance($userId)
         }
 
         return redirect()
-            ->route('evenements.show', $event->id)
+            ->route('Events.show', $event->id)
             ->with('success', 'Événement mis à jour avec succès !');
     }
 
@@ -486,7 +584,7 @@ private function calculateAverageAttendance($userId)
         $event->delete();
 
         return redirect()
-            ->route('evenements.index')
+            ->route('Events.index')
             ->with('success', 'Événement supprimé avec succès.');
     }
 
@@ -620,7 +718,7 @@ private function calculateAverageAttendance($userId)
             'cancelled' => $participants->where('attendance_status', 'cancelled')->count()
         ];
 
-        return view('FrontOffice.Events.participants', compact('event', 'participants', 'stats'));
+        return view('FrontOffice.Events.partials.participants-modal', compact('event', 'participants', 'stats'));
     }
 
     /**
@@ -667,7 +765,7 @@ private function calculateAverageAttendance($userId)
         $newEvent->save();
 
         return redirect()
-            ->route('evenements.edit', $newEvent->id)
+            ->route('Events.edit', $newEvent->id)
             ->with('success', 'Événement dupliqué. Modifiez les détails avant de publier.');
     }
 
@@ -791,4 +889,443 @@ private function calculateAverageAttendance($userId)
         //     Mail::to($participant->user->email)->send(new EventCancelled($event));
         // }
     }
+
+    
+ 
+// Add these methods to your EventController class
+
+/**
+ * Update a single participant's status
+ * PATCH /evenements/{eventId}/participants/{participantId}/status
+ */
+public function updateParticipantStatus(Request $request, $eventId, $participantId)
+{
+    $request->validate([
+        'attendance_status' => 'required|in:registered,confirmed,attended,cancelled'
+    ]);
+
+    $event = Event::findOrFail($eventId);
+
+    // Verify the user is the organizer
+    if ($event->user_id !== auth()->id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Non autorisé'
+        ], 403);
+    }
+
+    // Find participant and verify it belongs to this event
+    $participant = Participant::where('id', $participantId)
+        ->where('event_id', $eventId)
+        ->first();
+    
+    if (!$participant) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Participant non trouvé pour cet événement'
+        ], 404);
+    }
+
+    $oldStatus = $participant->attendance_status;
+    $participant->attendance_status = $request->attendance_status;
+    $participant->save();
+
+    // Optional: Send notification email
+    // if ($request->attendance_status === 'confirmed') {
+    //     Mail::to($participant->user->email)->send(new ParticipationConfirmed($event, $participant));
+    // }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Statut mis à jour avec succès',
+        'data' => [
+            'participant_id' => $participant->id,
+            'old_status' => $oldStatus,
+            'new_status' => $participant->attendance_status
+        ]
+    ]);
+}
+
+/**
+ * Bulk update participants' status
+ * POST /evenements/{eventId}/participants/bulk-status
+ */
+public function bulkUpdateParticipantStatus(Request $request, $eventId)
+{
+    \Log::info('Bulk update status request', [
+        'event_id' => $eventId,
+        'participant_ids' => $request->input('participant_ids'),
+        'new_status' => $request->input('attendance_status')
+    ]);
+
+    $request->validate([
+        'participant_ids' => 'required|array|min:1',
+        'participant_ids.*' => 'integer|exists:participants,id',
+        'attendance_status' => 'required|in:registered,confirmed,attended,cancelled'
+    ]);
+
+    $event = Event::findOrFail($eventId);
+
+    // Verify the user is the organizer
+    if ($event->user_id !== auth()->id()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Non autorisé'
+        ], 403);
+    }
+
+    // Verify all participants belong to this event
+    $validParticipants = Participant::where('event_id', $eventId)
+        ->whereIn('id', $request->participant_ids)
+        ->pluck('id')
+        ->toArray();
+    
+    if (count($validParticipants) !== count($request->participant_ids)) {
+        $invalidIds = array_diff($request->participant_ids, $validParticipants);
+        return response()->json([
+            'success' => false,
+            'message' => 'Certains participants ne font pas partie de cet événement (IDs: ' . implode(', ', $invalidIds) . ')'
+        ], 400);
+    }
+
+    $updatedCount = Participant::where('event_id', $eventId)
+        ->whereIn('id', $validParticipants)
+        ->update(['attendance_status' => $request->attendance_status]);
+
+    // Optional: Send bulk notification emails
+    // if ($request->attendance_status === 'confirmed') {
+    //     $participants = Participant::where('event_id', $eventId)
+    //         ->whereIn('id', $request->participant_ids)
+    //         ->with('user')
+    //         ->get();
+    //     
+    //     foreach ($participants as $participant) {
+    //         Mail::to($participant->user->email)->send(new ParticipationConfirmed($event, $participant));
+    //     }
+    // }
+
+    return response()->json([
+        'success' => true,
+        'message' => "{$updatedCount} participant(s) mis à jour",
+        'data' => [
+            'updated_count' => $updatedCount,
+            'new_status' => $request->attendance_status
+        ]
+    ]);
+}
+
+/**
+ * Delete a participant from an event
+ * DELETE /evenements/{eventId}/participants/{participantId}
+ */
+public function deleteParticipant($eventId, $participantId)
+{
+    try {
+        $event = Event::findOrFail($eventId);
+
+        // Verify the user is the organizer
+        if ($event->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        // Find participant and verify it belongs to this event
+        $participant = Participant::where('id', $participantId)
+            ->where('event_id', $eventId)
+            ->with('user')
+            ->first();
+        
+        if (!$participant) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Participant non trouvé pour cet événement'
+            ], 404);
+        }
+
+        $participantName = $participant->user->name ?? 'Participant';
+        
+        // Optional: Send cancellation email
+        // Mail::to($participant->user->email)->send(new ParticipationCancelled($event));
+
+        $participant->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$participantName} a été supprimé de l'événement",
+            'data' => [
+                'participant_id' => $participantId,
+                'deleted' => true,
+                'remaining_participants' => $event->participants()
+                    ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+                    ->count()
+            ]
+        ], 200);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error deleting participant: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la suppression du participant'
+        ], 500);
+    }
+}
+
+/**
+ * Bulk delete participants (FIXED)
+ * POST /evenements/{eventId}/participants/bulk-delete
+ */
+public function bulkDeleteParticipants(Request $request, $eventId)
+{
+    try {
+        // Log the incoming request for debugging
+        \Log::info('Bulk delete request', [
+            'event_id' => $eventId,
+            'participant_ids' => $request->input('participant_ids'),
+            'user_id' => auth()->id()
+        ]);
+
+        $request->validate([
+            'participant_ids' => 'required|array|min:1',
+            'participant_ids.*' => 'integer|exists:participants,id'
+        ]);
+
+        $event = Event::findOrFail($eventId);
+
+        // Verify the user is the organizer
+        if ($event->user_id !== auth()->id()) {
+            \Log::warning('Unauthorized bulk delete attempt', [
+                'event_id' => $eventId,
+                'event_owner' => $event->user_id,
+                'user_id' => auth()->id()
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        // Verify all participants belong to this event
+        $validParticipants = Participant::where('event_id', $eventId)
+            ->whereIn('id', $request->participant_ids)
+            ->pluck('id')
+            ->toArray();
+        
+        \Log::info('Participant validation', [
+            'requested_ids' => $request->participant_ids,
+            'valid_ids' => $validParticipants,
+            'event_id' => $eventId
+        ]);
+        
+        if (count($validParticipants) !== count($request->participant_ids)) {
+            $invalidIds = array_diff($request->participant_ids, $validParticipants);
+            \Log::warning('Invalid participants in bulk delete', [
+                'event_id' => $eventId,
+                'invalid_ids' => $invalidIds
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Certains participants ne font pas partie de cet événement (IDs: ' . implode(', ', $invalidIds) . ')'
+            ], 400);
+        }
+
+        // Optional: Get participants for notification before deletion
+        // $participants = Participant::where('event_id', $eventId)
+        //     ->whereIn('id', $request->participant_ids)
+        //     ->with('user')
+        //     ->get();
+        // 
+        // foreach ($participants as $participant) {
+        //     Mail::to($participant->user->email)->send(new ParticipationCancelled($event));
+        // }
+
+        $deletedCount = Participant::where('event_id', $eventId)
+            ->whereIn('id', $validParticipants)
+            ->delete();
+
+        \Log::info('Participants deleted successfully', [
+            'event_id' => $eventId,
+            'deleted_count' => $deletedCount
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$deletedCount} participant(s) supprimé(s)",
+            'data' => [
+                'deleted_count' => $deletedCount,
+                'remaining_participants' => $event->participants()
+                    ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+                    ->count()
+            ]
+        ], 200);
+        
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        \Log::error('Validation error in bulk delete', [
+            'errors' => $e->errors(),
+            'event_id' => $eventId
+        ]);
+        return response()->json([
+            'success' => false,
+            'message' => 'Données invalides',
+            'errors' => $e->errors()
+        ], 422);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error bulk deleting participants', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'event_id' => $eventId
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la suppression des participants'
+        ], 500);
+    }
+}
+
+/**
+ * Send bulk email to participants
+ * POST /evenements/{eventId}/participants/send-email
+ */
+public function sendBulkEmail(Request $request, $eventId)
+{
+    try {
+        \Log::info('Send bulk email request received', [
+            'event_id' => $eventId,
+            'participant_ids' => $request->input('participant_ids'),
+            'subject' => $request->input('subject')
+        ]);
+
+        // Validate request
+        $request->validate([
+            'participant_ids' => 'required|array|min:1',
+            'participant_ids.*' => 'integer|exists:participants,id',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|max:5000'
+        ]);
+
+        $event = Event::findOrFail($eventId);
+
+        // Verify the user is the organizer
+        if ($event->user_id !== auth()->id()) {
+            \Log::warning('Unauthorized email send attempt');
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        // Get participants with their user information
+        $participants = Participant::where('event_id', $eventId)
+            ->whereIn('id', $request->participant_ids)
+            ->with('user')
+            ->get();
+
+        \Log::info('Participants found for email', [
+            'count' => $participants->count()
+        ]);
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun participant trouvé'
+            ], 404);
+        }
+
+        // Send emails to each participant
+        $emailsSent = 0;
+        $failedEmails = [];
+
+        foreach ($participants as $participant) {
+            \Log::info('Processing participant for email', [
+                'participant_id' => $participant->id,
+                'has_user' => $participant->user !== null,
+                'has_email' => $participant->user ? ($participant->user->email !== null) : false
+            ]);
+
+            if ($participant->user && $participant->user->email) {
+                try {
+                    Mail::to($participant->user->email)->send(
+                        new ParticipantNotification(
+                            $event,
+                            $participant->user,
+                            $request->subject,
+                            $request->message
+                        )
+                    );
+                    $emailsSent++;
+                    
+                    \Log::info('Email sent successfully', [
+                        'participant_id' => $participant->id,
+                        'email' => $participant->user->email
+                    ]);
+                } catch (\Exception $e) {
+                    $failedEmails[] = $participant->user->email;
+                    \Log::error('Failed to send individual email', [
+                        'participant_id' => $participant->id,
+                        'error' => $e->getMessage(),
+                        'file' => $e->getFile(),
+                        'line' => $e->getLine()
+                    ]);
+                }
+            } else {
+                $failedEmails[] = "Participant #{$participant->id} (pas d'email)";
+            }
+        }
+
+        if ($emailsSent === 0) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun email n\'a pu être envoyé',
+                'data' => [
+                    'failed_emails' => $failedEmails
+                ]
+            ], 500);
+        }
+
+        $message = $emailsSent === count($participants)
+            ? "Tous les emails ont été envoyés avec succès ({$emailsSent})"
+            : "{$emailsSent} email(s) envoyé(s) sur " . count($participants);
+
+        if (!empty($failedEmails)) {
+            $message .= ". Échec: " . implode(', ', $failedEmails);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => $message,
+            'data' => [
+                'emails_sent' => $emailsSent,
+                'total_participants' => count($participants),
+                'failed_emails' => $failedEmails
+            ]
+        ], 200);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Données invalides',
+            'errors' => $e->errors()
+        ], 422);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error sending bulk emails', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'event_id' => $eventId,
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de l\'envoi des emails: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+
 }

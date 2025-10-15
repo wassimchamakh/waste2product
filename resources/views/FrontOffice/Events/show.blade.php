@@ -580,96 +580,152 @@
 
 @push('scripts')
 <script>
-    // Tab switching
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', () => {
-            // Remove active from all tabs
-            document.querySelectorAll('.tab-button').forEach(btn => {
-                btn.classList.remove('active', 'border-primary', 'text-primary');
-                btn.classList.add('border-transparent', 'text-gray-500');
-            });
-            document.querySelectorAll('.tab-content').forEach(content => {
-                content.classList.remove('active');
-            });
-            
-            // Add active to clicked tab
-            button.classList.add('active', 'border-primary', 'text-primary');
-            button.classList.remove('border-transparent', 'text-gray-500');
-            document.getElementById(button.dataset.tab).classList.add('active');
+   // Tab switching
+document.querySelectorAll('.tab-button').forEach(button => {
+    button.addEventListener('click', () => {
+        // Remove active from all tabs
+        document.querySelectorAll('.tab-button').forEach(btn => {
+            btn.classList.remove('active', 'border-primary', 'text-primary');
+            btn.classList.add('border-transparent', 'text-gray-500');
         });
-    });
-
-    // Modal functions
-    function showDeleteModal() {
-        const modal = document.getElementById('deleteModal');
-        modal.classList.add('show');
-    }
-
-    function hideDeleteModal() {
-        const modal = document.getElementById('deleteModal');
-        modal.classList.remove('show');
-    }
-
-    function showParticipantsModal() {
-        const modal = document.getElementById('participantsModal');
-        if (modal) {
-            modal.classList.add('show');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-            
-            // Load participants data
-            loadParticipantsData();
-        }
-    }
-
-    function hideParticipantsModal() {
-        const modal = document.getElementById('participantsModal');
-        if (modal) {
-            modal.classList.remove('show');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
-        }
-    }
-
-    // Confirmation functions
-    function confirmUnregister() {
-        return confirm('Êtes-vous sûr de vouloir vous désinscrire de cet événement ?');
-    }
-
-    // Real-time countdown (basic version)
-    @if(\Carbon\Carbon::parse($event->date_start)->isFuture())
-    function updateCountdown() {
-        const eventDate = new Date('{{ $event->date_start }}');
-        const now = new Date();
-        const diff = eventDate - now;
+        document.querySelectorAll('.tab-content').forEach(content => {
+            content.classList.remove('active');
+        });
         
-        if (diff > 0) {
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        // Add active to clicked tab
+        button.classList.add('active', 'border-primary', 'text-primary');
+        button.classList.remove('border-transparent', 'text-gray-500');
+        document.getElementById(button.dataset.tab).classList.add('active');
+    });
+});
+
+// Enhanced Modal functions with smooth animations
+function showDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.add('show');
+}
+
+function hideDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.classList.remove('show');
+}
+
+function showParticipantsModal() {
+    const modal = document.getElementById('participantsModal');
+    const dialog = document.getElementById('participantsDialog');
+    
+    if (modal) {
+        // Show modal with fade in
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        
+        // Trigger reflow for animation
+        modal.offsetHeight;
+        
+        // Add show class for fade in and scale up
+        requestAnimationFrame(() => {
+            modal.classList.add('show');
+            modal.style.opacity = '1';
+            modal.style.pointerEvents = 'auto';
             
-            let countdownText = '';
-            if (days > 0) {
-                countdownText = `${days} jour${days > 1 ? 's' : ''}`;
-                if (hours > 0) countdownText += ` et ${hours}h`;
-            } else if (hours > 0) {
-                countdownText = `${hours} heure${hours > 1 ? 's' : ''}`;
-            } else {
-                countdownText = 'Bientôt !';
+            if (dialog) {
+                dialog.style.transform = 'scale(1)';
             }
-            
-            const countdownEl = document.getElementById('countdown');
-            if (countdownEl) {
-                countdownEl.textContent = countdownText;
-            }
+        });
+        
+        // Prevent body scroll
+        document.body.style.overflow = 'hidden';
+        
+        // Load participants data
+        loadParticipantsData();
+    }
+}
+
+function hideParticipantsModal() {
+    const modal = document.getElementById('participantsModal');
+    const dialog = document.getElementById('participantsDialog');
+    
+    if (modal) {
+        // Scale down and fade out
+        modal.style.opacity = '0';
+        modal.style.pointerEvents = 'none';
+        
+        if (dialog) {
+            dialog.style.transform = 'scale(0.95)';
         }
+        
+        // Remove from DOM after animation
+        setTimeout(() => {
+            modal.classList.remove('show', 'flex');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }, 300);
+    }
+}
+
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('participantsModal');
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                hideParticipantsModal();
+            }
+        });
     }
     
-    // Update countdown every minute
-    updateCountdown();
-    setInterval(updateCountdown, 60000);
-    @endif
+    // Close with ESC key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const participantsModal = document.getElementById('participantsModal');
+            const emailModal = document.getElementById('emailModalModal');
+            
+            if (emailModal && !emailModal.classList.contains('hidden')) {
+                hideEmailModalModal();
+            } else if (participantsModal && participantsModal.classList.contains('show')) {
+                hideParticipantsModal();
+            }
+        }
+    });
+});
+
+// Confirmation functions
+function confirmUnregister() {
+    return confirm('Êtes-vous sûr de vouloir vous désinscrire de cet événement ?');
+}
+
+// Real-time countdown
+@if(\Carbon\Carbon::parse($event->date_start)->isFuture())
+function updateCountdown() {
+    const eventDate = new Date('{{ $event->date_start }}');
+    const now = new Date();
+    const diff = eventDate - now;
+    
+    if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        
+        let countdownText = '';
+        if (days > 0) {
+            countdownText = `${days} jour${days > 1 ? 's' : ''}`;
+            if (hours > 0) countdownText += ` et ${hours}h`;
+        } else if (hours > 0) {
+            countdownText = `${hours} heure${hours > 1 ? 's' : ''}`;
+        } else {
+            countdownText = 'Bientôt !';
+        }
+        
+        const countdownEl = document.getElementById('countdown');
+        if (countdownEl) {
+            countdownEl.textContent = countdownText;
+        }
+    }
+}
+
+// Update countdown every minute
+updateCountdown();
+setInterval(updateCountdown, 60000);
+@endif
 
     // Dark mode detection
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -682,5 +738,12 @@
             document.documentElement.classList.remove('dark');
         }
     });
+
+    // Auto-open participants modal if URL has #participants
+    if (window.location.hash === '#participants') {
+        setTimeout(() => {
+            showParticipantsModal();
+        }, 100);
+    }
 </script>
 @endpush

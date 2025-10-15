@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+EMAIL_DIAGNOSTIC.md
+EMAIL_SENDING_FIX.md
+EMAIL_TEST_INSTRUCTIONS.md

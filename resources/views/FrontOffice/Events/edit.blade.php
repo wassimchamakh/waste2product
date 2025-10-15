@@ -57,10 +57,10 @@
                 <p class="opacity-90">{{ $event->title }}</p>
             </div>
             <div class="flex space-x-3">
-                <a href="{{ route('evenements.show', $event) }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
+                <a href="{{ route('Events.show', $event) }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
                     <i class="fas fa-eye mr-2"></i>Voir l'événement
                 </a>
-                <a href="{{ route('evenements.mes-evenements') }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
+                <a href="{{ route('Events.mes-Events') }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i>Retour
                 </a>
             </div>
@@ -106,7 +106,7 @@
     @endif
 
     <!-- Edit Form -->
-    <form id="edit-form" action="{{ route('evenements.update', $event) }}" method="POST" enctype="multipart/form-data">
+    <form id="edit-form" action="{{ route('Events.update', $event) }}" method="POST" enctype="multipart/form-data">
         @csrf
         @method('PUT')
         
@@ -144,21 +144,23 @@
                             Type d'événement <span class="text-red-500">*</span>
                         </label>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            @foreach($types as $key => $type)
-                            <label class="cursor-pointer">
-                                <input type="radio" name="type" value="{{ $key }}" 
-                                       {{ old('type', $event->type) == $key ? 'checked' : '' }}
-                                       class="sr-only peer" required>
-                                <div class="p-4 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all">
-                                    <div class="flex items-center space-x-3">
-                                        <i class="{{ $type['icon'] }} text-xl text-primary"></i>
-                                        <div>
+                            @foreach ($types as $key => $type)
+                                <label>
+                                 <input type="radio" name="type" value="{{ $key }}"
+                                   {{ old('type', $event->type) == $key ? 'checked' : '' }}
+                                   class="sr-only peer" required>
+
+                                    <div class="p-4 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all">
+                                      <div class="flex items-center space-x-3">
+                                     <i class="{{ $type['icon'] }} text-xl text-primary"></i>
+                                     <div>
                                             <div class="font-medium">{{ $type['label'] }}</div>
-                                        </div>
+                                     </div>
                                     </div>
-                                </div>
+                                     </div>
                             </label>
-                            @endforeach
+                             @endforeach
+
                         </div>
                         @error('type')
                             <div class="error-message mt-1">{{ $message }}</div>
@@ -449,7 +451,7 @@
                     @endif
 
                     <!-- Duplicate -->
-                    <a href="{{ route('evenements.create', ['duplicate' => $event->id]) }}" class="w-full border border-success text-success px-6 py-3 rounded-lg hover:bg-success hover:text-white transition-colors font-medium text-center block">
+                    <a href="{{ route('Events.create', ['duplicate' => $event->id]) }}" class="w-full border border-success text-success px-6 py-3 rounded-lg hover:bg-success hover:text-white transition-colors font-medium text-center block">
                         <i class="fas fa-copy mr-2"></i>Dupliquer
                     </a>
                 </div>
@@ -496,7 +498,7 @@
                 <button onclick="hideDeleteModal()" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
                     Annuler
                 </button>
-                <form action="{{ route('evenements.destroy', $event) }}" method="POST" class="flex-1">
+                <form action="{{ route('Events.destroy', $event) }}" method="POST" class="flex-1">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="w-full px-4 py-2 bg-accent text-white rounded-lg hover:bg-red-600 transition-colors">

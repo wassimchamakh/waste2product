@@ -100,6 +100,23 @@ Route::prefix('events')->name('Events.')->group(function () {
     Route::post('/{id}/register', [EventController::class, 'register'])->name('register');
     Route::delete('/{id}/unregister', [EventController::class, 'unregister'])->name('unregister');
     Route::get('/{id}/participants', [EventController::class, 'participants'])->name('participants');
+    
+    // Get participants modal content for AJAX
+    Route::get('/{id}/participants-modal-content', [EventController::class, 'getParticipantsModalContent'])
+        ->name('participants.modalContent');
+
+     Route::patch('/{event}/participants/{participant}/status', [EventController::class, 'updateParticipantStatus'])
+        ->name('participants.updateStatus');
+    Route::delete('/{event}/participants/{participant}', [EventController::class, 'deleteParticipant'])
+        ->name('participants.delete');
+    
+    // Bulk operations - using POST to avoid DELETE with body issues
+    Route::post('/{event}/participants/bulk-status', [EventController::class, 'bulkUpdateParticipantStatus'])
+        ->name('participants.bulkUpdateStatus');
+    Route::post('/{event}/participants/bulk-delete', [EventController::class, 'bulkDeleteParticipants'])
+        ->name('participants.bulkDelete');
+    Route::post('/{event}/participants/send-email', [EventController::class, 'sendBulkEmail'])
+        ->name('participants.sendEmail');
 });
                             // PARTIE BACK OFFICE ADMIIIINN //
 Route::prefix('admin')->name('admin.')->group(function () {
