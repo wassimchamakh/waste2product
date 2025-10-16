@@ -2,10 +2,10 @@
     @if($project->photo)
         <img src="{{ asset('uploads/projects/' . $project->photo) }}" alt="{{ $project->title }}" class="w-full h-48 object-cover">
     @else
-        <div class="w-full h-48 bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center">
+        <div class="w-full h-48 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 flex items-center justify-center">
     <div class="text-center">
         <i class="fas fa-recycle text-4xl text-green-400 mb-2"></i>
-        <p class="text-sm text-green-600 font-medium"> {{ $project->title }}</p>
+        <p class="text-sm text-green-600 dark:text-green-400 font-medium"> {{ $project->title }}</p>
     </div>
 </div>
     @endif

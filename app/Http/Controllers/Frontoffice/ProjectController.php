@@ -127,7 +127,7 @@ class ProjectController extends Controller
             DB::beginTransaction();
 
             $data = $request->validated();
-            $data['user_id'] = 6; // Fixed user ID
+            $data['user_id'] = auth()->id(); // Utilisateur connecté
             $data['status'] = 'draft'; // Draft status
 
             // Handle photo upload
@@ -180,6 +180,9 @@ class ProjectController extends Controller
                          }])
                          ->findOrFail($id);
 
+        // Incrémenter le compteur de vues
+        $project->increment('views_count');
+
         // Get similar projects
         $similarProjects = Project::with(['category', 'user'])
                                  ->where('category_id', $project->category_id)
@@ -189,7 +192,10 @@ class ProjectController extends Controller
                                  ->take(3)
                                  ->get();
 
-        return view('FrontOffice.projects.show', compact('project', 'similarProjects'));
+        // Nombre de projets du créateur
+        $creatorProjectsCount = Project::where('user_id', $project->user_id)->count();
+
+        return view('FrontOffice.projects.show', compact('project', 'similarProjects', 'creatorProjectsCount'));
     }
 
     /**
@@ -200,7 +206,7 @@ class ProjectController extends Controller
         $project = Project::with('steps')->findOrFail($id);
 
         // Check if user owns the project
-        if ($project->user_id !== 6) {
+        if ($project->user_id !== auth()->id() && !(auth()->user() && auth()->user()->is_admin)) {
             abort(403, 'Action non autorisée');
         }
 
@@ -220,7 +226,7 @@ class ProjectController extends Controller
             $project = Project::findOrFail($id);
 
             // Check if user owns the project
-            if ($project->user_id !== 6) {
+            if ($project->user_id !== auth()->id() && !(auth()->user() && auth()->user()->is_admin)) {
                 abort(403, 'Action non autorisée');
             }
 
@@ -282,7 +288,7 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
 
         // Check if user owns the project
-        if ($project->user_id !== 6) {
+        if ($project->user_id !== auth()->id() && !(auth()->user() && auth()->user()->is_admin)) {
             abort(403, 'Action non autorisée');
         }
 
@@ -300,6 +306,22 @@ class ProjectController extends Controller
     }
 
     /**
+     * Publier un projet (rendre public)
+     */
+    public function publish($id)
+    {
+        $project = Project::findOrFail($id);
+        // Vérifier que l'utilisateur est bien le propriétaire
+        if ($project->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', "Vous n'avez pas le droit de publier ce projet.");
+        }
+        $project->status = 'published';
+        $project->save();
+        return redirect()->route('projects.show', $project->id)
+            ->with('success', 'Projet publié avec succès !');
+    }
+
+    /**
      * Toggle favorite status
      */
     public function toggleFavorite($id)
@@ -313,7 +335,7 @@ class ProjectController extends Controller
      */
     public function myProjects()
     {
-        $userId = 6; // Fixed user ID
+        $userId = auth()->id();
 
         $projects = Project::with(['category', 'steps'])
                           ->where('user_id', $userId)

@@ -3,43 +3,46 @@
 @section('title', $project->title . ' - Waste2Product')
 
 @section('content')
-<!-- Hero Section -->
-<div class="relative">
-    <!-- Background Image -->
-    <div class="h-96 overflow-hidden">
-        @if($project->photo)
-            <img 
-                src="{{ asset('uploads/projects/' . $project->photo) }}" 
-                alt="{{ $project->title }}"
-                class="w-full h-full object-cover"
-            >
-        @else
-            <div class="w-full h-full bg-gradient-to-br from-primary to-green-700"></div>
-        @endif
-        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
-    </div>
-    
-    <!-- Content Overlay -->
-    <div class="absolute inset-0 flex items-center">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div class="max-w-4xl">
+
+<!-- Section principale avec background coloré -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+    <div class="rounded-3xl bg-gradient-to-br from-green-50 to-green-100 shadow-lg p-8 mb-12">
+        <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
+            <!-- Project Image -->
+            <div class="w-full md:w-1/3 flex justify-center">
+                <div class="bg-white rounded-2xl shadow-lg overflow-hidden w-64 h-64 flex items-center justify-center">
+                    @if($project->photo)
+                        <img 
+                            src="{{ asset('uploads/projects/' . $project->photo) }}" 
+                            alt="{{ $project->title }}"
+                            class="object-cover w-full h-full"
+                        >
+                    @else
+                        <img 
+                            src="{{ asset('uploads/projects/default.png') }}" 
+                            alt="Image par défaut"
+                            class="object-cover w-full h-full"
+                        >
+                    @endif
+                </div>
+            </div>
+            <!-- Project Info -->
+            <div class="w-full md:w-2/3">
                 <!-- Breadcrumb -->
-                <nav class="flex items-center space-x-2 text-sm text-white opacity-90 mb-6">
+                <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-6">
                     <a href="{{ route('projects.my') }}" class="hover:text-warning transition-colors">
                         <i class="fas fa-tools mr-1"></i>Mes Projets
                     </a>
                     <i class="fas fa-chevron-right text-xs"></i>
                     <span>{{ $project->title }}</span>
                 </nav>
-                
                 <!-- Project Header -->
                 <div class="mb-6">
                     <div class="flex flex-wrap items-center gap-3 mb-4">
                         <!-- Category -->
-                        <span class="px-4 py-2 rounded-full text-sm font-semibold bg-white bg-opacity-20 text-white backdrop-blur-sm">
+                        <span class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-black shadow">
                             {{ $project->category->name ?? 'Général' }}
                         </span>
-                        
                         <!-- Difficulty -->
                         <span class="px-4 py-2 rounded-full text-sm font-semibold backdrop-blur-sm
                             @if($project->difficulty_level === 'easy') bg-green-500 text-white
@@ -51,19 +54,16 @@
                             @else Difficile
                             @endif
                         </span>
-                        
                         @if($project->status === 'featured')
                             <span class="px-4 py-2 rounded-full text-sm font-bold bg-warning text-white backdrop-blur-sm">
                                 <i class="fas fa-star mr-1"></i>Projet vedette
                             </span>
                         @endif
                     </div>
-                    
-                    <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
                         {{ $project->title }}
                     </h1>
-                    
-                    <div class="flex flex-wrap items-center gap-6 text-white">
+                    <div class="flex flex-wrap items-center gap-6 text-gray-700">
                         <div class="flex items-center gap-2">
                             <i class="fas fa-user"></i>
                             <span>Par {{ $project->user->name ?? 'Anonyme' }}</span>
@@ -89,27 +89,26 @@
 
 <!-- Main Content -->
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
-        
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
         <!-- Main Content -->
-        <div class="lg:col-span-2 space-y-12">
+        <div class="lg:col-span-2 flex flex-col space-y-8 md:space-y-12">
             
             <!-- Description -->
-            <section class="bg-white rounded-2xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-4 overflow-hidden">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
                     <i class="fas fa-info-circle text-primary"></i>
                     Description du projet
                 </h2>
-                <div class="prose prose-gray max-w-none">
-                    <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+                <div class="prose prose-gray dark:prose-invert max-w-none">
+                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line break-words">
                         {{ $project->description }}
                     </p>
                 </div>
             </section>
             
             <!-- Project Steps -->
-            <section class="bg-white rounded-2xl shadow-lg p-8">
-                <h2 class="text-2xl font-bold text-gray-900 mb-8 flex items-center gap-3">
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-4 overflow-hidden">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 flex items-center gap-3">
                     <i class="fas fa-list-ol text-primary"></i>
                     Étapes de réalisation
                     <span class="text-lg font-normal text-gray-500">({{ $project->steps->count() }} étapes)</span>
@@ -128,11 +127,11 @@
                                     <div class="flex-1">
                                         <!-- Step Header -->
                                         <div class="mb-4">
-                                            <h3 class="text-xl font-bold text-gray-900 mb-2">
+                                            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">
                                                 {{ $step->title }}
                                             </h3>
                                             @if($step->duration)
-                                                <p class="text-sm text-gray-600 flex items-center gap-2">
+                                                <p class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
                                                     <i class="fas fa-clock text-secondary"></i>
                                                     Durée estimée: {{ $step->duration }}
                                                 </p>
@@ -141,43 +140,38 @@
                                         
                                         <!-- Step Description -->
                                         <div class="mb-6">
-                                            <p class="text-gray-700 leading-relaxed">
+                                            <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
                                                 {{ $step->description }}
                                             </p>
                                         </div>
                                         
                                         <!-- Materials and Tools -->
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            @if($step->materials_needed)
-                                                <div class="bg-gray-50 rounded-lg p-4">
-                                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                                        <i class="fas fa-cube text-accent"></i>
-                                                        Matériaux nécessaires
-                                                    </h4>
-                                                    <div class="prose prose-sm prose-gray">
-                                                        {!! nl2br(e($step->materials_needed)) !!}
-                                                    </div>
+                                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 h-full">
+                                                <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                    <i class="fas fa-cube text-accent"></i>
+                                                    Matériaux nécessaires
+                                                </h4>
+                                                <div class="prose prose-sm prose-gray dark:prose-invert break-words whitespace-pre-line">
+                                                    {!! $step->materials_needed ? nl2br(e($step->materials_needed)) : '<span class=\'text-gray-400\'>Aucun</span>' !!}
                                                 </div>
-                                            @endif
-                                            
-                                            @if($step->tools_required)
-                                                <div class="bg-gray-50 rounded-lg p-4">
-                                                    <h4 class="font-semibold text-gray-900 mb-3 flex items-center gap-2">
-                                                        <i class="fas fa-wrench text-secondary"></i>
-                                                        Outils requis
-                                                    </h4>
-                                                    <div class="prose prose-sm prose-gray">
-                                                        {!! nl2br(e($step->tools_required)) !!}
-                                                    </div>
+                                            </div>
+                                            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 h-full">
+                                                <h4 class="font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
+                                                    <i class="fas fa-wrench text-secondary"></i>
+                                                    Outils requis
+                                                </h4>
+                                                <div class="prose prose-sm prose-gray dark:prose-invert break-words whitespace-pre-line">
+                                                    {!! $step->tools_required ? nl2br(e($step->tools_required)) : '<span class=\'text-gray-400\'>Aucun</span>' !!}
                                                 </div>
-                                            @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <!-- Connector Line -->
                                 @if(!$loop->last)
-                                    <div class="absolute left-6 top-12 w-0.5 h-8 bg-gray-300"></div>
+                                    <div class="absolute left-6 top-12 w-0.5 h-8 bg-gray-300 dark:bg-gray-600"></div>
                                 @endif
                             </div>
                         @endforeach
@@ -185,19 +179,56 @@
                 @else
                     <div class="text-center py-12">
                         <i class="fas fa-list-ol text-4xl text-gray-400 mb-4"></i>
-                        <p class="text-gray-600">Aucune étape définie pour ce projet</p>
+                        <p class="text-gray-600 dark:text-gray-400">Aucune étape définie pour ce projet</p>
                     </div>
                 @endif
+            </section>
+
+            <!-- Commentaires -->
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-8 mb-4 overflow-hidden">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-comments text-primary"></i>
+                    Commentaires
+                </h2>
+
+                <!-- Formulaire d'ajout de commentaire -->
+                @auth
+                <form method="POST" action="{{ route('comments.store', $project->id) }}" class="mb-6">
+                    @csrf
+                    <div class="flex gap-4 items-start">
+                        <textarea name="content" rows="2" class="w-full rounded-lg border-gray-300 focus:border-primary focus:ring focus:ring-primary/30" placeholder="Écrire un commentaire..." required></textarea>
+                        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-green-700 transition-colors">Envoyer</button>
+                    </div>
+                </form>
+                @endauth
+
+                <!-- Liste des commentaires -->
+                <div class="space-y-4">
+                    @forelse($project->comments as $comment)
+                        <div class="flex items-start gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center font-bold text-primary">
+                                {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                            </div>
+                            <div>
+                                <div class="font-semibold text-gray-900 dark:text-white">{{ $comment->user->name }}</div>
+                                <div class="text-gray-700 dark:text-gray-300">{{ $comment->filtered_content }}</div>
+                                <div class="text-xs text-gray-400">{{ $comment->created_at->diffForHumans() }}</div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-gray-500">Aucun commentaire pour ce projet.</div>
+                    @endforelse
+                </div>
             </section>
             
         </div>
         
         <!-- Sidebar -->
-        <div class="space-y-8">
+        <div class="flex flex-col space-y-8">
             
             <!-- Author Card -->
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-4 overflow-hidden">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <i class="fas fa-user text-primary"></i>
                     Créateur du projet
                 </h3>
@@ -207,30 +238,30 @@
                         {{ strtoupper(substr($project->user->name ?? 'A', 0, 1)) }}
                     </div>
                     <div>
-                        <h4 class="font-bold text-gray-900 text-lg">
+                        <h4 class="font-bold text-gray-900 dark:text-white text-lg">
                             {{ $project->user->name ?? 'Anonyme' }}
                         </h4>
-                        <p class="text-gray-600 text-sm">
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">
                             Membre depuis {{ $project->user->created_at->format('Y') ?? 'N/A' }}
                         </p>
                     </div>
                 </div>
                 
                 <!-- Author Stats -->
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t">
+                <div class="grid grid-cols-2 gap-4 pt-4 border-t dark:border-gray-700">
                     <div class="text-center">
-                        <div class="text-2xl font-bold text-primary">{{ $project->user->projects_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-600">Projets</div>
+                        <div class="text-2xl font-bold text-primary">{{ $creatorProjectsCount ?? 0 }}</div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400">Projets</div>
                     </div>
                     <div class="text-center">
                         <div class="text-2xl font-bold text-secondary">{{ $project->user->followers_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-600">Abonnés</div>
+                        <div class="text-xs text-gray-600 dark:text-gray-400">Abonnés</div>
                     </div>
                 </div>
             </div>
             
             <!-- Project Stats -->
-            <div class="bg-gradient-to-br from-primary to-green-700 text-white rounded-2xl p-6">
+            <div class="bg-gradient-to-br from-primary to-green-700 text-white rounded-2xl p-6 mb-4 overflow-hidden">
                 <h3 class="text-lg font-bold mb-4 flex items-center gap-2">
                     <i class="fas fa-chart-bar"></i>
                     Statistiques
@@ -257,8 +288,8 @@
             </div>
             
             <!-- Actions -->
-            <div class="bg-white rounded-2xl shadow-lg p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-4 overflow-hidden">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                     <i class="fas fa-tools text-primary"></i>
                     Actions
                 </h3>
@@ -282,6 +313,16 @@
                         <i class="fas fa-share"></i>
                         Partager le projet
                     </button>
+
+                    @if(auth()->check() && $project->user_id === auth()->id() && $project->status !== 'published')
+                        <form method="POST" action="{{ route('projects.publish', $project->id) }}" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full flex items-center justify-center gap-2 bg-warning hover:bg-yellow-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                                <i class="fas fa-globe"></i>
+                                Publier le projet
+                            </button>
+                        </form>
+                    @endif
                     
                     <!-- Mark as Completed -->
                     <button 
@@ -293,7 +334,7 @@
                     </button>
                     
                     @if(auth()->check() && $project->user_id === auth()->id())
-                        <div class="pt-4 border-t">
+                        <div class="pt-4 border-t dark:border-gray-700">
                             <a 
                                 href="{{ route('projects.edit', $project->id) }}" 
                                 class="w-full flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors mb-3"
@@ -316,8 +357,8 @@
             
             <!-- Materials Summary -->
             @if($project->steps->whereNotNull('materials_needed')->count() > 0)
-                <div class="bg-white rounded-2xl shadow-lg p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-4 overflow-hidden">
+                    <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                         <i class="fas fa-shopping-list text-primary"></i>
                         Liste complète des matériaux
                     </h3>
@@ -325,10 +366,10 @@
                     <div class="space-y-3">
                         @foreach($project->steps->whereNotNull('materials_needed') as $step)
                             <div class="text-sm">
-                                <div class="font-medium text-gray-900 mb-1">
+                                <div class="font-medium text-gray-900 dark:text-white mb-1">
                                     Étape {{ $step->step_number }}:
                                 </div>
-                                <div class="text-gray-600 pl-4">
+                                <div class="text-gray-600 dark:text-gray-400 pl-4">
                                     {!! nl2br(e($step->materials_needed)) !!}
                                 </div>
                             </div>
@@ -343,13 +384,13 @@
 
 <!-- Similar Projects -->
 @if(isset($similarProjects) && $similarProjects->count() > 0)
-<div class="bg-gray-50 py-16">
+<div class="bg-gray-50 dark:bg-gray-900 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-gray-900 mb-4">
+            <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">
                 Projets similaires
             </h2>
-            <p class="text-gray-600 text-lg">
+            <p class="text-gray-600 dark:text-gray-400 text-lg">
                 Découvrez d'autres projets qui pourraient vous intéresser
             </p>
         </div>
@@ -366,66 +407,59 @@
 <!-- Delete Modal -->
 @if(auth()->check() && $project->user_id === auth()->id())
 <div id="deleteModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-2xl max-w-md w-full mx-4">
         <div class="text-center mb-6">
-            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div class="w-16 h-16 bg-red-100 dark:bg-red-900 rounded-full flex items-center justify-center mx-auto mb-4">
                 <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-900 mb-2">Confirmer la suppression</h3>
-            <p class="text-gray-600">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Confirmer la suppression</h3>
+            <p class="text-gray-600 dark:text-gray-300">
                 Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible.
             </p>
         </div>
         
         <div class="flex gap-4">
-            <button 
-                onclick="hideDeleteModal()" 
-                class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
-            >
-                Annuler
-            </button>
             <form action="{{ route('projects.destroy', $project->id) }}" method="POST" class="flex-1">
                 @csrf
                 @method('DELETE')
-                <button 
-                    type="submit" 
-                    class="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-                >
+                <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                     Supprimer
                 </button>
             </form>
+            <button onclick="hideDeleteModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-lg font-medium transition-colors">
+                Annuler
+            </button>
         </div>
     </div>
 </div>
 @endif
+@endsection
 
 @push('scripts')
 <script>
 // Toggle favorite
 function toggleFavorite(projectId) {
-    // Implementation for favorite toggle
-    fetch(`/projects/${projectId}/favorite`, {
+    fetch(`/projects/${projectId}/toggle-favorite`, {
         method: 'POST',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
             'Content-Type': 'application/json',
         },
     })
     .then(response => response.json())
     .then(data => {
-        // Update UI
-        const btn = document.getElementById('favorite-btn-main');
-        const text = document.getElementById('favorite-text');
-        if (data.favorited) {
-            text.textContent = 'Retirer des favoris';
-            btn.classList.remove('bg-gray-500', 'hover:bg-gray-600');
-            btn.classList.add('bg-red-500', 'hover:bg-red-600');
+        const favoriteBtn = document.getElementById('favorite-btn-main');
+        const favoriteText = document.getElementById('favorite-text');
+        
+        if (data.is_favorited) {
+            favoriteText.textContent = 'Retirer des favoris';
+            favoriteBtn.classList.add('bg-red-600');
         } else {
-            text.textContent = 'Ajouter aux favoris';
-            btn.classList.remove('bg-red-500', 'hover:bg-red-600');
-            btn.classList.add('bg-gray-500', 'hover:bg-gray-600');
+            favoriteText.textContent = 'Ajouter aux favoris';
+            favoriteBtn.classList.remove('bg-red-600');
         }
-    });
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 // Share project
@@ -433,7 +467,7 @@ function shareProject() {
     if (navigator.share) {
         navigator.share({
             title: '{{ $project->title }}',
-            text: '{{ Str::limit($project->description, 100) }}',
+            text: 'Découvrez ce projet sur Waste2Product',
             url: window.location.href
         });
     } else {
@@ -461,4 +495,3 @@ function hideDeleteModal() {
 }
 </script>
 @endpush
-@endsection

@@ -43,7 +43,7 @@
         <div class="nav-section">
             <h3 class="nav-section-title">Gestion de contenu</h3>
             <ul>
-                <li class="nav-item">
+                 <li class="nav-item">
                     <a href="/admin/projects" class="nav-link {{ Request::is('admin/projects*') ? 'active' : '' }}">
                         <i class="fas fa-project-diagram nav-icon"></i>
                         <span class="nav-text">Projets</span>

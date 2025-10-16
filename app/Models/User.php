@@ -54,21 +54,36 @@ class User extends Authenticatable
             'total_co2_saved' => 'decimal:2',
         ];
     }
+
+    /**
+     * Relation avec les déchets
+     */
     public function dechets()
     {
         return $this->hasMany(Dechet::class);
     }
 
+    /**
+     * Relation avec les projets
+     */
     public function projects()
-{
-    return $this->hasMany(Project::class);
-}
+    {
+        return $this->hasMany(Project::class);
+    }
 
-    // Helpers
+    /**
+     * Relation avec les commentaires
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    /**
+     * Vérifie si l'utilisateur est administrateur
+     */
     public function isAdmin(): bool
     {
         return $this->is_admin;
     }
-
-    
 }
