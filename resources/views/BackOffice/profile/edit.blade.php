@@ -1,4 +1,4 @@
-@extends('FrontOffice.layout1.app')
+@extends('BackOffice.layouts.app')
 
 @section('title', 'Mon Profil - Waste2Product')
 

@@ -29,6 +29,7 @@
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a href="/admin/analytics" class="nav-link {{ Request::is('admin/analytics') ? 'active' : '' }}">
                         <i class="fas fa-chart-line nav-icon"></i>
@@ -36,6 +37,7 @@
                         <span class="nav-badge">Nouveau</span>
                     </a>
                 </li>
+                !-->
             </ul>
         </div>
 
@@ -95,17 +97,19 @@
             <h3 class="nav-section-title">Système</h3>
             <ul>
                 <li class="nav-item">
-                    <a href="/admin/settings" class="nav-link {{ Request::is('admin/settings*') ? 'active' : '' }}">
+                    <a href="/admin/profile" class="nav-link {{ Request::is('admin/profile*') ? 'active' : '' }}">
                         <i class="fas fa-cog nav-icon"></i>
                         <span class="nav-text">Paramètres</span>
                     </a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
                         <i class="fas fa-file-alt nav-icon"></i>
                         <span class="nav-text">Logs</span>
                     </a>
                 </li>
+                !-->
                 <li class="nav-item">
                 <form method="POST" action="{{ route('logout') }}">
                         @csrf

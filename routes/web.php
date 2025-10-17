@@ -3,6 +3,7 @@
 
 use App\Http\Controllers\Backoffice\Event1controller;
 use App\Http\Controllers\Backoffice\Project1controller;
+use App\Http\Controllers\Backoffice\UserController;
 use App\Http\Controllers\Frontoffice\DechetController;
 use App\Http\Controllers\Frontoffice\DechetFavoriteController;
 use App\Http\Controllers\Frontoffice\DechetReviewController;
@@ -32,11 +33,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+use App\Http\Controllers\Backoffice\DashboardController;
 
-
-Route::get('/admin', function () {
-    return view('BackOffice.home');
-})->name('admin');
+Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 
 Route::get('/', function () {
     return view('FrontOffice.home');
@@ -158,6 +157,10 @@ Route::prefix('tutorials')->name('tutorials.')->group(function () {
 
                             // PARTIE BACK OFFICE ADMIIIINN //
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/profile', [ProfileController::class, 'editadmin'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'updateadmin'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     
     Route::prefix('/dechets')->name('dechets.')->group(function () {
         Route::get('/', [Dechet1Controller::class, 'index'])->name('index');
@@ -217,6 +220,19 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/comments/{id}/moderate', [Tutorial1Controller::class, 'moderateComment'])->name('comments.moderate');
         Route::delete('/{id}', [Tutorial1Controller::class, 'destroy'])->name('destroy');
         Route::post('/bulk-action', [Tutorial1Controller::class, 'bulkAction'])->name('bulk');
+    });
+
+    Route::prefix('/users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/toggle-admin', [UserController::class, 'toggleAdmin'])->name('toggle-admin');
+        Route::patch('/{id}/toggle-verification', [UserController::class, 'toggleVerification'])->name('toggle-verification');
+        Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
     });
 });     
 }); 

@@ -28,6 +28,8 @@
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             position: fixed;
+            top: 0;
+            left: 0;
             height: 100vh;
             z-index: 40;
         }
@@ -246,6 +248,24 @@
             border-bottom: 1px solid #e2e8f0;
             padding: 0 2rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed ~ .main-area .navbar {
+            left: var(--sidebar-collapsed);
+        }
+
+        .content-area {
+            padding: 2rem;
+            margin-top: var(--navbar-height);
         }
 
         .search-container {
@@ -370,6 +390,7 @@
 
         .content-area {
             padding: 2rem;
+            margin-top: var(--navbar-height);
         }
 
         /* Mobile styles */
@@ -393,10 +414,12 @@
 
             .navbar {
                 padding: 0 1rem;
+                left: 0 !important;
             }
 
             .content-area {
                 padding: 1rem;
+                margin-top: var(--navbar-height);
             }
         }
 
@@ -431,6 +454,9 @@
         /* Force light mode - disable all dark mode styles */
         body, html {
             background-color: #f9fafb !important;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
         /* Override dark mode backgrounds */
