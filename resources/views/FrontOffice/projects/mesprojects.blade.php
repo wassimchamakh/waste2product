@@ -32,11 +32,11 @@
         </div>
     @else
         <div class="text-center py-16">
-            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full mb-6">
                 <i class="fas fa-folder-open text-4xl text-gray-400"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun projet trouvé</h3>
-            <p class="text-gray-600 mb-6">Vous n'avez pas encore de projets. Commencez à créer votre premier projet !</p>
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Aucun projet trouvé</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">Vous n'avez pas encore de projets. Commencez à créer votre premier projet !</p>
             <a 
                 href="{{ route('projects.create') }}" 
                 class="inline-flex items-center gap-2 bg-primary hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"

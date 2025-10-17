@@ -49,6 +49,14 @@ class Project extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * Commentaires associés au projet
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     // Accessors & Mutators
     public function getDifficultyLabelAttribute()
     {
