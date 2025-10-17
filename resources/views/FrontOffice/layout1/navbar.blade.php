@@ -40,51 +40,85 @@
                 <div class="relative">
                     <button id="notifications-btn" class="text-gray-600 hover:text-primary p-2 relative">
                         <i class="fas fa-bell text-lg"></i>
-                        <div class="notification-dot"></div>
+                        @if(isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
+                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                {{ $unreadNotificationsCount > 9 ? '9+' : $unreadNotificationsCount }}
+                            </span>
+                        @endif
                     </button>
                     
                     <!-- Notifications Dropdown -->
-                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
-                        <div class="p-4 border-b border-gray-200">
+                    <div id="notifications-dropdown" class="hidden absolute right-0 mt-2 w-96 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
+                        <div class="p-4 border-b border-gray-200 flex items-center justify-between">
                             <h3 class="font-semibold text-gray-900">Notifications</h3>
+                            @if(isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
+                                <form action="{{ route('notifications.mark-all-read') }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit" class="text-xs text-primary hover:text-primary-dark font-medium">
+                                        Tout marquer comme lu
+                                    </button>
+                                </form>
+                            @endif
                         </div>
-                        <div class="max-h-64 overflow-y-auto">
-                            <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
-                                        <i class="fas fa-check text-white text-sm"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Votre projet "Table Basse" a été approuvé !</p>
-                                        <p class="text-xs text-gray-500">Il y a 2 heures</p>
+                        <div class="max-h-96 overflow-y-auto">
+                            @forelse($notifications ?? [] as $notification)
+                                <div class="p-3 hover:bg-gray-50 border-b border-gray-100 {{ $notification->is_read ? 'bg-white' : 'bg-blue-50' }}">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0
+                                            @if($notification->color === 'blue') bg-blue-100
+                                            @elseif($notification->color === 'green') bg-green-100
+                                            @elseif($notification->color === 'purple') bg-purple-100
+                                            @elseif($notification->color === 'orange') bg-orange-100
+                                            @elseif($notification->color === 'red') bg-red-100
+                                            @elseif($notification->color === 'yellow') bg-yellow-100
+                                            @else bg-gray-100
+                                            @endif">
+                                            <i class="fas {{ $notification->icon }}
+                                                @if($notification->color === 'blue') text-blue-600
+                                                @elseif($notification->color === 'green') text-green-600
+                                                @elseif($notification->color === 'purple') text-purple-600
+                                                @elseif($notification->color === 'orange') text-orange-600
+                                                @elseif($notification->color === 'red') text-red-600
+                                                @elseif($notification->color === 'yellow') text-yellow-600
+                                                @else text-gray-600
+                                                @endif text-sm"></i>
+                                        </div>
+                                        <div class="flex-1 min-w-0">
+                                            @if($notification->link)
+                                                <a href="{{ $notification->link }}" class="block">
+                                                    <p class="text-sm font-medium text-gray-900 hover:text-primary">{{ $notification->title }}</p>
+                                                    <p class="text-xs text-gray-600 mt-1">{{ $notification->message }}</p>
+                                                </a>
+                                            @else
+                                                <p class="text-sm font-medium text-gray-900">{{ $notification->title }}</p>
+                                                <p class="text-xs text-gray-600 mt-1">{{ $notification->message }}</p>
+                                            @endif
+                                            <div class="flex items-center justify-between mt-2">
+                                                <p class="text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</p>
+                                                @if(!$notification->is_read)
+                                                    <form action="{{ route('notifications.mark-read', $notification->id) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="text-xs text-primary hover:text-primary-dark font-medium">
+                                                            Marquer comme lu
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user text-white text-sm"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Ahmed souhaite récupérer vos palettes</p>
-                                        <p class="text-xs text-gray-500">Il y a 4 heures</p>
-                                    </div>
+                            @empty
+                                <div class="p-8 text-center text-gray-500">
+                                    <i class="fas fa-bell-slash text-4xl mb-2 text-gray-300"></i>
+                                    <p class="text-sm">Aucune notification</p>
                                 </div>
-                            </div>
-                            <div class="p-3 hover:bg-gray-50">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-                                        <i class="fas fa-calendar text-white text-sm"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Rappel: Repair Café demain à 14h</p>
-                                        <p class="text-xs text-gray-500">Il y a 6 heures</p>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                         <div class="p-3 text-center border-t border-gray-200">
-                            <a href="/notifications" class="text-primary text-sm font-medium">Voir toutes les notifications</a>
+                            <a href="{{ route('notifications.index') }}" class="text-primary text-sm font-medium hover:text-primary-dark">
+                                Voir toutes les notifications
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -202,10 +236,14 @@
                         <i class="fas fa-project-diagram w-4"></i>
                         <span>Mes Projets</span>
                     </a>
-                    <a href="/notifications" class="w-full text-left py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg flex items-center space-x-3">
+                    <a href="{{ route('notifications.index') }}" class="w-full text-left py-3 px-4 text-gray-600 hover:bg-gray-100 rounded-lg flex items-center space-x-3">
                         <i class="fas fa-bell w-4"></i>
                         <span>Notifications</span>
-                        <span class="ml-auto bg-accent text-white text-xs px-2 py-1 rounded-full">3</span>
+                        @if(isset($unreadNotificationsCount) && $unreadNotificationsCount > 0)
+                            <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                                {{ $unreadNotificationsCount > 9 ? '9+' : $unreadNotificationsCount }}
+                            </span>
+                        @endif
                     </a>
                     <a href="/logout" class="w-full text-left py-3 px-4 text-red-600 hover:bg-gray-100 rounded-lg flex items-center space-x-3">
                         <i class="fas fa-sign-out-alt w-4"></i>

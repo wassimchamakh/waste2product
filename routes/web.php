@@ -234,5 +234,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::patch('/{id}/toggle-verification', [UserController::class, 'toggleVerification'])->name('toggle-verification');
         Route::post('/bulk-action', [UserController::class, 'bulkAction'])->name('bulk-action');
     });
+
+    // Notifications
+    Route::prefix('/notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Backoffice\NotificationController::class, 'index'])->name('index');
+        Route::post('/mark-all-read', [\App\Http\Controllers\Backoffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::patch('/{id}/mark-read', [\App\Http\Controllers\Backoffice\NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::delete('/{id}', [\App\Http\Controllers\Backoffice\NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/read/all', [\App\Http\Controllers\Backoffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
+    });
 });     
+
+// FrontOffice Notifications (for regular users)
+Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
+    Route::get('/', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'index'])->name('index');
+    Route::post('/mark-all-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+    Route::patch('/{id}/mark-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAsRead'])->name('mark-read');
+    Route::delete('/{id}', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'destroy'])->name('destroy');
+    Route::delete('/read/all', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
+});
 }); 
