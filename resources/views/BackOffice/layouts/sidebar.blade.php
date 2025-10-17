@@ -81,12 +81,12 @@
                         <span class="nav-text">Utilisateurs</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a href="/admin/roles" class="nav-link {{ Request::is('admin/roles*') ? 'active' : '' }}">
                         <i class="fas fa-user-shield nav-icon"></i>
                         <span class="nav-text">Rôles & Permissions</span>
                     </a>
-                </li>
+                </li>!-->
             </ul>
         </div>
 

@@ -285,4 +285,83 @@ class TutoComment extends Model
         return $this->status === 'Flagged';
     }
 
+    /**
+     * Approve the comment.
+     */
+    public function approve(?int $moderatorId = null): void
+    {
+        $this->status = 'Approved';
+        $this->moderated_by = $moderatorId ?? auth()->id();
+        $this->moderated_at = now();
+        $this->save();
+
+        // Update tutorial's average rating if this comment has a rating
+        if ($this->rating) {
+            $this->tutorial->updateAverageRating();
+        }
+    }
+
+    /**
+     * Reject the comment.
+     */
+    public function reject(?int $moderatorId = null, ?string $note = null): void
+    {
+        $this->status = 'Rejected';
+        $this->moderated_by = $moderatorId ?? auth()->id();
+        $this->moderated_at = now();
+        if ($note) {
+            $this->moderation_note = $note;
+        }
+        $this->save();
+    }
+
+    /**
+     * Flag the comment for review.
+     */
+    public function flag(?string $note = null): void
+    {
+        $this->status = 'Flagged';
+        if ($note) {
+            $this->moderation_note = $note;
+        }
+        $this->save();
+    }
+
+    /**
+     * Mark comment as helpful by a user.
+     */
+    public function markAsHelpful(int $userId): void
+    {
+        $helpfulUsers = $this->is_helpful_by_users ?? [];
+        
+        if (!in_array($userId, $helpfulUsers)) {
+            $helpfulUsers[] = $userId;
+            $this->is_helpful_by_users = $helpfulUsers;
+            $this->helpful_count = count($helpfulUsers);
+            $this->save();
+        }
+    }
+
+    /**
+     * Unmark comment as helpful by a user.
+     */
+    public function unmarkAsHelpful(int $userId): void
+    {
+        $helpfulUsers = $this->is_helpful_by_users ?? [];
+        
+        if (($key = array_search($userId, $helpfulUsers)) !== false) {
+            unset($helpfulUsers[$key]);
+            $this->is_helpful_by_users = array_values($helpfulUsers);
+            $this->helpful_count = count($this->is_helpful_by_users);
+            $this->save();
+        }
+    }
+
+    /**
+     * Check if user marked this comment as helpful.
+     */
+    public function isMarkedHelpfulBy(int $userId): bool
+    {
+        return in_array($userId, $this->is_helpful_by_users ?? []);
+    }
 }

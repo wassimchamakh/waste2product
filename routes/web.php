@@ -10,6 +10,7 @@ use App\Http\Controllers\Backoffice\Dechet1Controller;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Frontoffice\EventController;
 use App\Http\Controllers\Frontoffice\ProjectController;
+use App\Http\Controllers\Frontoffice\TutorialController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 
@@ -17,9 +18,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/*Route::get('/dashboard', function () {
+
+Route::get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');*/
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -118,6 +120,35 @@ Route::prefix('events')->name('Events.')->group(function () {
     Route::post('/{event}/participants/send-email', [EventController::class, 'sendBulkEmail'])
         ->name('participants.sendEmail');
 });
+
+
+Route::prefix('tutorials')->name('tutorials.')->group(function () {
+    // Public routes
+    Route::get('/', [TutorialController::class, 'index'])->name('index');
+    Route::get('/create', [TutorialController::class, 'create'])->name('create');
+    Route::post('/', [TutorialController::class, 'store'])->name('store');
+    Route::get('/{slug}', [TutorialController::class, 'show'])->name('show');
+    Route::get('/{slug}/edit', [TutorialController::class, 'edit'])->name('edit');
+    Route::put('/{slug}', [TutorialController::class, 'update'])->name('update');
+    Route::delete('/{slug}', [TutorialController::class, 'destroy'])->name('destroy');
+    
+    // Step routes
+    Route::get('/{slug}/step/{stepNumber}', [TutorialController::class, 'step'])->name('step');
+    Route::post('/steps/complete', [TutorialController::class, 'markStepComplete'])->name('steps.complete');
+    
+    // Comments routes
+    Route::post('/comments', [TutorialController::class, 'storeComment'])->name('comments.store');
+    Route::post('/comments/helpful', [TutorialController::class, 'markCommentHelpful'])->name('comments.helpful');
+    
+    // User interactions
+    Route::post('/bookmark', [TutorialController::class, 'toggleBookmark'])->name('bookmark');
+    Route::post('/{id}/complete', [TutorialController::class, 'markComplete'])->name('complete');
+    
+    // Notes routes
+    Route::post('/notes/save', [TutorialController::class, 'saveNotes'])->name('notes.save');
+    Route::get('/notes/get', [TutorialController::class, 'getNotes'])->name('notes.get');
+});
+
                             // PARTIE BACK OFFICE ADMIIIINN //
 Route::prefix('admin')->name('admin.')->group(function () {
     

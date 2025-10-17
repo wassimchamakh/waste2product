@@ -78,16 +78,42 @@ class Tutorial extends Model
         // Auto-generate slug from title when creating
         static::creating(function ($tutorial) {
             if (empty($tutorial->slug)) {
-                $tutorial->slug = Str::slug($tutorial->title);
+                // Use maxLength of 255 to avoid truncation
+                $slug = Str::slug($tutorial->title, '-', null, ['maxLength' => 255]);
+                
+                // Ensure unique slug
+                $count = 1;
+                $originalSlug = $slug;
+                while (static::where('slug', $slug)->exists()) {
+                    $slug = $originalSlug . '-' . $count;
+                    $count++;
+                }
+                
+                $tutorial->slug = $slug;
             }
         });
 
-        // Update slug when title changes
+        // Update slug when title changes (but keep existing slug if title hasn't changed)
+        // DISABLED: Don't regenerate slug on update to avoid conflicts
+        // Users can manually change slug if needed
+        /*
         static::updating(function ($tutorial) {
             if ($tutorial->isDirty('title')) {
-                $tutorial->slug = Str::slug($tutorial->title);
+                // Use maxLength of 255 to avoid truncation
+                $slug = Str::slug($tutorial->title, '-', null, ['maxLength' => 255]);
+                
+                // Ensure unique slug (excluding current tutorial)
+                $count = 1;
+                $originalSlug = $slug;
+                while (static::where('slug', $slug)->where('id', '!=', $tutorial->id)->exists()) {
+                    $slug = $originalSlug . '-' . $count;
+                    $count++;
+                }
+                
+                $tutorial->slug = $slug;
             }
         });
+        */
     }
 
     /**
@@ -134,6 +160,29 @@ class Tutorial extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
+     * Get all user progress records for this tutorial.
+     * One-to-Many relationship
+     */
+    public function userProgress(): HasMany
+    {
+        return $this->hasMany(UserTutorialProgress::class, 'tutorial_id');
+    }
+
+    /**
+     * Get user progress for the current authenticated user.
+     */
+    public function myProgress(): ?UserTutorialProgress
+    {
+        if (!auth()->check()) {
+            return null;
+        }
+        
+        return $this->userProgress()
+            ->where('user_id', auth()->id())
+            ->first();
     }
 
     /**
@@ -247,12 +296,18 @@ class Tutorial extends Model
     public function getThumbnailUrlAttribute()
     {
         if ($this->thumbnail_image) {
-            // If it's a full URL
+            // If it's a full URL (external image)
             if (filter_var($this->thumbnail_image, FILTER_VALIDATE_URL)) {
                 return $this->thumbnail_image;
             }
-            // If it's a storage path
-            return asset('storage/' . $this->thumbnail_image);
+            
+            // Check if it starts with "tutorials/" (storage path format)
+            if (str_starts_with($this->thumbnail_image, 'tutorials/')) {
+                return asset('storage/' . $this->thumbnail_image);
+            }
+            
+            // Otherwise, it's just a filename in public/uploads/tutorials/
+            return asset('uploads/tutorials/' . $this->thumbnail_image);
         }
         
         // Default image

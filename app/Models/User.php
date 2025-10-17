@@ -60,9 +60,71 @@ class User extends Authenticatable
     }
 
     public function projects()
-{
-    return $this->hasMany(Project::class);
-}
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    /**
+     * Get all tutorials created by this user.
+     */
+    public function createdTutorials()
+    {
+        return $this->hasMany(Tutorial::class, 'created_by');
+    }
+
+    /**
+     * Get all comments made by this user.
+     */
+    public function tutorialComments()
+    {
+        return $this->hasMany(TutoComment::class, 'user_id');
+    }
+
+    /**
+     * Get all tutorial progress records for this user.
+     */
+    public function tutorialProgress()
+    {
+        return $this->hasMany(UserTutorialProgress::class, 'user_id');
+    }
+
+    /**
+     * Get all step completions for this user.
+     */
+    public function stepCompletions()
+    {
+        return $this->hasMany(UserStepCompletion::class, 'user_id');
+    }
+
+    /**
+     * Get tutorials in progress for this user.
+     */
+    public function tutorialsInProgress()
+    {
+        return $this->hasManyThrough(
+            Tutorial::class,
+            UserTutorialProgress::class,
+            'user_id',
+            'id',
+            'id',
+            'tutorial_id'
+        )->where('is_completed', false);
+    }
+
+    /**
+     * Get completed tutorials for this user.
+     */
+    public function completedTutorials()
+    {
+        return $this->hasManyThrough(
+            Tutorial::class,
+            UserTutorialProgress::class,
+            'user_id',
+            'id',
+            'id',
+            'tutorial_id'
+        )->where('is_completed', true);
+    }
 
     // Helpers
     public function isAdmin(): bool
