@@ -57,13 +57,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/events" class="nav-link {{ Request::is('admin/evenements*') ? 'active' : '' }}">
+                    <a href="/admin/events" class="nav-link {{ Request::is('admin/events*') ? 'active' : '' }}">
                         <i class="fas fa-calendar-alt nav-icon"></i>
                         <span class="nav-text">Événements</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/tutoriels" class="nav-link {{ Request::is('admin/tutoriels*') ? 'active' : '' }}">
+                    <a href="/admin/tutorials" class="nav-link {{ Request::is('admin/tutorials*') ? 'active' : '' }}">
                         <i class="fas fa-book nav-icon"></i>
                         <span class="nav-text">Tutoriels</span>
                     </a>

@@ -8,6 +8,7 @@ use App\Http\Controllers\Frontoffice\DechetFavoriteController;
 use App\Http\Controllers\Frontoffice\DechetReviewController;
 use App\Http\Controllers\Backoffice\Dechet1Controller;
 use App\Http\Controllers\Backoffice\CategoryController;
+use App\Http\Controllers\Backoffice\Tutorial1Controller;
 use App\Http\Controllers\Frontoffice\EventController;
 use App\Http\Controllers\Frontoffice\ProjectController;
 use App\Http\Controllers\Frontoffice\TutorialController;
@@ -188,6 +189,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{event}', [Event1controller::class, 'destroy'])->name('destroy');
         Route::get('/{event}/participants', [Event1controller::class, 'participants'])->name('participants');
         Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
+    });
+
+    Route::prefix('/tutorials')->name('tutorials.')->group(function () {
+        Route::get('/', [Tutorial1Controller::class, 'index'])->name('index');
+        Route::get('/create', [Tutorial1Controller::class, 'create'])->name('create');
+        Route::post('/', [Tutorial1Controller::class, 'store'])->name('store');
+        Route::get('/{id}', [Tutorial1Controller::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [Tutorial1Controller::class, 'edit'])->name('edit');
+        Route::put('/{id}', [Tutorial1Controller::class, 'update'])->name('update');
+        Route::get('/{id}/steps', [Tutorial1Controller::class, 'steps'])->name('steps');
+        Route::get('/{id}/steps/create', [Tutorial1Controller::class, 'createStep'])->name('steps.create');
+        Route::post('/{id}/steps', [Tutorial1Controller::class, 'storeStep'])->name('steps.store');
+        Route::get('/{tutorialId}/steps/{stepId}/edit', [Tutorial1Controller::class, 'editStep'])->name('steps.edit');
+        Route::put('/{tutorialId}/steps/{stepId}', [Tutorial1Controller::class, 'updateStep'])->name('steps.update');
+        Route::delete('/{tutorialId}/steps/{stepId}', [Tutorial1Controller::class, 'destroyStep'])->name('steps.destroy');
+        Route::get('/{id}/comments', [Tutorial1Controller::class, 'comments'])->name('comments');
+        Route::get('/{id}/progress', [Tutorial1Controller::class, 'progress'])->name('progress');
+        Route::post('/{id}/status', [Tutorial1Controller::class, 'updateStatus'])->name('status');
+        Route::post('/{id}/featured', [Tutorial1Controller::class, 'toggleFeatured'])->name('featured');
+        Route::post('/comments/{id}/moderate', [Tutorial1Controller::class, 'moderateComment'])->name('comments.moderate');
+        Route::delete('/{id}', [Tutorial1Controller::class, 'destroy'])->name('destroy');
+        Route::post('/bulk-action', [Tutorial1Controller::class, 'bulkAction'])->name('bulk');
     });
 });     
 }); 
