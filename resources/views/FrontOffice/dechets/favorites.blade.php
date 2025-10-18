@@ -133,7 +133,7 @@
                         <div class="flex gap-2">
                             <a
                                 href="{{ route('dechets.show', $dechet->id) }}"
-                                class="flex-1 bg-primary hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105"
+                                class="flex-1 bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105 shadow-md"
                             >
                                 <i class="fas fa-eye mr-2"></i>Voir détails
                             </a>
@@ -196,7 +196,7 @@ function toggleFavorite(dechetId, button) {
         }
     })
     .then(res => res.json())
-    .then(data => {
+    .then data => {
         if (!data.favorited) {
             // Remove card with animation
             const card = button.closest('.card-hover');

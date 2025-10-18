@@ -40,7 +40,9 @@
                 <div class="relative">
                     <button id="notifications-btn" class="text-gray-600 hover:text-primary p-2 relative">
                         <i class="fas fa-bell text-lg"></i>
-                        <div class="notification-dot"></div>
+                        @if(Auth::user()->unreadNotifications->count() > 0)
+                            <span id="notif-dot" class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-600 rounded-full"></span>
+                        @endif
                     </button>
                     
                     <!-- Notifications Dropdown -->
@@ -49,42 +51,48 @@
                             <h3 class="font-semibold text-gray-900">Notifications</h3>
                         </div>
                         <div class="max-h-64 overflow-y-auto">
-                            <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
-                                        <i class="fas fa-check text-white text-sm"></i>
+                            @forelse(Auth::user()->unreadNotifications as $notification)
+                                <a href="{{ isset($notification->data['project_id']) ? route('projects.show', $notification->data['project_id']) : '#' }}" class="block p-3 hover:bg-gray-50 border-b border-gray-100 notif-link" data-id="{{ $notification->id }}">
+                                    <div class="flex items-start space-x-3">
+                                        <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center">
+                                            <i class="fas fa-bell text-white text-sm"></i>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-sm text-gray-900">
+                                                {{ $notification->data['message'] ?? 'Nouvelle notification' }}
+                                            </p>
+                                            <p class="text-xs text-gray-500">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Votre projet "Table Basse" a été approuvé !</p>
-                                        <p class="text-xs text-gray-500">Il y a 2 heures</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-3 hover:bg-gray-50 border-b border-gray-100">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
-                                        <i class="fas fa-user text-white text-sm"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Ahmed souhaite récupérer vos palettes</p>
-                                        <p class="text-xs text-gray-500">Il y a 4 heures</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="p-3 hover:bg-gray-50">
-                                <div class="flex items-start space-x-3">
-                                    <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
-                                        <i class="fas fa-calendar text-white text-sm"></i>
-                                    </div>
-                                    <div class="flex-1">
-                                        <p class="text-sm text-gray-900">Rappel: Repair Café demain à 14h</p>
-                                        <p class="text-xs text-gray-500">Il y a 6 heures</p>
-                                    </div>
-                                </div>
-                            </div>
+                                </a>
+                            @empty
+                                <div class="p-3 text-gray-500">Aucune notification</div>
+                            @endforelse
                         </div>
                         <div class="p-3 text-center border-t border-gray-200">
-                            <a href="/notifications" class="text-primary text-sm font-medium">Voir toutes les notifications</a>
+<script>
+document.querySelectorAll('.notif-link').forEach(function(link) {
+    link.addEventListener('click', function(e) {
+        var notifId = this.getAttribute('data-id');
+        fetch('/notifications/read/' + notifId, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json',
+            },
+        });
+        // Optionnel: retirer la notif de la vue sans recharger
+        this.style.display = 'none';
+    });
+});
+</script>
+                            <a href="/notifications" class="text-primary text-sm font-medium mr-2">Voir toutes les notifications</a>
+                            <form method="POST" action="{{ route('notifications.clear') }}" style="display:inline;">
+                                @csrf
+                                <button type="submit" class="text-red-600 text-sm font-medium ml-2 hover:underline" onclick="return confirm('Effacer toutes les notifications ?');">Effacer toutes</button>
+                            </form>
                         </div>
                     </div>
                 </div>

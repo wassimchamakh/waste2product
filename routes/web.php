@@ -12,6 +12,7 @@ use App\Http\Controllers\Frontoffice\EventController;
 use App\Http\Controllers\Frontoffice\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectLikeController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -148,4 +149,25 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
     });
 });     
-}); 
+});
+
+Route::post('/projects/{project}/toggle-like', [ProjectLikeController::class, 'toggle'])->middleware('auth')->name('projects.toggleLike');
+
+// Route pour effacer toutes les notifications du user connecté
+Route::post('/notifications/clear', function() {
+    Auth::user()->notifications()->delete();
+    return back();
+})->name('notifications.clear')->middleware('auth');
+
+// Route pour marquer toutes les notifications comme lues
+Route::post('/notifications/markAsRead', function() {
+    Auth::user()->unreadNotifications->markAsRead();
+    return response()->json(['status' => 'ok']);
+})->name('notifications.markAsRead')->middleware('auth');
+
+// Route pour marquer une notification comme lue individuellement
+Route::post('/notifications/read/{id}', function($id) {
+    $notif = Auth::user()->notifications()->find($id);
+    if($notif) $notif->markAsRead();
+    return response()->json(['status' => 'ok']);
+})->name('notifications.read')->middleware('auth');

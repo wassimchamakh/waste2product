@@ -25,6 +25,13 @@ class CommentController extends Controller
             'project_id' => $project->id,
             'content' => $request->input('content'),
         ]);
+        // Notification au propriétaire du projet
+        $owner = $project->user;
+        if ($owner && $owner->id !== auth()->id()) {
+            $commenterName = auth()->user()->name;
+            $projectTitle = $project->title;
+            $owner->notify(new \App\Notifications\ProjectCommentedNotification($commenterName, $projectTitle, $project->id));
+        }
 
         return redirect()->route('projects.show', $project->id)
             ->with('success', 'Commentaire ajouté !');

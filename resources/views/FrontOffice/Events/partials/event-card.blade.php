@@ -116,7 +116,7 @@
                     Complet
                 </button>
             @endif
-            <a href="{{ route('evenements.show', $event) }}" class="flex-1 border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium text-center">
+            <a href="{{ route('evenements.show', $event) }}" class="flex-1 bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105 shadow-md">
                 Voir détails
             </a>
         </div>

@@ -33,7 +33,13 @@
                     <div class="text-sm opacity-90">Projets vedettes</div>
                 </div>
                 <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['completed'] ?? 0 }}</div>
+                    <div class="text-3xl font-bold">
+                        @auth
+                            {{ \App\Models\Project::where('user_id', auth()->id())->count() }}
+                        @else
+                            0
+                        @endauth
+                    </div>
                     <div class="text-sm opacity-90">Réalisations</div>
                 </div>
             </div>
