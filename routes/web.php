@@ -77,6 +77,8 @@ Route::prefix('dechets')->name('dechets.')->group(function () {
 });
 
 Route::group(['prefix' => 'projects'], function() {
+    // Route pour noter un projet
+    Route::post('/{project}/rate', [ProjectController::class, 'rate'])->name('projects.rate');
     Route::get('/', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/mesprojets', [ProjectController::class, 'myProjects'])->name('projects.my');
     Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
@@ -87,8 +89,12 @@ Route::group(['prefix' => 'projects'], function() {
     Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::post('/{project}/favorite', [ProjectController::class, 'toggleFavorite'])->name('projects.favorite');
 
+
     // Route pour enregistrer un commentaire
     Route::post('/{project}/comment', [\App\Http\Controllers\FrontOffice\CommentController::class, 'store'])->name('comments.store');
+
+    // Route pour supprimer un commentaire
+    Route::delete('/comment/{comment}', [\App\Http\Controllers\FrontOffice\CommentController::class, 'destroy'])->name('comments.destroy');
 
     // Route pour publier un projet
     Route::post('/{project}/publish', [ProjectController::class, 'publish'])->name('projects.publish');

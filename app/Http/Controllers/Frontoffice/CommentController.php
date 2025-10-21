@@ -7,8 +7,8 @@ use App\Models\Comment;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
-class CommentController extends Controller
-{
+class CommentController extends Controller {
+
     /**
      * Enregistre un nouveau commentaire pour un projet
      */
@@ -35,5 +35,17 @@ class CommentController extends Controller
 
         return redirect()->route('projects.show', $project->id)
             ->with('success', 'Commentaire ajouté !');
+    }
+    /**
+     * Supprime un commentaire de l'utilisateur
+     */
+    public function destroy($id)
+    {
+        $comment = Comment::findOrFail($id);
+        if ($comment->user_id !== auth()->id()) {
+            return redirect()->back()->with('error', "Vous n'avez pas le droit de supprimer ce commentaire.");
+        }
+        $comment->delete();
+        return redirect()->back()->with('success', 'Commentaire supprimé !');
     }
 }

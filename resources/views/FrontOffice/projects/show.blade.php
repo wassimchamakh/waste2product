@@ -247,8 +247,8 @@
                         <div class="text-xs text-gray-600 font-medium">Projets</div>
                     </div>
                     <div class="text-center bg-blue-50 rounded-xl p-3">
-                        <div class="text-2xl font-extrabold text-blue-600">{{ $project->user->followers_count ?? 0 }}</div>
-                        <div class="text-xs text-gray-600 font-medium">Abonnés</div>
+                        <div class="text-2xl font-extrabold text-blue-600"><!--{{ $project->user->followers_count ?? 0 }}--></div>
+                        <div class="text-xs text-gray-600 font-medium"><!--Abonnés--></div>
                     </div>
                 </div>
             </div>
@@ -270,26 +270,32 @@
                         </span>
                         <span class="font-extrabold text-xl">{{ $project->views_count ?? 0 }}</span>
                     </div>
-                    <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
+                   <!--  <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-heart"></i>
                             Favoris
                         </span>
                         <span class="font-extrabold text-xl">{{ $project->favorites_count ?? 0 }}</span>
-                    </div>
+                    </div>-->
                     <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-check-circle"></i>
                             Réalisations
                         </span>
-                        <span class="font-extrabold text-xl">{{ $project->completions_count ?? 0 }}</span>
+                        <span class="font-extrabold text-xl">
+                            @auth
+                                {{ \App\Models\Project::where('user_id', auth()->id())->count() }}
+                            @else
+                                0
+                            @endauth
+                        </span>
                     </div>
                     <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
                         <span class="flex items-center gap-2">
                             <i class="fas fa-star"></i>
                             Note moyenne
                         </span>
-                        <span class="font-extrabold text-xl">{{ number_format($project->average_rating ?? 0, 1) }}/5</span>
+                        <span class="font-extrabold text-xl">{{ number_format($averageRating ?? 0, 1) }}/5</span>
                     </div>
                 </div>
             </div>
@@ -329,6 +335,66 @@
             @endif
             
             <!-- Actions -->
+            <!-- Notation par étoiles -->
+            <div class="bg-white rounded-2xl shadow-xl p-6 border border-green-200 mb-8 flex flex-col items-center">
+                <h3 class="text-xl font-extrabold text-green-700 mb-4 flex items-center gap-2">
+                    <i class="fas fa-star text-yellow-400"></i> Noter ce projet
+                </h3>
+                @auth
+                <form id="rating-form" method="POST" action="{{ route('projects.rate', $project->id) }}" class="flex flex-col items-center">
+                    @csrf
+                    <div class="flex items-center gap-2 mb-2" id="star-rating">
+                        @for($i = 1; $i <= 5; $i++)
+                            <span class="star text-3xl cursor-pointer {{ ($userRating ?? 0) >= $i ? 'text-yellow-400' : 'text-gray-300' }}" data-value="{{ $i }}">
+                                <i class="fas fa-star"></i>
+                            </span>
+                        @endfor
+                    </div>
+                    <input type="hidden" name="rating" id="rating-value" value="{{ $userRating ?? 0 }}">
+                    <button type="submit" class="mt-2 bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-bold transition">Valider ma note</button>
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const stars = document.querySelectorAll('#star-rating .star');
+                            const ratingInput = document.getElementById('rating-value');
+                            let selected = parseInt(ratingInput.value) || 0;
+
+                            function updateStars(rating) {
+                                stars.forEach((star, idx) => {
+                                    if (idx < rating) {
+                                        star.classList.remove('text-gray-300');
+                                        star.classList.add('text-yellow-400');
+                                    } else {
+                                        star.classList.remove('text-yellow-400');
+                                        star.classList.add('text-gray-300');
+                                    }
+                                });
+                            }
+
+                            stars.forEach((star, idx) => {
+                                star.addEventListener('mouseenter', function() {
+                                    updateStars(idx + 1);
+                                });
+                                star.addEventListener('mouseleave', function() {
+                                    updateStars(selected);
+                                });
+                                star.addEventListener('click', function() {
+                                    selected = idx + 1;
+                                    ratingInput.value = selected;
+                                    updateStars(selected);
+                                });
+                            });
+                            updateStars(selected);
+                        });
+                    </script>
+                </form>
+                @else
+                <div class="text-gray-500">Connectez-vous pour noter ce projet.</div>
+                @endauth
+                <div class="mt-3 text-sm text-gray-600">
+                    Moyenne&nbsp;: <span class="font-bold text-yellow-600">{{ $averageRating ?? '-' }}</span> / 5
+                    ({{ $ratingsCount ?? 0 }} votes)
+                </div>
+            </div>
             <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
                 <div class="flex items-center gap-3 mb-4">
                     <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
@@ -338,6 +404,23 @@
                 </div>
                 
                 <div class="space-y-3">
+                    {{-- Bouton Publier le projet : toujours visible en haut de la section Actions pour le propriétaire --}}
+                    @if(auth()->check() && $project->user_id === auth()->id())
+                        @if($project->status === 'draft')
+                            <form method="POST" action="{{ route('projects.publish', $project->id) }}" class="w-full mb-3">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-globe"></i>
+                                    Publier le projet
+                                </button>
+                            </form>
+                        @else
+                            <button class="w-full flex items-center justify-center gap-3 bg-gray-400 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg cursor-not-allowed mb-3" disabled>
+                                <i class="fas fa-globe"></i>
+                                Projet déjà publié
+                            </button>
+                        @endif
+                    @endif
                     <!-- Like Button -->
                     @auth
                     <button 
@@ -360,32 +443,41 @@
                     @endguest
 
                     <!-- Favorite Button -->
-                    <button 
-                        onclick="toggleFavorite({{ $project->id }})"
-                        class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                        id="favorite-btn-main"
-                    >
-                        <i class="fas fa-heart"></i>
-                        <span id="favorite-text">{{ $project->is_favorited ?? false ? 'Retirer des favoris' : 'Ajouter aux favoris' }}</span>
-                    </button>
+                   <!-- @if(!(auth()->check() && $project->user_id === auth()->id()))
+                        <button 
+                            onclick="toggleFavorite({{ $project->id }})"
+                            class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                            id="favorite-btn-main"
+                        >
+                            <i class="fas fa-heart"></i>
+                            <span id="favorite-text">{{ $project->is_favorited ?? false ? 'Retirer des favoris' : 'Ajouter aux favoris' }}</span>
+                        </button>-->
 
-                    <!-- Share Button -->
-                    <button 
-                        onclick="shareProject()"
-                        class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                    >
-                        <i class="fas fa-share"></i>
-                        Partager le projet
-                    </button>
+                        <!-- Share Button -->
+                        <button 
+                            onclick="shareProject()"
+                            class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+                        >
+                            <i class="fas fa-share"></i>
+                            Partager le projet
+                        </button>
+                    @endif
 
-                    @if(auth()->check() && $project->user_id === auth()->id() && $project->status !== 'published')
-                        <form method="POST" action="{{ route('projects.publish', $project->id) }}" class="w-full">
-                            @csrf
-                            <button type="submit" class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                    @if(auth()->check() && $project->user_id === auth()->id())
+                        @if($project->status === 'draft')
+                            <form method="POST" action="{{ route('projects.publish', $project->id) }}" class="w-full">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                                    <i class="fas fa-globe"></i>
+                                    Publier le projet
+                                </button>
+                            </form>
+                        @else
+                            <button class="w-full flex items-center justify-center gap-3 bg-gray-400 text-white px-6 py-4 rounded-xl font-bold text-lg shadow-lg cursor-not-allowed" disabled>
                                 <i class="fas fa-globe"></i>
-                                Publier le projet
+                                Projet déjà publié
                             </button>
-                        </form>
+                        @endif
                     @endif
 
                     <!-- Mark as Completed -->
@@ -490,10 +582,20 @@
                                     </span>
                                 </div>
                                 
-                                <p class="text-gray-700 text-lg leading-relaxed mb-4">
-                                    {{ $comment->filtered_content }}
-                                </p>
-                                <!-- Actions du commentaire masquées -->
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="text-gray-700 text-lg leading-relaxed">
+                                        {{ $comment->filtered_content }}
+                                    </p>
+                                    @if(auth()->check() && $comment->user_id === auth()->id())
+                                        <form method="POST" action="{{ route('comments.destroy', $comment->id) }}" onsubmit="return confirm('Voulez-vous vraiment supprimer ce commentaire ?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" title="Supprimer le commentaire" class="ml-2 text-red-500 hover:text-red-700 transition-colors">
+                                                <i class="fas fa-trash-alt fa-lg"></i>
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
                             </div>
                         </div>
                         

@@ -15,9 +15,28 @@ class Project1controller extends Controller
 public function index()
     {
         $categories = Category::all();
-        $projects = Project::with('category')
-            ->latest()
-            ->paginate(10);
+        $query = Project::with('category');
+
+        // Filtre recherche
+        if (request()->filled('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%$search%")
+                  ->orWhere('description', 'like', "%$search%") ;
+            });
+        }
+
+        // Filtre catégorie
+        if (request()->filled('category')) {
+            $query->where('category_id', request('category'));
+        }
+
+        // Filtre difficulté
+        if (request()->filled('difficulty')) {
+            $query->where('difficulty_level', request('difficulty'));
+        }
+
+        $projects = $query->latest()->paginate(10);
 
         return view('BackOffice.projects.index', compact('projects', 'categories'));
     }
@@ -40,20 +59,59 @@ public function index()
         'title'          => 'required|string|max:255',
         'description'    => 'nullable|string',
         'category_id'    => 'required|exists:categories,id',
-        'estimated_time' => 'required|integer|min:1',
+        'estimated_time' => 'required',
+        'photo'          => 'nullable|image|max:2048',
+        'steps'          => 'array',
+        'steps.*.title'  => 'required_with:steps|string|max:255',
+        'steps.*.description' => 'required_with:steps|string',
     ]);
 
-    Project::create([
-        'title'          => $request->title,
-        'description'    => $request->description,
-        'category_id'    => $request->category_id,
-        'estimated_time' => $request->estimated_time,
-        'user_id'        => 5, // Hardcoded for testing
-        'status'         => 'published',
-    ]);
+    try {
+        \DB::beginTransaction();
 
-    return redirect()->route('admin.projects.index')
-                     ->with('success', 'Projet créé avec succès.');
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '_' . \Str::random(10) . '.' . $file->extension();
+            $file->move(public_path('uploads/projects'), $filename);
+            $photoPath = $filename;
+        }
+
+        $project = Project::create([
+            'title'          => $request->title,
+            'description'    => $request->description,
+            'category_id'    => $request->category_id,
+            'estimated_time' => $request->estimated_time,
+            'user_id'        => auth()->id(),
+            'status'         => 'published',
+            'photo'          => $photoPath,
+        ]);
+
+        // Ajout des étapes
+        if ($request->has('steps')) {
+            foreach ($request->steps as $index => $stepData) {
+                if (!empty($stepData['title']) && !empty($stepData['description'])) {
+                    $project->steps()->create([
+                        'title' => $stepData['title'],
+                        'description' => $stepData['description'],
+                        'duration' => $stepData['duration'] ?? '',
+                        'materials_needed' => $stepData['materials_needed'] ?? '',
+                        'tools_required' => $stepData['tools_required'] ?? '',
+                        'step_number' => $index + 1,
+                    ]);
+                }
+            }
+        }
+
+        \DB::commit();
+
+        return redirect()->route('admin.projects.index')
+                         ->with('success', 'Projet créé avec succès.');
+    } catch (\Exception $e) {
+        \DB::rollBack();
+        return back()->withErrors(['error' => 'Une erreur est survenue lors de la création du projet.'])
+                    ->withInput();
+    }
 }
     /**
      * Show the form for editing the specified project.
@@ -73,13 +131,44 @@ public function index()
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
             'category_id' => 'required|exists:categories,id',
+            'photo'       => 'nullable|image|max:2048',
+            'steps'       => 'array',
+            'steps.*.title' => 'required_with:steps|string|max:255',
+            'steps.*.description' => 'required_with:steps|string',
         ]);
+
+        // Gestion de la photo
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $filename = time() . '_' . \Str::random(10) . '.' . $file->extension();
+            $file->move(public_path('uploads/projects'), $filename);
+            $project->photo = $filename;
+        }
 
         $project->update([
             'title'       => $request->title,
             'description' => $request->description,
             'category_id' => $request->category_id,
+            'photo'       => $project->photo,
         ]);
+
+        // Suppression des anciennes étapes
+        $project->steps()->delete();
+        // Ajout des nouvelles étapes
+        if ($request->has('steps')) {
+            foreach ($request->steps as $index => $stepData) {
+                if (!empty($stepData['title']) && !empty($stepData['description'])) {
+                    $project->steps()->create([
+                        'title' => $stepData['title'],
+                        'description' => $stepData['description'],
+                        'duration' => $stepData['duration'] ?? '',
+                        'materials_needed' => $stepData['materials_needed'] ?? '',
+                        'tools_required' => $stepData['tools_required'] ?? '',
+                        'step_number' => $index + 1,
+                    ]);
+                }
+            }
+        }
 
         return redirect()->route('admin.projects.index')
                          ->with('success', 'Projet mis à jour avec succès.');
