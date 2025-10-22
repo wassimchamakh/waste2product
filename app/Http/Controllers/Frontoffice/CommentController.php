@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\FrontOffice;
+namespace App\Http\Controllers\Frontoffice;
 
 use App\Http\Controllers\Controller;
 use App\Models\Comment;

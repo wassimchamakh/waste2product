@@ -126,10 +126,10 @@ Route::group(['prefix' => 'projects'], function() {
 
 
     // Route pour enregistrer un commentaire
-    Route::post('/{project}/comment', [\App\Http\Controllers\FrontOffice\CommentController::class, 'store'])->name('comments.store');
+    Route::post('/{project}/comment', [\App\Http\Controllers\Frontoffice\CommentController::class, 'store'])->name('comments.store');
 
     // Route pour supprimer un commentaire
-    Route::delete('/comment/{comment}', [\App\Http\Controllers\FrontOffice\CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::delete('/comment/{comment}', [\App\Http\Controllers\Frontoffice\CommentController::class, 'destroy'])->name('comments.destroy');
 
     // Route pour publier un projet
     Route::post('/{project}/publish', [ProjectController::class, 'publish'])->name('projects.publish');
