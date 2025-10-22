@@ -13,6 +13,9 @@ use App\Http\Controllers\Frontoffice\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectLikeController;
+use App\Http\Controllers\ForumPostController;
+use App\Http\Controllers\ForumCommentController;
+use App\Http\Controllers\Admin\ForumAdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +24,38 @@ Route::get('/', function () {
 /*Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');*/
+
+// ==========================================
+// FORUM ROUTES (Public + Authenticated)
+// ==========================================
+
+// Forum - Public routes (browsing)
+Route::prefix('forum')->name('forum.')->group(function () {
+    // Public browsing
+    Route::get('/', [ForumPostController::class, 'index'])->name('index');
+    
+    // Authenticated actions
+    Route::middleware('auth')->group(function () {
+        // Posts (create MUST come before {post} to avoid route conflicts)
+        Route::get('/posts/create', [ForumPostController::class, 'create'])->name('posts.create');
+        Route::post('/posts', [ForumPostController::class, 'store'])->name('posts.store');
+        Route::get('/posts/{post}/edit', [ForumPostController::class, 'edit'])->name('posts.edit');
+        Route::put('/posts/{post}', [ForumPostController::class, 'update'])->name('posts.update');
+        Route::delete('/posts/{post}', [ForumPostController::class, 'destroy'])->name('posts.destroy');
+        Route::post('/posts/{post}/vote', [ForumPostController::class, 'vote'])->name('posts.vote');
+        Route::post('/posts/{post}/summarize', [ForumPostController::class, 'summarize'])->name('posts.summarize');
+        
+        // Comments
+        Route::post('/comments', [ForumCommentController::class, 'store'])->name('comments.store');
+        Route::put('/comments/{comment}', [ForumCommentController::class, 'update'])->name('comments.update');
+        Route::delete('/comments/{comment}', [ForumCommentController::class, 'destroy'])->name('comments.destroy');
+        Route::post('/comments/{comment}/vote', [ForumCommentController::class, 'vote'])->name('comments.vote');
+        Route::post('/comments/{comment}/mark-best-answer', [ForumCommentController::class, 'markAsBestAnswer'])->name('comments.markBestAnswer');
+    });
+    
+    // Public post viewing (after auth routes to avoid conflicts)
+    Route::get('/posts/{post}', [ForumPostController::class, 'show'])->name('posts.show');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -114,6 +149,9 @@ Route::prefix('events')->name('Events.')->group(function () {
     Route::delete('/{id}/unregister', [EventController::class, 'unregister'])->name('unregister');
     Route::get('/{id}/participants', [EventController::class, 'participants'])->name('participants');
 });
+
+// (Forum routes moved above to allow public access to index/show)
+
                             // PARTIE BACK OFFICE ADMIIIINN //
 Route::prefix('admin')->name('admin.')->group(function () {
     
@@ -153,6 +191,26 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{event}', [Event1controller::class, 'destroy'])->name('destroy');
         Route::get('/{event}/participants', [Event1controller::class, 'participants'])->name('participants');
         Route::delete('/{event}/participants/{participant}', [Event1controller::class, 'removeParticipant'])->name('removeParticipant');
+    });
+
+    // Forum Admin Routes
+    Route::prefix('/forum')->name('forum.')->group(function () {
+        Route::get('/', [ForumAdminController::class, 'index'])->name('index');
+        Route::get('/posts', [ForumAdminController::class, 'posts'])->name('posts');
+        Route::get('/comments', [ForumAdminController::class, 'comments'])->name('comments');
+        Route::get('/users', [ForumAdminController::class, 'users'])->name('users');
+        
+        // Post moderation
+        Route::delete('/posts/{post}', [ForumAdminController::class, 'destroyPost'])->name('posts.destroy');
+        Route::post('/posts/{post}/pin', [ForumAdminController::class, 'togglePin'])->name('posts.pin');
+        Route::post('/posts/{post}/lock', [ForumAdminController::class, 'toggleLock'])->name('posts.lock');
+        Route::post('/posts/{post}/status', [ForumAdminController::class, 'changeStatus'])->name('posts.status');
+        
+        // Comment moderation
+        Route::delete('/comments/{comment}', [ForumAdminController::class, 'destroyComment'])->name('comments.destroy');
+        
+        // Spam management
+        Route::post('/spam/toggle', [ForumAdminController::class, 'toggleSpam'])->name('spam.toggle');
     });
 });     
 });

@@ -63,6 +63,13 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.forum.index') }}" class="nav-link {{ Request::is('admin/forum*') ? 'active' : '' }}">
+                        <i class="fas fa-comments nav-icon"></i>
+                        <span class="nav-text">Forum</span>
+                        <span class="nav-badge">Nouveau</span>
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a href="/admin/tutoriels" class="nav-link {{ Request::is('admin/tutoriels*') ? 'active' : '' }}">
                         <i class="fas fa-book nav-icon"></i>
                         <span class="nav-text">Tutoriels</span>

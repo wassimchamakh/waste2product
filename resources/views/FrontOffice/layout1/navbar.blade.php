@@ -23,11 +23,14 @@
                 <a href="/dechets" class="nav-link {{ Request::is('dechets*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Déchets
                 </a>
-                <a href="/projects" class="nav-link {{ Request::is('projets*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
+                <a href="/projects" class="nav-link {{ Request::is('projects*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Projets
                 </a>
-                <a href="/events" class="nav-link {{ Request::is('evenements*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
+                <a href="/events" class="nav-link {{ Request::is('events*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Événements
+                </a>
+                <a href="{{ route('forum.index') }}" class="nav-link {{ Request::is('forum*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
+                    💬 Forum
                 </a>
                 <a href="/tutoriels" class="nav-link {{ Request::is('tutoriels*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Tutoriels
@@ -172,11 +175,14 @@ document.querySelectorAll('.notif-link').forEach(function(link) {
                 <a href="/dechets" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('dechets*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Déchets
                 </a>
-                <a href="/projets" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('projets*') ? 'bg-primary text-white' : 'text-gray-600' }}">
+                <a href="/projects" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('projects*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Projets
                 </a>
-                <a href="/evenements" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('evenements*') ? 'bg-primary text-white' : 'text-gray-600' }}">
+                <a href="/events" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('events*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Événements
+                </a>
+                <a href="{{ route('forum.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('forum*') ? 'bg-primary text-white' : 'text-gray-600' }}">
+                    💬 Forum
                 </a>
                 <a href="/tutoriels" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('tutoriels*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Tutoriels
