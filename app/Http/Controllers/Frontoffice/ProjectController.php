@@ -14,6 +14,26 @@ use Illuminate\Support\Str;
 class ProjectController extends Controller
 {
     /**
+     * Enregistrer la note d'un utilisateur pour un projet
+     */
+    public function rate(Request $request, $projectId)
+    {
+        $request->validate([
+            'rating' => 'required|integer|min:1|max:5',
+        ]);
+        if (!auth()->check()) {
+            return redirect()->back()->with('error', 'Vous devez être connecté pour noter.');
+        }
+        $userId = auth()->id();
+        $rating = $request->input('rating');
+        $project = Project::findOrFail($projectId);
+        $projectRating = \App\Models\ProjectRating::updateOrCreate(
+            [ 'user_id' => $userId, 'project_id' => $project->id ],
+            [ 'rating' => $rating ]
+        );
+        return redirect()->back()->with('success', 'Votre note a bien été enregistrée !');
+    }
+    /**
      * Display a listing of projects with filters
      */
     public function index(Request $request)
@@ -26,9 +46,18 @@ class ProjectController extends Controller
             $query->where('category_id', $request->category);
         }
 
-        // Filter by difficulty
+        // Filter by difficulty (accept both EN and FR values)
         if ($request->filled('difficulty')) {
-            $query->where('difficulty_level', $request->difficulty);
+            $difficultyMap = [
+                'easy' => 'facile',
+                'medium' => 'intermédiaire',
+                'hard' => 'difficile',
+                'facile' => 'facile',
+                'intermédiaire' => 'intermédiaire',
+                'difficile' => 'difficile',
+            ];
+            $difficulty = $difficultyMap[$request->difficulty] ?? $request->difficulty;
+            $query->where('difficulty_level', $difficulty);
         }
 
         // Filter by duration
@@ -176,26 +205,42 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::with(['category', 'user', 'steps' => function($query) {
-                             $query->orderBy('step_number');
-                         }])
-                         ->findOrFail($id);
+            $query->orderBy('step_number');
+        }])->findOrFail($id);
 
         // Incrémenter le compteur de vues
         $project->increment('views_count');
 
         // Get similar projects
         $similarProjects = Project::with(['category', 'user'])
-                                 ->where('category_id', $project->category_id)
-                                 ->where('id', '!=', $project->id)
-                                 ->where('status', 'published')
-                                 ->latest()
-                                 ->take(3)
-                                 ->get();
+            ->where('category_id', $project->category_id)
+            ->where('id', '!=', $project->id)
+            ->where('status', 'published')
+            ->latest()
+            ->take(3)
+            ->get();
 
         // Nombre de projets du créateur
         $creatorProjectsCount = Project::where('user_id', $project->user_id)->count();
 
-        return view('FrontOffice.projects.show', compact('project', 'similarProjects', 'creatorProjectsCount'));
+        // Calcul de la note moyenne et du nombre de votes
+        $averageRating = \App\Models\ProjectRating::where('project_id', $project->id)->avg('rating');
+        $ratingsCount = \App\Models\ProjectRating::where('project_id', $project->id)->count();
+        $userRating = null;
+        if (auth()->check()) {
+            $userRating = \App\Models\ProjectRating::where('project_id', $project->id)
+                ->where('user_id', auth()->id())
+                ->value('rating');
+        }
+
+        return view('FrontOffice.projects.show', compact(
+            'project',
+            'similarProjects',
+            'creatorProjectsCount',
+            'averageRating',
+            'ratingsCount',
+            'userRating'
+        ));
     }
 
     /**

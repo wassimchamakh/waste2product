@@ -469,14 +469,18 @@
             <div class="hidden lg:flex justify-between items-center pt-8 border-t border-gray-200 dark:border-gray-700">
                 @if($step->step_number > 1)
                     @php $prevStep = $allSteps->where('step_number', $step->step_number - 1)->first(); @endphp
-                    <a href="{{ route('tutorials.step', [$tutorial->slug, $prevStep->step_number]) }}" 
-                       class="flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                        <i class="fas fa-chevron-left mr-2"></i>
-                        <div class="text-left">
-                            <div class="text-sm font-medium">Étape Précédente</div>
-                            <div class="text-xs text-gray-500 dark:text-gray-400">{{ $prevStep->title }}</div>
-                        </div>
-                    </a>
+                    @if($prevStep)
+                        <a href="{{ route('tutorials.step', [$tutorial->slug, $prevStep->step_number]) }}" 
+                           class="flex items-center px-6 py-3 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                            <i class="fas fa-chevron-left mr-2"></i>
+                            <div class="text-left">
+                                <div class="text-sm font-medium">Étape Précédente</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">{{ $prevStep->title }}</div>
+                            </div>
+                        </a>
+                    @else
+                        <div></div>
+                    @endif
                 @else
                     <div></div>
                 @endif
@@ -489,14 +493,16 @@
 
                 @if($step->step_number < $allSteps->count())
                     @php $nextStep = $allSteps->where('step_number', $step->step_number + 1)->first(); @endphp
-                    <a href="{{ route('tutorials.step', [$tutorial->slug, $nextStep->step_number]) }}" 
-                       class="flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-green-600 transition-colors">
-                        <div class="text-right">
-                            <div class="text-sm font-medium">Étape Suivante</div>
-                            <div class="text-xs text-green-200">{{ $nextStep->title }}</div>
-                        </div>
-                        <i class="fas fa-chevron-right ml-2"></i>
-                    </a>
+                    @if($nextStep)
+                        <a href="{{ route('tutorials.step', [$tutorial->slug, $nextStep->step_number]) }}" 
+                           class="flex items-center px-6 py-3 bg-primary text-white rounded-lg hover:bg-green-600 transition-colors">
+                            <div class="text-right">
+                                <div class="text-sm font-medium">Étape Suivante</div>
+                                <div class="text-xs text-green-200">{{ $nextStep->title }}</div>
+                            </div>
+                            <i class="fas fa-chevron-right ml-2"></i>
+                        </a>
+                    @endif
                 @else
                     <a href="{{ route('tutorials.complete', $tutorial->id) }}" 
                        class="flex items-center px-6 py-3 bg-secondary text-white rounded-lg hover:bg-teal-400 transition-colors">
@@ -522,10 +528,14 @@
     <div class="flex items-center justify-between p-4">
         @if($step->step_number > 1)
             @php $prevStep = $allSteps->where('step_number', $step->step_number - 1)->first(); @endphp
-            <a href="{{ route('tutorials.step', [$tutorial->slug, $prevStep->step_number]) }}" 
-               class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg">
-                <i class="fas fa-chevron-left mr-2"></i>Précédent
-            </a>
+            @if($prevStep)
+                <a href="{{ route('tutorials.step', [$tutorial->slug, $prevStep->step_number]) }}" 
+                   class="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg">
+                    <i class="fas fa-chevron-left mr-2"></i>Précédent
+                </a>
+            @else
+                <div></div>
+            @endif
         @else
             <div></div>
         @endif
@@ -536,10 +546,14 @@
 
         @if($step->step_number < $allSteps->count())
             @php $nextStep = $allSteps->where('step_number', $step->step_number + 1)->first(); @endphp
-            <a href="{{ route('tutorials.step', [$tutorial->slug, $nextStep->step_number]) }}" 
-               class="flex items-center px-4 py-2 bg-primary text-white rounded-lg">
-                Suivant<i class="fas fa-chevron-right ml-2"></i>
-            </a>
+            @if($nextStep)
+                <a href="{{ route('tutorials.step', [$tutorial->slug, $nextStep->step_number]) }}" 
+                   class="flex items-center px-4 py-2 bg-primary text-white rounded-lg">
+                    Suivant<i class="fas fa-chevron-right ml-2"></i>
+                </a>
+            @else
+                <div></div>
+            @endif
         @else
             <a href="{{ route('tutorials.complete', $tutorial->id) }}" 
                class="flex items-center px-4 py-2 bg-secondary text-white rounded-lg">

@@ -17,20 +17,20 @@
             
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#home" class="nav-link {{ Request::is('/') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
+                <a href="/" class="nav-link {{ Request::is('/') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Accueil
                 </a>
-                <a href="#dechets" class="nav-link text-gray-600 hover:text-primary">
+                <a href="{{ route('dechets.index') }}" class="nav-link {{ Request::is('dechets*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Déchets
                 </a>
-                <a href="#projets" class="nav-link text-gray-600 hover:text-primary">
+                <a href="{{ route('projects.index') }}" class="nav-link {{ Request::is('projects*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Projets
                 </a>
-                <a href="#evenements" class="nav-link text-gray-600 hover:text-primary">
+                <a href="{{ route('Events.index') }}" class="nav-link {{ Request::is('events*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
                     Événements
                 </a>
-                <a href="#tutoriels" class="nav-link text-gray-600 hover:text-primary">
-                    Tutoriels
+                <a href="{{ route('forum.index') }}" class="nav-link {{ Request::is('forum*') ? 'text-primary font-medium' : 'text-gray-600 hover:text-primary' }}">
+                    💬 Forum
                 </a>
             </div>
             
@@ -63,20 +63,20 @@
             </div>
             
             <nav class="space-y-4">
-                <a href="#home" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('/') ? 'bg-primary text-white' : 'text-gray-600' }}">
+                <a href="/" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('/') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Accueil
                 </a>
-                <a href="#dechets" class="mobile-nav-link block py-3 px-4 rounded-lg text-gray-600">
+                <a href="{{ route('dechets.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('dechets*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Déchets
                 </a>
-                <a href="#projets" class="mobile-nav-link block py-3 px-4 rounded-lg text-gray-600">
+                <a href="{{ route('projects.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('projects*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Projets
                 </a>
-                <a href="#evenements" class="mobile-nav-link block py-3 px-4 rounded-lg text-gray-600">
+                <a href="{{ route('Events.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('events*') ? 'bg-primary text-white' : 'text-gray-600' }}">
                     Événements
                 </a>
-                <a href="#tutoriels" class="mobile-nav-link block py-3 px-4 rounded-lg text-gray-600">
-                    Tutoriels
+                <a href="{{ route('forum.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg {{ Request::is('forum*') ? 'bg-primary text-white' : 'text-gray-600' }}">
+                    💬 Forum
                 </a>
             </nav>
             

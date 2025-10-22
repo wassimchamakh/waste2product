@@ -17,6 +17,10 @@ use App\Http\Controllers\Frontoffice\ProjectController;
 use App\Http\Controllers\Frontoffice\TutorialController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectLikeController;
+use App\Http\Controllers\ForumPostController;
+use App\Http\Controllers\ForumCommentController;
+use App\Http\Controllers\Admin\ForumAdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -26,6 +30,38 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+// ==========================================
+// FORUM ROUTES (Public + Authenticated)
+// ==========================================
+
+// Forum - Public routes (browsing)
+Route::prefix('forum')->name('forum.')->group(function () {
+    // Public browsing
+    Route::get('/', [ForumPostController::class, 'index'])->name('index');
+    
+    // Authenticated actions
+    Route::middleware('auth')->group(function () {
+        // Posts (create MUST come before {post} to avoid route conflicts)
+        Route::get('/posts/create', [ForumPostController::class, 'create'])->name('posts.create');
+        Route::post('/posts', [ForumPostController::class, 'store'])->name('posts.store');
+        Route::get('/posts/{post}/edit', [ForumPostController::class, 'edit'])->name('posts.edit');
+        Route::put('/posts/{post}', [ForumPostController::class, 'update'])->name('posts.update');
+        Route::delete('/posts/{post}', [ForumPostController::class, 'destroy'])->name('posts.destroy');
+        Route::post('/posts/{post}/vote', [ForumPostController::class, 'vote'])->name('posts.vote');
+        Route::post('/posts/{post}/summarize', [ForumPostController::class, 'summarize'])->name('posts.summarize');
+        
+        // Comments
+        Route::post('/comments', [ForumCommentController::class, 'store'])->name('comments.store');
+        Route::put('/comments/{comment}', [ForumCommentController::class, 'update'])->name('comments.update');
+        Route::delete('/comments/{comment}', [ForumCommentController::class, 'destroy'])->name('comments.destroy');
+        Route::post('/comments/{comment}/vote', [ForumCommentController::class, 'vote'])->name('comments.vote');
+        Route::post('/comments/{comment}/mark-best-answer', [ForumCommentController::class, 'markAsBestAnswer'])->name('comments.markBestAnswer');
+    });
+    
+    // Public post viewing (after auth routes to avoid conflicts)
+    Route::get('/posts/{post}', [ForumPostController::class, 'show'])->name('posts.show');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -80,6 +116,8 @@ Route::prefix('dechets')->name('dechets.')->group(function () {
 });
 
 Route::group(['prefix' => 'projects'], function() {
+    // Route pour noter un projet
+    Route::post('/{project}/rate', [ProjectController::class, 'rate'])->name('projects.rate');
     Route::get('/', [ProjectController::class, 'index'])->name('projects.index');
     Route::get('/mesprojets', [ProjectController::class, 'myProjects'])->name('projects.my');
     Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
@@ -90,8 +128,12 @@ Route::group(['prefix' => 'projects'], function() {
     Route::delete('/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
     Route::post('/{project}/favorite', [ProjectController::class, 'toggleFavorite'])->name('projects.favorite');
 
+
     // Route pour enregistrer un commentaire
-    Route::post('/{project}/comment', [\App\Http\Controllers\FrontOffice\CommentController::class, 'store'])->name('comments.store');
+    Route::post('/{project}/comment', [\App\Http\Controllers\Frontoffice\CommentController::class, 'store'])->name('comments.store');
+
+    // Route pour supprimer un commentaire
+    Route::delete('/comment/{comment}', [\App\Http\Controllers\Frontoffice\CommentController::class, 'destroy'])->name('comments.destroy');
 
     // Route pour publier un projet
     Route::post('/{project}/publish', [ProjectController::class, 'publish'])->name('projects.publish');
@@ -293,9 +335,32 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}', [\App\Http\Controllers\Backoffice\NotificationController::class, 'destroy'])->name('destroy');
         Route::delete('/read/all', [\App\Http\Controllers\Backoffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
     });
-});     
+     
 
-    // FrontOffice Notifications (for regular users)
+    
+
+
+    // Forum Admin Routes
+    Route::prefix('/forum')->name('forum.')->group(function () {
+        Route::get('/', [ForumAdminController::class, 'index'])->name('index');
+        Route::get('/posts', [ForumAdminController::class, 'posts'])->name('posts');
+        Route::get('/comments', [ForumAdminController::class, 'comments'])->name('comments');
+        Route::get('/users', [ForumAdminController::class, 'users'])->name('users');
+        
+        // Post moderation
+        Route::delete('/posts/{post}', [ForumAdminController::class, 'destroyPost'])->name('posts.destroy');
+        Route::post('/posts/{post}/pin', [ForumAdminController::class, 'togglePin'])->name('posts.pin');
+        Route::post('/posts/{post}/lock', [ForumAdminController::class, 'toggleLock'])->name('posts.lock');
+        Route::post('/posts/{post}/status', [ForumAdminController::class, 'changeStatus'])->name('posts.status');
+        
+        // Comment moderation
+        Route::delete('/comments/{comment}', [ForumAdminController::class, 'destroyComment'])->name('comments.destroy');
+        
+        // Spam management
+        Route::post('/spam/toggle', [ForumAdminController::class, 'toggleSpam'])->name('spam.toggle');
+    });
+});     
+// FrontOffice Notifications (for regular users)
     Route::prefix('notifications')->name('notifications.')->group(function () {
         Route::get('/', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'index'])->name('index');
         Route::post('/mark-all-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
@@ -304,6 +369,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/read/all', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
     });
 }); // Close auth middleware group
+
+Route::post('/projects/{project}/toggle-like', [ProjectLikeController::class, 'toggle'])->middleware('auth')->name('projects.toggleLike');
+
+// Route pour effacer toutes les notifications du user connecté
+Route::post('/notifications/clear', function() {
+    Auth::user()->notifications()->delete();
+    return back();
+})->name('notifications.clear')->middleware('auth');
+
+// Route pour marquer toutes les notifications comme lues
+Route::post('/notifications/markAsRead', function() {
+    Auth::user()->unreadNotifications->markAsRead();
+    return response()->json(['status' => 'ok']);
+})->name('notifications.markAsRead')->middleware('auth');
+
+// Route pour marquer une notification comme lue individuellement
+Route::post('/notifications/read/{id}', function($id) {
+    $notif = Auth::user()->notifications()->find($id);
+    if($notif) $notif->markAsRead();
+    return response()->json(['status' => 'ok']);
+})->name('notifications.read')->middleware('auth');
+
 
 // Stripe Webhook - No authentication required (Stripe sends requests directly)
 Route::post('/webhooks/stripe', [PaymentController::class, 'handleWebhook'])->name('webhooks.stripe');

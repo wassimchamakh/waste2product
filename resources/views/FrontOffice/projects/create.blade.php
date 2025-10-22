@@ -229,14 +229,23 @@
                         Étapes du projet
                         <span class="text-red-500">*</span>
                     </h2>
-                    <button 
-                        type="button" 
-                        onclick="addStep()" 
-                        class="inline-flex items-center gap-2 bg-secondary hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
-                    >
-                        <i class="fas fa-plus"></i>
-                        Ajouter une étape
-                    </button>
+                    <div class="flex gap-2">
+                        <button 
+                            type="button" 
+                            onclick="addStep()" 
+                            class="inline-flex items-center gap-2 bg-secondary hover:bg-orange-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                        >
+                            <i class="fas fa-plus"></i>
+                            Ajouter une étape
+                        </button>
+                        <button 
+                            type="button" 
+                            onclick="suggestStep()" 
+                            class="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                        >
+                            <i class="fas fa-magic"></i> Suggérer une étape
+                        </button>
+                    </div>
                 </div>
 
                 <div id="steps-container">
@@ -347,6 +356,7 @@
                                 <li>• Soyez précis et détaillé dans vos descriptions</li>
                                 <li>• Listez tous les matériaux et outils nécessaires</li>
                                 <li>• Indiquez les temps de réalisation pour planifier</li>
+                               
                                 <li>• Pensez aux débutants qui suivront votre projet</li>
                             </ul>
                         </div>
@@ -377,6 +387,95 @@
 </div>
 
 <script>
+// Suggestions d'étapes types
+const stepSuggestions = [
+    {
+        title: "Préparer les matériaux",
+        duration: "10 min",
+        materials_needed: "Liste des matériaux nécessaires",
+        tools_required: "Liste des outils",
+        description: "Rassemblez tous les matériaux et outils nécessaires avant de commencer."
+    },
+    {
+        title: "Assembler les pièces",
+        duration: "20 min",
+        materials_needed: "Pièces à assembler",
+        tools_required: "Tournevis, marteau",
+        description: "Suivez les instructions pour assembler les différentes parties du projet."
+    },
+    {
+        title: "Vérifier la solidité",
+        duration: "5 min",
+        materials_needed: "",
+        tools_required: "",
+        description: "Testez la solidité et la stabilité de votre réalisation."
+    },
+    {
+        title: "Nettoyer la zone de travail",
+        duration: "5 min",
+        materials_needed: "Chiffon, balai",
+        tools_required: "",
+        description: "Nettoyez la zone de travail et rangez les outils."
+    }
+];
+
+function suggestStep() {
+    // Afficher le loader
+    const container = document.getElementById('steps-container');
+    const loaderId = 'suggestion-loader';
+    let loader = document.getElementById(loaderId);
+    if (!loader) {
+        loader = document.createElement('div');
+        loader.id = loaderId;
+        loader.className = 'flex items-center justify-center my-4';
+        loader.innerHTML = '<span class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mr-2"></span><span class="text-primary font-semibold">Génération de la suggestion...</span>';
+        container.parentNode.insertBefore(loader, container);
+    }
+    // Attendre 5 secondes puis afficher la suggestion
+    setTimeout(function() {
+        loader.remove();
+        const suggestion = stepSuggestions[Math.floor(Math.random() * stepSuggestions.length)];
+        const index = container.children.length;
+        const newStep = document.createElement('div');
+        newStep.className = 'step-item bg-gray-50 dark:bg-gray-700 rounded-xl p-6 mb-6';
+        newStep.innerHTML = `
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                    <span class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white font-bold text-sm step-number">${index + 1}</span>
+                    Étape ${index + 1}
+                </h3>
+                <button type="button" onclick="removeStep(this)" class="text-red-500 hover:text-red-700 remove-step" title="Supprimer cette étape">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Titre de l'étape <span class="text-red-500">*</span></label>
+                    <input type="text" name="steps[${index}][title]" class="form-input w-full rounded-lg" value="${suggestion.title}" required>
+                </div>
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Durée estimée</label>
+                    <input type="text" name="steps[${index}][duration]" class="form-input w-full rounded-lg" value="${suggestion.duration}">
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Matériaux nécessaires</label>
+                    <textarea name="steps[${index}][materials_needed]" class="form-textarea w-full rounded-lg" rows="2">${suggestion.materials_needed}</textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Outils requis</label>
+                    <textarea name="steps[${index}][tools_required]" class="form-textarea w-full rounded-lg" rows="2">${suggestion.tools_required}</textarea>
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Description de l'étape</label>
+                <textarea name="steps[${index}][description]" class="form-textarea w-full rounded-lg" rows="3" required>${suggestion.description}</textarea>
+            </div>
+        `;
+        container.appendChild(newStep);
+    }, 5000);
+}
 let stepCount = 1;
 
 function updateImpactScore(value) {

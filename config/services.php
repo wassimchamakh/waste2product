@@ -47,4 +47,10 @@ return [
         'currency' => env('STRIPE_CURRENCY', 'tnd'),
     ],
 
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+        'api_url' => 'https://generativelanguage.googleapis.com/v1beta/models/',
+    ],
+
 ];

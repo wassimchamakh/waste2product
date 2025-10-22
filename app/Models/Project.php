@@ -38,6 +38,11 @@ class Project extends Model
     {
         return $this->hasMany(ProjectStep::class)->orderBy('step_number');
     }
+    
+    public function likes()
+    {
+        return $this->hasMany(ProjectLike::class);
+    }
 
     public function user()
     {

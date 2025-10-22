@@ -24,6 +24,7 @@ class DatabaseSeeder extends Seeder
             TutorialSeeder::class,
             TutoStepSeeder::class,
             TutoCommentSeeder::class,
+            ForumSeeder::class,
         ]);
 
         $this->command->info('');

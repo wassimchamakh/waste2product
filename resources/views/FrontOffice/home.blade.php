@@ -361,7 +361,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('dechets.index') }}" class="block w-full bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center text-sm font-semibold py-2.5 rounded-lg transition-all transform group-hover:scale-105">
+                        <a href="{{ route('dechets.index') }}" class="block w-full bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center text-sm font-semibold py-2.5 rounded-lg shadow-md transition-all transform hover:scale-105">
                             Voir détails
                         </a>
                     </div>
