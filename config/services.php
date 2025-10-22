@@ -35,4 +35,16 @@ return [
         ],
     ],
 
+    'sentiment_api' => [
+        'url' => env('SENTIMENT_API_URL', 'http://127.0.0.1:5000'),
+        'timeout' => env('SENTIMENT_API_TIMEOUT', 10),
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'currency' => env('STRIPE_CURRENCY', 'tnd'),
+    ],
+
 ];

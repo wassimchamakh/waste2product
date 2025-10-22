@@ -96,6 +96,19 @@
                             </select>
                         </div>
 
+                        @if($event->is_paid)
+                        <!-- Payment Status Filter -->
+                        <div class="md:w-44">
+                            <select id="payment-status-filter-modal" class="w-full px-3 py-2 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option value="">Tous les paiements</option>
+                                <option value="completed">✅ Payé</option>
+                                <option value="pending_payment">⏳ En attente</option>
+                                <option value="failed">❌ Échoué</option>
+                                <option value="refunded">🔄 Remboursé</option>
+                            </select>
+                        </div>
+                        @endif
+
                         <!-- Export -->
                         <div class="relative">
                             <button id="export-btn-modal" class="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-orange-500 transition-colors text-sm">
@@ -169,6 +182,17 @@
                                     <th class="text-left px-4 py-2 text-xs font-semibold text-gray-600 uppercase">
                                         Statut
                                     </th>
+                                    @if($event->is_paid)
+                                    <th class="text-left px-4 py-2 text-xs font-semibold text-gray-600 uppercase">
+                                        Paiement
+                                    </th>
+                                    <th class="text-left px-4 py-2 text-xs font-semibold text-gray-600 uppercase">
+                                        Montant
+                                    </th>
+                                    <th class="text-left px-4 py-2 text-xs font-semibold text-gray-600 uppercase">
+                                        Facture
+                                    </th>
+                                    @endif
                                     <th class="text-left px-4 py-2 text-xs font-semibold text-gray-600 uppercase">
                                         Contact
                                     </th>
@@ -309,6 +333,9 @@
     function setupEventListenersModal() {
         document.getElementById('search-participants-modal')?.addEventListener('input', handleSearchModal);
         document.getElementById('status-filter-modal')?.addEventListener('change', handleStatusFilterModal);
+        @if($event->is_paid)
+        document.getElementById('payment-status-filter-modal')?.addEventListener('change', handleStatusFilterModal);
+        @endif
         document.getElementById('select-all-modal')?.addEventListener('change', handleSelectAllModal);
         
         const exportBtn = document.getElementById('export-btn-modal');
@@ -370,6 +397,23 @@
 
     function exportToCSV(participants) {
         try {
+            @if($event->is_paid)
+            const headers = ['Nom', 'Email', 'Téléphone', 'Date d\'inscription', 'Statut', 'Paiement', 'Montant', 'Facture', 'Date de paiement'];
+            const csvContent = [
+                headers.join(','),
+                ...participants.map(participant => [
+                    `"${participant.name}"`,
+                    `"${participant.email}"`,
+                    `"${participant.phone}"`,
+                    `"${formatDateForExport(participant.registration_date)}"`,
+                    `"${getStatusLabel(participant.status)}"`,
+                    `"${getPaymentStatusLabel(participant.payment_status)}"`,
+                    `"${participant.amount_paid || '0.00'} EUR"`,
+                    `"${participant.invoice_number || 'N/A'}"`,
+                    `"${participant.payment_completed_at ? formatDateForExport(participant.payment_completed_at) : 'N/A'}"`
+                ].join(','))
+            ].join('\n');
+            @else
             const headers = ['Nom', 'Email', 'Téléphone', 'Date d\'inscription', 'Statut'];
             const csvContent = [
                 headers.join(','),
@@ -381,6 +425,7 @@
                     `"${getStatusLabel(participant.status)}"`
                 ].join(','))
             ].join('\n');
+            @endif
 
             downloadFile(csvContent, 'participants.csv', 'text/csv;charset=utf-8;');
             showNotificationModal('Export CSV terminé avec succès');
@@ -391,6 +436,41 @@
 
     function exportToExcel(participants) {
         try {
+            @if($event->is_paid)
+            let excelContent = `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Date d'inscription</th>
+                            <th>Statut</th>
+                            <th>Paiement</th>
+                            <th>Montant</th>
+                            <th>Facture</th>
+                            <th>Date de paiement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            participants.forEach(participant => {
+                excelContent += `
+                    <tr>
+                        <td>${participant.name}</td>
+                        <td>${participant.email}</td>
+                        <td>${participant.phone}</td>
+                        <td>${formatDateForExport(participant.registration_date)}</td>
+                        <td>${getStatusLabel(participant.status)}</td>
+                        <td>${getPaymentStatusLabel(participant.payment_status)}</td>
+                        <td>${participant.amount_paid || '0.00'} EUR</td>
+                        <td>${participant.invoice_number || 'N/A'}</td>
+                        <td>${participant.payment_completed_at ? formatDateForExport(participant.payment_completed_at) : 'N/A'}</td>
+                    </tr>
+                `;
+            });
+            @else
             let excelContent = `
                 <table>
                     <thead>
@@ -416,6 +496,7 @@
                     </tr>
                 `;
             });
+            @endif
 
             excelContent += '</tbody></table>';
 
@@ -431,6 +512,70 @@
             const printWindow = window.open('', '_blank');
             const eventTitle = '{{ $event->title ?? "Événement" }}';
             
+            @if($event->is_paid)
+            let pdfContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Liste des participants - ${eventTitle}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; }
+                        h1 { color: #2E7D47; border-bottom: 2px solid #2E7D47; padding-bottom: 10px; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 11px; }
+                        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                        th { background-color: #f8f9fa; font-weight: bold; }
+                        tr:nth-child(even) { background-color: #f8f9fa; }
+                        .status-confirmed { color: #06D6A0; font-weight: bold; }
+                        .status-registered { color: #F4A261; font-weight: bold; }
+                        .status-attended { color: #2E7D47; font-weight: bold; }
+                        .status-cancelled { color: #E76F51; font-weight: bold; }
+                        .payment-completed { color: #06D6A0; font-weight: bold; }
+                        .payment-pending_payment { color: #F4A261; font-weight: bold; }
+                        .payment-failed { color: #E76F51; font-weight: bold; }
+                        .payment-refunded { color: #9333ea; font-weight: bold; }
+                        .footer { margin-top: 30px; text-align: center; color: #666; font-size: 12px; }
+                    </style>
+                </head>
+                <body>
+                    <h1>Liste des participants</h1>
+                    <p><strong>Événement:</strong> ${eventTitle}</p>
+                    <p><strong>Total des participants:</strong> ${participants.length}</p>
+                    <p><strong>Date d'export:</strong> ${new Date().toLocaleDateString('fr-FR')}</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Email</th>
+                                <th>Téléphone</th>
+                                <th>Inscription</th>
+                                <th>Statut</th>
+                                <th>Paiement</th>
+                                <th>Montant</th>
+                                <th>Facture</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            participants.forEach(participant => {
+                const statusClass = `status-${participant.status}`;
+                const paymentClass = `payment-${participant.payment_status}`;
+                pdfContent += `
+                    <tr>
+                        <td>${participant.name}</td>
+                        <td>${participant.email}</td>
+                        <td>${participant.phone}</td>
+                        <td>${formatDateForExport(participant.registration_date)}</td>
+                        <td class="${statusClass}">${getStatusLabel(participant.status)}</td>
+                        <td class="${paymentClass}">${getPaymentStatusLabel(participant.payment_status)}</td>
+                        <td>${participant.amount_paid || '0.00'} EUR</td>
+                        <td>${participant.invoice_number || 'N/A'}</td>
+                    </tr>
+                `;
+            });
+            @else
             let pdfContent = `
                 <!DOCTYPE html>
                 <html>
@@ -482,6 +627,7 @@
                     </tr>
                 `;
             });
+            @endif
 
             pdfContent += `
                         </tbody>
@@ -538,6 +684,32 @@
         return labels[status] || status;
     }
 
+    function getPaymentStatusLabel(status) {
+        const labels = {
+            'completed': 'Payé',
+            'pending_payment': 'En attente',
+            'failed': 'Échoué',
+            'refunded': 'Remboursé',
+            'partially_refunded': 'Remb. partiel',
+            'expired': 'Expiré',
+            'not_required': 'Non requis'
+        };
+        return labels[status] || status;
+    }
+
+    function getPaymentStatusBadge(status) {
+        const badges = {
+            'completed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800"><i class="fas fa-check-circle mr-1"></i>Payé</span>',
+            'pending_payment': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800"><i class="fas fa-clock mr-1"></i>En attente</span>',
+            'failed': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800"><i class="fas fa-times-circle mr-1"></i>Échoué</span>',
+            'refunded': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800"><i class="fas fa-undo mr-1"></i>Remboursé</span>',
+            'partially_refunded': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800"><i class="fas fa-undo mr-1"></i>Remb. partiel</span>',
+            'expired': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800"><i class="fas fa-hourglass-end mr-1"></i>Expiré</span>',
+            'not_required': '<span class="px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800"><i class="fas fa-gift mr-1"></i>Gratuit</span>'
+        };
+        return badges[status] || `<span class="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">${status}</span>`;
+    }
+
     // Search and filter functions
     function handleSearchModal() {
         const searchTerm = document.getElementById('search-participants-modal').value.toLowerCase();
@@ -568,6 +740,15 @@
                 participant.status === statusFilter
             );
         }
+        
+        @if($event->is_paid)
+        const paymentStatusFilter = document.getElementById('payment-status-filter-modal')?.value;
+        if (paymentStatusFilter) {
+            filteredParticipantsModal = filteredParticipantsModal.filter(participant => 
+                participant.payment_status === paymentStatusFilter
+            );
+        }
+        @endif
     }
 
     function handleSelectAllModal() {
@@ -642,6 +823,83 @@
         tbody.innerHTML = paginatedParticipants.map(participant => {
             const isSelected = selectedParticipantsModal.has(participant.id);
             const avatarColor = getAvatarColor(participant.name);
+            
+            @if($event->is_paid)
+            return `
+                <tr class="participant-row hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}" data-id="${participant.id}">
+                    <td class="px-4 py-3">
+                        <input type="checkbox" class="participant-checkbox-modal text-primary focus:ring-primary rounded" 
+                               value="${participant.id}" ${isSelected ? 'checked' : ''}
+                               onchange="handleParticipantSelectModal(this)">
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex items-center">
+                            <div class="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3" style="background-color: ${avatarColor}">
+                                ${participant.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                                <div class="font-medium text-sm text-gray-900">${participant.name}</div>
+                                <div class="text-xs text-gray-500">${participant.email}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-500">
+                        ${formatDateModal(participant.registration_date)}
+                    </td>
+                    <td class="px-4 py-3">
+                        <select class="status-select text-xs border-0 bg-transparent ${getStatusClassModal(participant.status)} font-medium rounded px-2 py-1" 
+                                data-id="${participant.id}" onchange="updateParticipantStatusModal(this)">
+                            <option value="registered" ${participant.status === 'registered' ? 'selected' : ''}>⏳ En attente</option>
+                            <option value="confirmed" ${participant.status === 'confirmed' ? 'selected' : ''}>✅ Confirmé</option>
+                            <option value="attended" ${participant.status === 'attended' ? 'selected' : ''}>🎯 Présent</option>
+                            <option value="cancelled" ${participant.status === 'cancelled' ? 'selected' : ''}>❌ Annulé</option>
+                        </select>
+                    </td>
+                    <td class="px-4 py-3">
+                        ${getPaymentStatusBadge(participant.payment_status)}
+                    </td>
+                    <td class="px-4 py-3">
+                        <span class="text-sm font-semibold text-gray-900">
+                            ${participant.amount_paid ? parseFloat(participant.amount_paid).toFixed(2) : '0.00'} EUR
+                        </span>
+                        ${participant.payment_completed_at ? `
+                        <div class="text-xs text-gray-500 mt-1">
+                            <i class="fas fa-calendar-check mr-1"></i>${formatDateModal(participant.payment_completed_at)}
+                        </div>
+                        ` : ''}
+                    </td>
+                    <td class="px-4 py-3">
+                        ${participant.invoice_number ? `
+                        <span class="text-xs font-mono bg-gray-100 px-2 py-1 rounded">${participant.invoice_number}</span>
+                        ` : '<span class="text-xs text-gray-400">N/A</span>'}
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex space-x-2 text-sm">
+                            <a href="mailto:${participant.email}" class="text-primary hover:text-green-600" title="${participant.email}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            ${participant.phone !== 'N/A' ? `
+                            <a href="tel:${participant.phone}" class="text-primary hover:text-green-600" title="${participant.phone}">
+                                <i class="fas fa-phone"></i>
+                            </a>
+                            ` : ''}
+                        </div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="flex justify-end space-x-2 text-sm">
+                            <button onclick="showEmailModalModal([${participant.id}])" 
+                                    class="text-primary hover:text-green-600" title="Envoyer email">
+                                <i class="fas fa-envelope"></i>
+                            </button>
+                            <button onclick="removeParticipantModal(${participant.id})" 
+                                    class="text-accent hover:text-red-600" title="Supprimer">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            @else
             return `
                 <tr class="participant-row hover:bg-gray-50 ${isSelected ? 'bg-blue-50' : ''}" data-id="${participant.id}">
                     <td class="px-4 py-3">
@@ -698,6 +956,7 @@
                     </td>
                 </tr>
             `;
+            @endif
         }).join('');
         
         updatePaginationModal();

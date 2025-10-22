@@ -11,6 +11,8 @@ use App\Http\Controllers\Backoffice\Dechet1Controller;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\Tutorial1Controller;
 use App\Http\Controllers\Frontoffice\EventController;
+use App\Http\Controllers\Frontoffice\PaymentController;
+use App\Http\Controllers\Frontoffice\RefundController;
 use App\Http\Controllers\Frontoffice\ProjectController;
 use App\Http\Controllers\Frontoffice\TutorialController;
 use Illuminate\Support\Facades\Route;
@@ -125,6 +127,54 @@ Route::prefix('events')->name('Events.')->group(function () {
         ->name('participants.bulkDelete');
     Route::post('/{event}/participants/send-email', [EventController::class, 'sendBulkEmail'])
         ->name('participants.sendEmail');
+    
+    // Feedback route
+    Route::post('/{event}/feedback', [EventController::class, 'submitFeedback'])
+        ->name('feedback.submit');
+    
+    // Sentiment Analysis routes
+    Route::post('/{event}/analyze-sentiment', [EventController::class, 'analyzeSentiment'])
+        ->name('sentiment.analyze');
+    Route::get('/{event}/sentiment-results', [EventController::class, 'getSentimentResults'])
+        ->name('sentiment.results');
+    
+    // Payment routes
+    Route::get('/{event}/payment/{participant}', [PaymentController::class, 'showPaymentPage'])
+        ->name('payment');
+    Route::get('/{event}/payment/{participant}/success', [PaymentController::class, 'success'])
+        ->name('payment.success');
+    Route::get('/{event}/payment/{participant}/failure', [PaymentController::class, 'failure'])
+        ->name('payment.failure');
+    Route::get('/{event}/payment/{participant}/cancel', [PaymentController::class, 'cancel'])
+        ->name('payment.cancel');
+    
+    // Refund routes
+    Route::get('/{event}/refund/{participant}', [RefundController::class, 'showRefundForm'])
+        ->name('refund.form');
+    Route::post('/{event}/refund/{participant}', [RefundController::class, 'requestRefund'])
+        ->name('refund.request');
+    Route::get('/{event}/refund-requests', [RefundController::class, 'listRefundRequests'])
+        ->name('refund.list');
+    Route::post('/{event}/refund/{refundRequest}/approve', [RefundController::class, 'approveRefund'])
+        ->name('refund.approve');
+    Route::post('/{event}/refund/{refundRequest}/reject', [RefundController::class, 'rejectRefund'])
+        ->name('refund.reject');
+    
+    // Certificate routes
+    Route::get('/{event}/certificate/{participant}', [EventController::class, 'viewCertificate'])
+        ->name('certificate.view');
+    Route::post('/{event}/certificates/send', [EventController::class, 'sendCertificates'])
+        ->name('certificates.send');
+    
+    // Ticket routes
+    Route::get('/{event}/ticket/{participant}', [EventController::class, 'viewTicket'])
+        ->name('ticket.view');
+    Route::get('/{event}/ticket/verify/{ticket}', [EventController::class, 'verifyTicket'])
+        ->name('ticket.verify');
+    Route::post('/{event}/confirm-participation', [EventController::class, 'confirmParticipation'])
+        ->name('confirm.participation');
+    Route::get('/{event}/qr-scanner', [EventController::class, 'qrScanner'])
+        ->name('qr.scanner');
 });
 
 
@@ -245,12 +295,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });     
 
-// FrontOffice Notifications (for regular users)
-Route::middleware('auth')->prefix('notifications')->name('notifications.')->group(function () {
-    Route::get('/', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'index'])->name('index');
-    Route::post('/mark-all-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
-    Route::patch('/{id}/mark-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAsRead'])->name('mark-read');
-    Route::delete('/{id}', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'destroy'])->name('destroy');
-    Route::delete('/read/all', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
-});
-}); 
+    // FrontOffice Notifications (for regular users)
+    Route::prefix('notifications')->name('notifications.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'index'])->name('index');
+        Route::post('/mark-all-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::patch('/{id}/mark-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::delete('/{id}', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/read/all', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
+    });
+}); // Close auth middleware group
+
+// Stripe Webhook - No authentication required (Stripe sends requests directly)
+Route::post('/webhooks/stripe', [PaymentController::class, 'handleWebhook'])->name('webhooks.stripe');

@@ -90,19 +90,30 @@
 <!-- Navigation Tabs -->
 <section class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav class="flex space-x-4 py-4">
-            <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-lg transition-all" data-view="list">
-                <i class="fas fa-list mr-2"></i>
-                Vue Liste
-            </button>
-            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="calendar">
-                <i class="fas fa-calendar-alt mr-2"></i>
-                Vue Calendrier
-            </button>
-            <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="popular">
-                <i class="fas fa-fire mr-2"></i>
-                Événements Populaires
-            </button>
+        <nav class="flex items-center justify-between py-4">
+            <div class="flex space-x-4">
+                <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-lg transition-all" data-view="list">
+                    <i class="fas fa-list mr-2"></i>
+                    Vue Liste
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="calendar">
+                    <i class="fas fa-calendar-alt mr-2"></i>
+                    Vue Calendrier
+                </button>
+                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="popular">
+                    <i class="fas fa-fire mr-2"></i>
+                    Événements Populaires
+                </button>
+            </div>
+            
+            @auth
+            <div>
+                <a href="{{ route('Events.mes-Events') }}" class="bg-gradient-to-r from-primary to-success text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all text-sm font-medium inline-flex items-center">
+                    <i class="fas fa-user-check mr-2"></i>
+                    Mes Événements
+                </a>
+            </div>
+            @endauth
         </nav>
     </div>
 </section>
@@ -182,6 +193,12 @@
                     $isFull = $currentParticipants >= $event->max_participants;
                     $progressPercent = $event->max_participants > 0 ? ($currentParticipants / $event->max_participants) * 100 : 0;
                     $progressColor = $progressPercent < 50 ? 'bg-success' : ($progressPercent < 80 ? 'bg-warning' : 'bg-accent');
+                    
+                    // Check if current user is registered
+                    $isRegistered = auth()->check() && $event->participants()
+                        ->where('user_id', auth()->id())
+                        ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+                        ->exists();
                 @endphp
 
                 <div class="event-card card-hover bg-white shadow-sm border border-gray-200 rounded-xl overflow-hidden event-type-{{ $event->type }}">
@@ -199,11 +216,23 @@
                         </div>
                         
                         <!-- Status Badge -->
-                        <div class="absolute top-3 right-3">
+                        <div class="absolute top-3 right-3 flex flex-col gap-2">
+                            @if($isRegistered)
+                                <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg flex items-center">
+                                    <i class="fas fa-check-circle mr-1"></i>
+                                    Inscrit
+                                </span>
+                            @endif
                             @if($isFull)
-                                <span class="bg-accent text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">Complet</span>
-                            @else
-                                <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">Disponible</span>
+                                <span class="bg-accent text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                    <i class="fas fa-lock mr-1"></i>
+                                    Complet
+                                </span>
+                            @elseif(!$isRegistered)
+                                <span class="bg-success text-white px-3 py-1 rounded-full text-sm font-medium shadow-lg">
+                                    <i class="fas fa-door-open mr-1"></i>
+                                    Disponible
+                                </span>
                             @endif
                         </div>
                         
@@ -269,19 +298,43 @@
                         
                         <!-- Actions -->
                         <div class="flex gap-2">
-                            @if(!$isFull)
-                                <form action="{{ route('Events.register', $event->id) }}" method="POST" class="flex-1">
-                                    @csrf
-                                    <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
-                                        S'inscrire
+                            @auth
+                                @if($isRegistered)
+                                    <!-- Already Registered - Show Unregister Button -->
+                                    <form action="{{ route('Events.unregister', $event->id) }}" method="POST" class="flex-1" onsubmit="return confirm('Êtes-vous sûr de vouloir vous désinscrire ?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="w-full bg-accent text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors text-sm font-medium">
+                                            <i class="fas fa-user-minus mr-1"></i>
+                                            Se désinscrire
+                                        </button>
+                                    </form>
+                                @elseif($isFull)
+                                    <!-- Event Full -->
+                                    <button class="flex-1 bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed text-sm font-medium" disabled>
+                                        <i class="fas fa-users mr-1"></i>
+                                        Complet
                                     </button>
-                                </form>
+                                @else
+                                    <!-- Register Button -->
+                                    <form action="{{ route('Events.register', $event->id) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium">
+                                            <i class="fas fa-user-plus mr-1"></i>
+                                            S'inscrire
+                                        </button>
+                                    </form>
+                                @endif
                             @else
-                                <button class="flex-1 bg-gray-300 text-gray-500 px-4 py-2 rounded-lg cursor-not-allowed text-sm font-medium" disabled>
-                                    Complet
-                                </button>
-                            @endif
+                                <!-- Not Logged In - Redirect to Login -->
+                                <a href="{{ route('login') }}" class="flex-1 bg-primary text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors text-sm font-medium text-center">
+                                    <i class="fas fa-sign-in-alt mr-1"></i>
+                                    Connexion
+                                </a>
+                            @endauth
+                            
                             <a href="{{ route('Events.show', $event->id) }}" class="flex-1 border border-primary text-primary px-4 py-2 rounded-lg hover:bg-primary hover:text-white transition-colors text-sm font-medium text-center">
+                                <i class="fas fa-info-circle mr-1"></i>
                                 Détails
                             </a>
                         </div>

@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Participant;
 use App\Http\Requests\EventRequest;
 use App\Mail\ParticipantNotification;
+use App\Services\SentimentAnalysisService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -190,6 +191,14 @@ public function show($id)
         ->where('user_id', $userId)
         ->first();
 
+    // Check for pending refund request
+    $pendingRefundRequest = null;
+    if ($userParticipation) {
+        $pendingRefundRequest = \App\Models\RefundRequest::where('participant_id', $userParticipation->id)
+            ->whereIn('status', ['pending', 'processing'])
+            ->first();
+    }
+
     // Convert to object so you can use -> notation
     $stats = (object) [
         'current_participants' => $event->participants()
@@ -205,6 +214,31 @@ public function show($id)
         'is_full' => $event->isFull(),
         'fill_percentage' => $event->fill_percentage
     ];
+
+    // Payment statistics (only for paid events)
+    $paymentStats = null;
+    if ($event->isPaid()) {
+        $paymentStats = (object) [
+            'total_revenue' => $event->participants()
+                ->where('payment_status', 'completed')
+                ->sum('amount_paid'),
+            'paid_participants' => $event->participants()
+                ->where('payment_status', 'completed')
+                ->count(),
+            'pending_payments' => $event->participants()
+                ->where('payment_status', 'pending_payment')
+                ->count(),
+            'failed_payments' => $event->participants()
+                ->where('payment_status', 'failed')
+                ->count(),
+            'refunded' => $event->participants()
+                ->whereIn('payment_status', ['refunded', 'partially_refunded'])
+                ->count(),
+            'total_refunded' => $event->participants()
+                ->whereIn('payment_status', ['refunded', 'partially_refunded'])
+                ->sum('amount_refunded'),
+        ];
+    }
 
     $similarEvents = Event::with(['organizer'])
         ->where('type', $event->type)
@@ -227,6 +261,10 @@ public function show($id)
             'status' => $participant->attendance_status,
             'rating' => $participant->rating,
             'feedback' => $participant->feedback,
+            'payment_status' => $participant->payment_status,
+            'amount_paid' => $participant->amount_paid,
+            'invoice_number' => $participant->invoice_number,
+            'payment_completed_at' => $participant->payment_completed_at ? $participant->payment_completed_at->toISOString() : null,
         ];
     });
 
@@ -238,7 +276,9 @@ public function show($id)
         'stats',
         'similarEvents',
         'isOrganizer',
-        'participantsData'
+        'participantsData',
+        'paymentStats',
+        'pendingRefundRequest'
     ));
 }
 
@@ -289,6 +329,10 @@ public function getParticipantsModalContent($id)
             'status' => $participant->attendance_status,
             'rating' => $participant->rating,
             'feedback' => $participant->feedback,
+            'payment_status' => $participant->payment_status,
+            'amount_paid' => $participant->amount_paid,
+            'invoice_number' => $participant->invoice_number,
+            'payment_completed_at' => $participant->payment_completed_at ? $participant->payment_completed_at->toISOString() : null,
         ];
     });
 
@@ -468,6 +512,20 @@ private function calculateAverageAttendance($userId)
             $data['image'] = $request->file('image')->store('events', 'public');
         }
 
+        // Handle checkboxes (they won't be in request if unchecked)
+        $data['parking_available'] = $request->has('parking_available');
+        $data['accessible_pmr'] = $request->has('accessible_pmr');
+        $data['wifi_available'] = $request->has('wifi_available');
+
+        // Handle program JSON
+        if ($request->has('program') && !empty($request->program)) {
+            $data['program'] = json_decode($request->program, true);
+        }
+
+        // Handle coordinates (ensure they're numbers or null)
+        $data['latitude'] = $request->latitude ? (float)$request->latitude : null;
+        $data['longitude'] = $request->longitude ? (float)$request->longitude : null;
+
         // Définir le statut
         $data['status'] = $request->has('publish_now') ? 'published' : 'draft';
 
@@ -551,6 +609,20 @@ private function calculateAverageAttendance($userId)
             $data['image'] = $request->file('image')->store('events', 'public');
         }
 
+        // Handle checkboxes
+        $data['parking_available'] = $request->has('parking_available');
+        $data['accessible_pmr'] = $request->has('accessible_pmr');
+        $data['wifi_available'] = $request->has('wifi_available');
+
+        // Handle program JSON
+        if ($request->has('program') && !empty($request->program)) {
+            $data['program'] = json_decode($request->program, true);
+        }
+
+        // Handle coordinates
+        $data['latitude'] = $request->latitude ? (float)$request->latitude : null;
+        $data['longitude'] = $request->longitude ? (float)$request->longitude : null;
+
         $event->update($data);
 
         // Envoyer une notification aux participants si demandé
@@ -589,32 +661,53 @@ private function calculateAverageAttendance($userId)
     }
 
     /**
-     * Inscription à un événement
+     * Inscription à un événement (Enhanced for Paid Events)
      * POST /evenements/{id}/register
      */
     public function register(Request $request, $id)
     {
         $event = Event::findOrFail($id);
 
-        // Vérifications
+        // 1. Authentication check
         if (!Auth::check()) {
             return redirect()->route('login')
                 ->with('error', 'Vous devez être connecté pour vous inscrire.');
         }
 
-        // Vérifier si déjà inscrit
+        // 2. Check if already registered (active registration only)
         $existingParticipation = Participant::where('event_id', $id)
             ->where('user_id', Auth::id())
+            ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+            ->whereNotIn('payment_status', ['failed', 'refunded', 'expired'])
             ->first();
 
-        if ($existingParticipation && $existingParticipation->attendance_status !== 'cancelled') {
+        if ($existingParticipation) {
+            // If payment is pending, redirect to payment page
+            if ($existingParticipation->payment_status === 'pending_payment') {
+                return redirect()->route('Events.payment', [
+                    'event' => $event->id,
+                    'participant' => $existingParticipation->id
+                ])->with('info', 'Veuillez compléter votre paiement.');
+            }
+
             return redirect()->back()
                 ->with('warning', 'Vous êtes déjà inscrit à cet événement.');
         }
 
-        // Vérifier si l'événement est complet
+        // 3. Delete any cancelled/failed previous registrations to avoid unique constraint violation
+        Participant::where('event_id', $id)
+            ->where('user_id', Auth::id())
+            ->whereIn('attendance_status', ['cancelled'])
+            ->orWhere(function($query) use ($id) {
+                $query->where('event_id', $id)
+                      ->where('user_id', Auth::id())
+                      ->whereIn('payment_status', ['failed', 'expired']);
+            })
+            ->delete();
+
+        // 3. Check capacity
         $currentParticipants = $event->participants()
-            ->where('attendance_status', '!=', 'cancelled')
+            ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
             ->count();
 
         if ($currentParticipants >= $event->max_participants) {
@@ -622,28 +715,47 @@ private function calculateAverageAttendance($userId)
                 ->with('error', 'Désolé, cet événement est complet.');
         }
 
-        // Créer ou réactiver la participation
-        if ($existingParticipation) {
-            $existingParticipation->update([
-                'attendance_status' => 'registered',
-                'registration_date' => Carbon::now(),
-                'email_sent' => false
-            ]);
-        } else {
-            Participant::create([
-                'event_id' => $id,
-                'user_id' => Auth::id(),
-                'registration_date' => Carbon::now(),
-                'attendance_status' => 'registered',
-                'email_sent' => false
-            ]);
+        // 4. Check if event hasn't started
+        if (Carbon::now()->gte($event->date_start)) {
+            return redirect()->back()
+                ->with('error', 'Cet événement a déjà commencé.');
         }
 
-        // TODO: Envoyer email de confirmation
-        // event(new ParticipantRegistered($event, Auth::user()));
+        // 5. Get event price (considering early bird)
+        $price = $event->getCurrentPrice();
 
-        return redirect()->back()
-            ->with('success', 'Inscription réussie ! Vous recevrez un email de confirmation.');
+        // 6. Create participant
+        $participant = Participant::create([
+            'event_id' => $id,
+            'user_id' => Auth::id(),
+            'registration_date' => Carbon::now(),
+            'attendance_status' => 'registered',
+            'payment_status' => $price > 0 ? 'pending_payment' : 'not_required',
+            'amount_paid' => null,
+            'email_sent' => false
+        ]);
+
+        // 7. Handle based on event type
+        if ($price > 0) {
+            // PAID EVENT - Redirect to payment page
+            return redirect()->route('Events.payment', [
+                'event' => $event->id,
+                'participant' => $participant->id
+            ])->with('info', 'Veuillez procéder au paiement pour confirmer votre inscription.');
+
+        } else {
+            // FREE EVENT - Immediate confirmation
+            $participant->update([
+                'attendance_status' => 'confirmed',
+                'payment_status' => 'not_required'
+            ]);
+
+            // TODO: Send confirmation email
+            // dispatch(new SendRegistrationConfirmation($participant));
+
+            return redirect()->back()
+                ->with('success', 'Inscription confirmée avec succès!');
+        }
     }
 
     /**
@@ -770,28 +882,71 @@ private function calculateAverageAttendance($userId)
     }
 
     /**
-     * Laisser un avis sur un événement
-     * POST /evenements/{id}/review
+     * Submit feedback for an event (with automatic sentiment analysis)
+     * POST /events/{event}/feedback
      */
-    public function review(Request $request, $id)
+    public function submitFeedback(Request $request, $id)
     {
-        $request->validate([
+        // Validate input
+        $validated = $request->validate([
             'rating' => 'required|integer|min:1|max:5',
             'feedback' => 'required|string|min:10|max:1000'
         ]);
 
+        // Check if user attended this event
         $participation = Participant::where('event_id', $id)
             ->where('user_id', Auth::id())
             ->where('attendance_status', 'attended')
             ->firstOrFail();
 
+        // Check if feedback already exists
+        if ($participation->feedback) {
+            return redirect()->back()
+                ->with('warning', 'Vous avez déjà laissé un avis pour cet événement.');
+        }
+
+        // Update participation with feedback and rating
         $participation->update([
-            'rating' => $request->rating,
-            'feedback' => $request->feedback
+            'rating' => $validated['rating'],
+            'feedback' => $validated['feedback']
         ]);
 
+        // Automatically analyze sentiment
+        try {
+            $sentimentService = app(SentimentAnalysisService::class);
+            
+            if ($sentimentService->isAvailable()) {
+                $result = $sentimentService->analyze($validated['feedback']);
+                
+                if ($result && isset($result['sentiment'])) {
+                    $sentiment = $result['sentiment'];
+                    
+                    $participation->update([
+                        'sentiment_label' => $sentiment['label'] ?? null,
+                        'sentiment_score' => $sentiment['score'] ?? null,
+                        'sentiment_confidence' => $sentiment['confidence'] ?? null,
+                        'sentiment_details' => json_encode($sentiment),
+                        'feedback_themes' => json_encode($result['themes'] ?? []),
+                        'sentiment_analyzed_at' => now()
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            // Sentiment analysis failed, but feedback is saved
+            \Log::warning('Sentiment analysis failed for feedback: ' . $e->getMessage());
+        }
+
         return redirect()->back()
-            ->with('success', 'Merci pour votre avis !');
+            ->with('success', 'Merci pour votre avis ! Il a été enregistré avec succès.');
+    }
+
+    /**
+     * Laisser un avis sur un événement (Legacy method - kept for compatibility)
+     * POST /evenements/{id}/review
+     */
+    public function review(Request $request, $id)
+    {
+        return $this->submitFeedback($request, $id);
     }
 
     /**
@@ -1325,6 +1480,475 @@ public function sendBulkEmail(Request $request, $eventId)
             'message' => 'Erreur lors de l\'envoi des emails: ' . $e->getMessage()
         ], 500);
     }
+}
+
+/**
+ * Analyze sentiment for all event feedback
+ * POST /evenements/{eventId}/analyze-sentiment
+ */
+public function analyzeSentiment($eventId)
+{
+    try {
+        $event = Event::findOrFail($eventId);
+
+        // Verify the user is the organizer
+        if ($event->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        // Get all feedback that hasn't been analyzed or needs re-analysis
+        $participants = Participant::where('event_id', $eventId)
+            ->whereNotNull('feedback')
+            ->where('feedback', '!=', '')
+            ->get();
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun feedback à analyser'
+            ], 404);
+        }
+
+        $sentimentService = new SentimentAnalysisService();
+
+        // Check if API is available
+        if (!$sentimentService->isAvailable()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le service d\'analyse de sentiment n\'est pas disponible. Assurez-vous que le service Python est en cours d\'exécution.'
+            ], 503);
+        }
+
+        // Prepare batch data
+        $feedbackList = $participants->map(function($participant) {
+            return [
+                'id' => $participant->id,
+                'text' => $participant->feedback
+            ];
+        })->toArray();
+
+        // Analyze in batch
+        $results = $sentimentService->analyzeBatch($feedbackList);
+
+        if (!$results) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'analyse'
+            ], 500);
+        }
+
+        // Update participants with sentiment data
+        $updatedCount = 0;
+        foreach ($results['results'] as $result) {
+            $participant = Participant::find($result['id']);
+            if ($participant && isset($result['sentiment'])) {
+                $participant->update([
+                    'sentiment_label' => $result['sentiment']['label'],
+                    'sentiment_score' => $result['sentiment']['score'],
+                    'sentiment_confidence' => $result['sentiment']['confidence'],
+                    'sentiment_details' => json_encode($result['sentiment']),
+                    'feedback_themes' => json_encode($result['themes']),
+                    'sentiment_analyzed_at' => now()
+                ]);
+                $updatedCount++;
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "{$updatedCount} feedback analysé(s) avec succès",
+            'data' => [
+                'analyzed_count' => $updatedCount,
+                'aggregate' => $results['aggregate'],
+                'top_themes' => $results['top_themes']
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error analyzing sentiment', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de l\'analyse: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
+/**
+ * Get sentiment analysis results for an event
+ * GET /evenements/{eventId}/sentiment-results
+ */
+public function getSentimentResults($eventId)
+{
+    try {
+        $event = Event::with(['participants' => function($query) {
+            $query->whereNotNull('feedback')
+                  ->whereNotNull('sentiment_label');
+        }])->findOrFail($eventId);
+
+        // Verify the user is the organizer
+        if ($event->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Non autorisé'
+            ], 403);
+        }
+
+        $participants = $event->participants;
+
+        if ($participants->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune analyse disponible'
+            ], 404);
+        }
+
+        // Calculate aggregate statistics
+        $totalCount = $participants->count();
+        $positiveCount = $participants->where('sentiment_label', 'positive')->count();
+        $negativeCount = $participants->where('sentiment_label', 'negative')->count();
+        $neutralCount = $participants->where('sentiment_label', 'neutral')->count();
+
+        $avgScore = $participants->avg('sentiment_score');
+        $avgConfidence = $participants->avg('sentiment_confidence');
+
+        // Get all themes
+        $allThemes = [];
+        foreach ($participants as $participant) {
+            if ($participant->feedback_themes) {
+                $themes = json_decode($participant->feedback_themes, true);
+                if (is_array($themes)) {
+                    $allThemes = array_merge($allThemes, $themes);
+                }
+            }
+        }
+        $themeCounts = array_count_values($allThemes);
+        arsort($themeCounts);
+        $topThemes = array_slice($themeCounts, 0, 10, true);
+
+        // Get concerning feedback (negative sentiment)
+        $concerns = $participants
+            ->where('sentiment_label', 'negative')
+            ->map(function($p) {
+                return [
+                    'participant' => $p->user->name ?? 'Anonyme',
+                    'feedback' => $p->feedback,
+                    'score' => $p->sentiment_score,
+                    'themes' => json_decode($p->feedback_themes, true) ?? []
+                ];
+            })
+            ->values();
+
+        $aggregate = [
+            'total_count' => $totalCount,
+            'positive_count' => $positiveCount,
+            'negative_count' => $negativeCount,
+            'neutral_count' => $neutralCount,
+            'positive_percentage' => $totalCount > 0 ? round(($positiveCount / $totalCount) * 100, 2) : 0,
+            'negative_percentage' => $totalCount > 0 ? round(($negativeCount / $totalCount) * 100, 2) : 0,
+            'neutral_percentage' => $totalCount > 0 ? round(($neutralCount / $totalCount) * 100, 2) : 0,
+            'average_score' => round($avgScore, 4),
+            'average_confidence' => round($avgConfidence, 4),
+            'last_analyzed' => $participants->max('sentiment_analyzed_at')
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'aggregate' => $aggregate,
+                'top_themes' => $topThemes,
+                'concerns' => $concerns,
+                'feedback_list' => $participants->map(function($p) {
+                    return [
+                        'id' => $p->id,
+                        'user' => $p->user->name ?? 'Anonyme',
+                        'feedback' => $p->feedback,
+                        'rating' => $p->rating,
+                        'sentiment_label' => $p->sentiment_label,
+                        'sentiment_score' => $p->sentiment_score,
+                        'sentiment_confidence' => $p->sentiment_confidence,
+                        'themes' => json_decode($p->feedback_themes, true) ?? [],
+                        'analyzed_at' => $p->sentiment_analyzed_at
+                    ];
+                })
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Error getting sentiment results', [
+            'error' => $e->getMessage()
+        ]);
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Erreur lors de la récupération des résultats'
+        ], 500);
+    }
+}
+
+/**
+ * View participant certificate
+ */
+public function viewCertificate($eventId, $participantId)
+{
+    $participant = Participant::with(['event.user', 'user'])->findOrFail($participantId);
+    $event = $participant->event;
+
+    // Check authorization - participant themselves or event organizer
+    if (Auth::id() !== $participant->user_id && Auth::id() !== $event->user_id) {
+        abort(403, 'Non autorisé');
+    }
+
+    // Check eligibility
+    if (!\App\Helpers\CertificateHelper::isEligibleForCertificate($participant)) {
+        return redirect()->back()->with('error', 'Ce participant n\'est pas éligible pour un certificat.');
+    }
+
+    // Generate certificate
+    $certificateHTML = \App\Helpers\CertificateHelper::generateCertificate($participant);
+
+    return response($certificateHTML)->header('Content-Type', 'text/html');
+}
+
+/**
+ * Send certificates to all attended participants
+ */
+public function sendCertificates(Request $request, $eventId)
+{
+    $event = Event::findOrFail($eventId);
+
+    // Check authorization - only event organizer
+    if (Auth::id() !== $event->user_id) {
+        return redirect()->back()->with('error', 'Non autorisé');
+    }
+
+    // Get all attended participants
+    $attendedParticipants = $event->participants()
+        ->where('attendance_status', 'attended')
+        ->with('user')
+        ->get();
+
+    if ($attendedParticipants->isEmpty()) {
+        return redirect()->back()->with('error', 'Aucun participant présent trouvé.');
+    }
+
+    $sentCount = 0;
+    foreach ($attendedParticipants as $participant) {
+        if (\App\Helpers\CertificateHelper::isEligibleForCertificate($participant)) {
+            try {
+                // Send email with certificate
+                Mail::to($participant->user->email)->send(
+                    new \App\Mail\CertificateNotification($participant)
+                );
+                $sentCount++;
+            } catch (\Exception $e) {
+                \Log::error('Error sending certificate: ' . $e->getMessage());
+            }
+        }
+    }
+
+    return redirect()->back()->with('success', "Certificats envoyés à {$sentCount} participant(s).");
+}
+
+/**
+ * View participant ticket
+ */
+public function viewTicket($eventId, $participantId)
+{
+    $participant = Participant::with(['event.user', 'user'])->findOrFail($participantId);
+    $event = $participant->event;
+
+    // Check authorization - participant themselves or event organizer
+    if (Auth::id() !== $participant->user_id && Auth::id() !== $event->user_id) {
+        abort(403, 'Non autorisé');
+    }
+
+    // Check eligibility
+    if (!\App\Helpers\TicketHelper::canViewTicket($participant)) {
+        return redirect()->back()->with('error', 'Votre billet n\'est pas encore disponible. Veuillez confirmer votre participation ou compléter le paiement.');
+    }
+
+    // Generate ticket data
+    $ticketNumber = \App\Helpers\TicketHelper::generateTicketNumber($participant);
+    $qrCodeSVG = \App\Helpers\TicketHelper::generateQRCodeSVG($participant);
+    $statusBadge = \App\Helpers\TicketHelper::getTicketStatusBadge($participant);
+
+    return view('tickets.ticket-view', compact('participant', 'event', 'ticketNumber', 'qrCodeSVG', 'statusBadge'));
+}
+
+/**
+ * Verify ticket via QR code scan
+ */
+public function verifyTicket($eventId, $ticketNumber)
+{
+    $event = Event::findOrFail($eventId);
+
+    // Check authorization - only event organizer can verify tickets
+    // Also log the check for debugging
+    \Log::info('Ticket verification attempt', [
+        'event_id' => $eventId,
+        'event_user_id' => $event->user_id,
+        'current_user_id' => Auth::id(),
+        'is_authenticated' => Auth::check(),
+        'ticket_number' => $ticketNumber
+    ]);
+
+    if (!Auth::check()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Vous devez être connecté pour vérifier les billets'
+        ], 401);
+    }
+
+    if (Auth::id() !== $event->user_id) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Seul l\'organisateur de cet événement peut vérifier les billets'
+        ], 403);
+    }
+
+    // Find participant by ticket number pattern: TKT-YEAR-EVENTID-PARTICIPANTID
+    $parts = explode('-', $ticketNumber);
+    
+    if (count($parts) !== 4 || $parts[0] !== 'TKT') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Format de billet invalide'
+        ], 400);
+    }
+
+    $participantId = (int)$parts[3];
+    
+    $participant = Participant::with('user')
+        ->where('id', $participantId)
+        ->where('event_id', $eventId)
+        ->first();
+
+    if (!$participant) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Billet non trouvé pour cet événement'
+        ], 404);
+    }
+
+    // Check if ticket is valid
+    if (!in_array($participant->attendance_status, ['confirmed', 'attended'])) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Ce billet n\'est pas valide. Statut: ' . $participant->attendance_status
+        ], 400);
+    }
+
+    // Check payment status for paid events
+    if ($event->isPaid() && $participant->payment_status !== 'completed') {
+        return response()->json([
+            'success' => false,
+            'message' => 'Paiement non complété. Statut: ' . $participant->payment_status
+        ], 400);
+    }
+
+    // Check if already attended
+    $alreadyAttended = $participant->attendance_status === 'attended';
+
+    // Mark as attended if not already
+    if (!$alreadyAttended) {
+        $participant->update([
+            'attendance_status' => 'attended'
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => $alreadyAttended ? 'Participant déjà enregistré comme présent' : 'Participant marqué comme présent',
+        'data' => [
+            'participant_id' => $participant->id,
+            'participant_name' => $participant->user->name ?? 'Utilisateur inconnu',
+            'participant_email' => $participant->user->email ?? 'N/A',
+            'ticket_number' => $ticketNumber,
+            'attendance_status' => 'attended',
+            'already_attended' => $alreadyAttended,
+            'registration_date' => $participant->registration_date->format('d/m/Y à H:i')
+        ]
+    ]);
+}
+
+/**
+ * Confirm participation for free events
+ */
+public function confirmParticipation($eventId)
+{
+    $event = Event::findOrFail($eventId);
+
+    // Find user's participation
+    $participant = Participant::where('event_id', $eventId)
+        ->where('user_id', Auth::id())
+        ->where('attendance_status', 'registered')
+        ->first();
+
+    if (!$participant) {
+        return redirect()->back()->with('error', 'Aucune inscription trouvée ou déjà confirmée.');
+    }
+
+    // Only for free events
+    if ($event->isPaid()) {
+        return redirect()->back()->with('error', 'Cette action n\'est disponible que pour les événements gratuits.');
+    }
+
+    // Update status to confirmed
+    $participant->update([
+        'attendance_status' => 'confirmed'
+    ]);
+
+    // Send ticket email
+    try {
+        Mail::to($participant->user->email)->send(
+            new \App\Mail\TicketNotification($participant)
+        );
+        
+        return redirect()->back()->with('success', 'Participation confirmée ! Consultez votre email pour votre billet.');
+    } catch (\Exception $e) {
+        \Log::error('Error sending ticket: ' . $e->getMessage());
+        return redirect()->back()->with('warning', 'Participation confirmée, mais l\'envoi du billet par email a échoué. Vous pouvez le consulter sur cette page.');
+    }
+}
+
+/**
+ * QR Scanner interface for organizers
+ */
+public function qrScanner($eventId)
+{
+    $event = Event::with(['organizer', 'participants.user'])->findOrFail($eventId);
+
+    // Check authorization - only event organizer
+    if (Auth::id() !== $event->user_id) {
+        abort(403, 'Seul l\'organisateur peut accéder au scanner QR.');
+    }
+
+    // Get statistics
+    $stats = (object) [
+        'total_confirmed' => $event->participants()
+            ->where('attendance_status', '!=', 'cancelled')
+            ->whereIn('attendance_status', ['confirmed', 'attended'])
+            ->count(),
+        'attended' => $event->participants()
+            ->where('attendance_status', 'attended')
+            ->count(),
+    ];
+
+    // Get attended participants
+    $attendedParticipants = $event->participants()
+        ->where('attendance_status', 'attended')
+        ->with('user')
+        ->orderBy('updated_at', 'desc')
+        ->get();
+
+    return view('FrontOffice.Events.qr-scanner', compact('event', 'stats', 'attendedParticipants'));
 }
 
 

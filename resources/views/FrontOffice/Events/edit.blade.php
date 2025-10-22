@@ -182,6 +182,53 @@
                             <div class="error-message mt-1">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <!-- Learning Objectives -->
+                    <div class="mb-6">
+                        <label for="learning_objectives" class="block text-sm font-medium text-gray-700 mb-2">
+                            Ce que les participants vont apprendre/faire (optionnel)
+                        </label>
+                        <textarea name="learning_objectives" id="learning_objectives" rows="4"
+                                  class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  placeholder="Ex: - Techniques de réparation de base&#10;- Utilisation d'outils de bricolage...">{{ old('learning_objectives', $event->learning_objectives) }}</textarea>
+                        <div class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Listez les compétences ou connaissances que les participants acquerront
+                        </div>
+                    </div>
+
+                    <!-- Required Materials -->
+                    <div class="mb-6">
+                        <label for="required_materials" class="block text-sm font-medium text-gray-700 mb-2">
+                            Matériel nécessaire (optionnel)
+                        </label>
+                        <textarea name="required_materials" id="required_materials" rows="3"
+                                  class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  placeholder="Ex: Apportez vos objets à réparer...">{{ old('required_materials', $event->required_materials) }}</textarea>
+                        <div class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Indiquez ce que les participants doivent apporter
+                        </div>
+                    </div>
+
+                    <!-- Skill Level -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Niveau requis <span class="text-red-500">*</span>
+                        </label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            @foreach(['beginner' => 'Débutant', 'intermediate' => 'Intermédiaire', 'advanced' => 'Avancé', 'all' => 'Tous niveaux'] as $level => $label)
+                            <label class="cursor-pointer">
+                                <input type="radio" name="skill_level" value="{{ $level }}" 
+                                       {{ old('skill_level', $event->skill_level ?? 'beginner') == $level ? 'checked' : '' }}
+                                       class="sr-only peer" required>
+                                <div class="p-3 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all text-center">
+                                    <div class="font-medium text-sm">{{ $label }}</div>
+                                </div>
+                            </label>
+                            @endforeach
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Date and Location -->
@@ -248,6 +295,99 @@
                         @error('location')
                             <div class="error-message mt-1">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <!-- Google Maps Link -->
+                    <div class="mb-6">
+                        <label for="maps_link" class="block text-sm font-medium text-gray-700 mb-2">
+                            Lien Google Maps (optionnel)
+                        </label>
+                        <input type="url" name="maps_link" id="maps_link"
+                               value="{{ old('maps_link', $event->maps_link) }}"
+                               class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                               placeholder="https://maps.google.com/...">
+                        <div class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Collez le lien partagé de Google Maps ou sélectionnez sur la carte
+                        </div>
+                    </div>
+
+                    <!-- Interactive Map Picker -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Sélectionner l'emplacement sur la carte (optionnel)
+                        </label>
+                        <div class="text-sm text-gray-500 mb-2">
+                            <i class="fas fa-map-marker-alt mr-1"></i>
+                            Cliquez sur la carte pour placer le marqueur
+                        </div>
+                        
+                        <div id="map-picker" class="rounded-lg overflow-hidden border border-gray-300" style="height: 400px;"></div>
+                        
+                        <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $event->latitude) }}">
+                        <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $event->longitude) }}">
+                        
+                        <div class="mt-2 text-sm text-gray-600">
+                            <span class="font-medium">Coordonnées:</span> 
+                            <span id="lat-display">{{ $event->latitude ?? '-' }}</span>, 
+                            <span id="lng-display">{{ $event->longitude ?? '-' }}</span>
+                        </div>
+                        
+                        <button type="button" id="clear-map" class="mt-2 text-sm text-red-500 hover:text-red-700">
+                            <i class="fas fa-times mr-1"></i>Effacer la sélection
+                        </button>
+                    </div>
+
+                    <!-- Access Instructions -->
+                    <div class="mb-6">
+                        <label for="access_instructions" class="block text-sm font-medium text-gray-700 mb-2">
+                            Instructions d'accès (optionnel)
+                        </label>
+                        <textarea name="access_instructions" id="access_instructions" rows="3"
+                                  class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                                  placeholder="Ex: Entrée par la porte principale...">{{ old('access_instructions', $event->access_instructions) }}</textarea>
+                        <div class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i>
+                            Indiquez comment accéder au lieu
+                        </div>
+                    </div>
+
+                    <!-- Location Facilities -->
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-3">
+                            Installations disponibles
+                        </label>
+                        <div class="space-y-3">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="parking_available" value="1"
+                                       {{ old('parking_available', $event->parking_available) ? 'checked' : '' }}
+                                       class="mr-3 text-primary focus:ring-primary rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-car text-primary mr-2"></i>
+                                    <span>Parking disponible</span>
+                                </div>
+                            </label>
+                            
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="accessible_pmr" value="1"
+                                       {{ old('accessible_pmr', $event->accessible_pmr) ? 'checked' : '' }}
+                                       class="mr-3 text-primary focus:ring-primary rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-wheelchair text-primary mr-2"></i>
+                                    <span>Accessible PMR</span>
+                                </div>
+                            </label>
+                            
+                            <label class="flex items-center cursor-pointer">
+                                <input type="checkbox" name="wifi_available" value="1"
+                                       {{ old('wifi_available', $event->wifi_available) ? 'checked' : '' }}
+                                       class="mr-3 text-primary focus:ring-primary rounded">
+                                <div class="flex items-center">
+                                    <i class="fas fa-wifi text-primary mr-2"></i>
+                                    <span>WiFi gratuit</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
@@ -662,5 +802,112 @@
             document.documentElement.classList.remove('dark');
         }
     });
+
+    // Leaflet Map Picker (OpenStreetMap - Free, No API Key Required)
+    let map;
+    let marker;
+    const defaultLat = 36.8065;
+    const defaultLng = 10.1815;
+
+    // Initialize map when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initLeafletMap();
+    });
+
+    function initLeafletMap() {
+        const initialLat = parseFloat(document.getElementById('latitude').value) || defaultLat;
+        const initialLng = parseFloat(document.getElementById('longitude').value) || defaultLng;
+        
+        // Create map
+        map = L.map('map-picker').setView([initialLat, initialLng], 13);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add marker if coordinates exist
+        if (document.getElementById('latitude').value && document.getElementById('longitude').value) {
+            addMarker([initialLat, initialLng]);
+        }
+
+        // Click event to place marker
+        map.on('click', function(e) {
+            addMarker([e.latlng.lat, e.latlng.lng]);
+            updateCoordinates(e.latlng.lat, e.latlng.lng);
+        });
+    }
+
+    function addMarker(latlng) {
+        // Remove existing marker
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Add new marker
+        marker = L.marker(latlng, {
+            draggable: true,
+            title: "Emplacement de l'événement"
+        }).addTo(map);
+
+        // Update coordinates when marker is dragged
+        marker.on('dragend', function(e) {
+            const position = e.target.getLatLng();
+            updateCoordinates(position.lat, position.lng);
+        });
+    }
+
+    function updateCoordinates(lat, lng) {
+        document.getElementById('latitude').value = lat.toFixed(7);
+        document.getElementById('longitude').value = lng.toFixed(7);
+        document.getElementById('lat-display').textContent = lat.toFixed(7);
+        document.getElementById('lng-display').textContent = lng.toFixed(7);
+    }
+
+    // Clear map selection
+    document.getElementById('clear-map').addEventListener('click', function() {
+        if (marker) {
+            map.removeLayer(marker);
+            marker = null;
+        }
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+        document.getElementById('lat-display').textContent = '-';
+        document.getElementById('lng-display').textContent = '-';
+    });
+
+    // Try to geocode address when location field changes (using Nominatim - OSM free geocoding)
+    document.getElementById('location').addEventListener('blur', function() {
+        const address = this.value;
+        if (address && !document.getElementById('latitude').value) {
+            geocodeAddress(address);
+        }
+    });
+
+    function geocodeAddress(address) {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Tunisia')}&limit=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    map.setView([lat, lng], 15);
+                    addMarker([lat, lng]);
+                    updateCoordinates(lat, lng);
+                }
+            })
+            .catch(error => {
+                console.log('Geocoding error:', error);
+            });
+    }
 </script>
+
+<!-- Leaflet CSS and JS for Map Picker (OpenStreetMap - No API Key Required) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin=""></script>
 @endpush
