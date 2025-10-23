@@ -60,7 +60,7 @@
 </div>
 
 <!-- Filters Section -->
-<div class="bg-white dark:bg-gray-800 shadow-lg sticky top-16 z-40">
+<div class="bg-white shadow-lg sticky top-16 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <form method="GET" action="{{ route('dechets.index') }}" class="space-y-4">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -72,7 +72,7 @@
                             name="search" 
                             value="{{ request('search') }}"
                             placeholder="Rechercher un déchet..." 
-                            class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                            class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                         >
                         <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                     </div>
@@ -82,7 +82,7 @@
                 <div>
                     <select 
                         name="category" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="">Toutes les catégories</option>
                         @foreach($categories as $category)
@@ -97,7 +97,7 @@
                 <div>
                     <select 
                         name="status" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                         <option value="">Tous les statuts</option>
                         <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Disponible</option>
@@ -113,7 +113,7 @@
                         name="location" 
                         value="{{ request('location') }}"
                         placeholder="Localisation (ville, gouvernorat...)" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
                     >
                 </div>
                 
@@ -126,9 +126,18 @@
                         Filtrer
                     </button>
                     
+                    <button 
+                        type="button"
+                        onclick="openImageRecognition()"
+                        class="flex-1 sm:flex-initial bg-gradient-to-r from-purple-500 to-indigo-500 hover:shadow-lg text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-camera"></i>
+                        Reconnaître
+                    </button>
+                    
                     <a 
                         href="{{ route('dechets.index') }}" 
-                        class="flex-1 sm:flex-initial bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+                        class="flex-1 sm:flex-initial bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
                     >
                         <i class="fas fa-redo"></i>
                     </a>
@@ -174,7 +183,7 @@
     @if($Dechets->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($Dechets as $dechet)
-                <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover">
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
                     <!-- Image -->
                     <div class="relative h-56 overflow-hidden group">
                         @if($dechet->photo)
@@ -184,7 +193,7 @@
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             >
                         @else
-                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
                                 <i class="fas fa-image text-6xl text-gray-400"></i>
                             </div>
                         @endif
@@ -198,7 +207,7 @@
                         
                         <!-- Badge Catégorie -->
                         <div class="absolute bottom-4 left-4">
-                            <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white dark:bg-gray-800 text-primary backdrop-blur-sm flex items-center gap-2">
+                            <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white text-primary backdrop-blur-sm flex items-center gap-2">
                                 <i class="{{ $dechet->category->icon ?? 'fas fa-tag' }}"></i>
                                 {{ $dechet->category->name }}
                             </span>
@@ -207,28 +216,28 @@
                     
                     <!-- Content -->
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
                             {{ $dechet->title }}
                         </h3>
                         
-                        <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
                             {{ Str::limit($dechet->description, 100) }}
                         </p>
                         
                         <!-- Meta Info -->
                         <div class="space-y-2 mb-6">
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <span>{{ $dechet->location }}</span>
                             </div>
 
-                            <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
                                 <i class="fas fa-box text-secondary"></i>
                                 <span>Quantité: {{ $dechet->quantity }}</span>
                             </div>
 
                             <div class="flex items-center justify-between text-sm">
-                                <div class="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                                <div class="flex items-center gap-2 text-gray-600">
                                     <i class="fas fa-eye text-primary"></i>
                                     <span>{{ $dechet->views_count }} vues</span>
                                 </div>
@@ -256,7 +265,7 @@
                         <div class="flex gap-2">
                             <a
                                 href="{{ route('dechets.show', $dechet->id) }}"
-                                class="flex-1 bg-primary hover:bg-green-700 text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105"
+                                class="flex-1 bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center py-3 rounded-lg font-medium transition-all transform hover:scale-105 shadow-md"
                             >
                                 <i class="fas fa-eye mr-2"></i>Voir détails
                             </a>
@@ -264,7 +273,7 @@
                             <!-- Favorite Button -->
                             <button
                                 onclick="toggleFavorite({{ $dechet->id }}, this)"
-                                class="favorite-btn bg-gray-100 hover:bg-red-50 dark:bg-gray-600 dark:hover:bg-red-900 text-gray-600 dark:text-gray-300 p-3 rounded-lg transition-all transform hover:scale-110"
+                                class="favorite-btn bg-gray-100 hover:bg-red-50 text-gray-600 p-3 rounded-lg transition-all transform hover:scale-110"
                                 data-dechet-id="{{ $dechet->id }}"
                                 title="Ajouter aux favoris"
                             >
@@ -292,11 +301,11 @@
         </div>
     @else
         <div class="text-center py-16">
-            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full mb-6">
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
                 <i class="fas fa-search text-4xl text-gray-400"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Aucun déchet trouvé</h3>
-            <p class="text-gray-600 dark:text-gray-400 mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun déchet trouvé</h3>
+            <p class="text-gray-600 mb-6">
                 Essayez de modifier vos filtres ou 
                 <a href="{{ route('dechets.index') }}" class="text-primary font-medium hover:underline">réinitialisez la recherche</a>
             </p>

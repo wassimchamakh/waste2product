@@ -1,0 +1,13 @@
+# Python Requirements for Sentiment Analysis Service
+
+# Flask framework
+Flask==3.0.0
+flask-cors==4.0.0
+
+# Sentiment Analysis libraries
+vaderSentiment==3.3.2
+textblob==0.17.1
+
+# Additional utilities
+gunicorn==21.2.0
+python-dotenv==1.0.0

@@ -10,7 +10,7 @@
             <h1 class="text-3xl font-bold text-gray-900">Catégories de Déchets</h1>
             <p class="text-gray-600 mt-1">Gérez les catégories utilisées pour classifier les déchets</p>
         </div>
-        <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
+        <a href="{{ route('admin.categories.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 shadow-md">
             <i class="fas fa-plus"></i>
             <span>Nouvelle Catégorie</span>
         </a>

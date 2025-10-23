@@ -17,11 +17,35 @@ class Event extends Model
         'date_start',
         'date_end',
         'location',
+        'maps_link',
+        'latitude',
+        'longitude',
         'max_participants',
         'price',
         'status',
         'image',
         'user_id',
+        'program',
+        'learning_objectives',
+        'required_materials',
+        'skill_level',
+        'access_instructions',
+        'parking_available',
+        'accessible_pmr',
+        'wifi_available',
+        // Payment settings
+        'requires_approval',
+        'allow_installments',
+        'installment_count',
+        'cancellation_policy',
+        'custom_cancellation_policy',
+        'refund_schedule',
+        'early_bird_price',
+        'early_bird_deadline',
+        'group_discount_enabled',
+        'group_size',
+        'group_price',
+        'payment_deadline_hours',
     ];
 
     protected $casts = [
@@ -29,14 +53,39 @@ class Event extends Model
         'date_end' => 'datetime',
         'price' => 'decimal:2',
         'max_participants' => 'integer',
+        'latitude' => 'decimal:7',
+        'longitude' => 'decimal:7',
+        'program' => 'array',
+        'parking_available' => 'boolean',
+        'accessible_pmr' => 'boolean',
+        'wifi_available' => 'boolean',
+        // Payment settings casts
+        'requires_approval' => 'boolean',
+        'allow_installments' => 'boolean',
+        'installment_count' => 'integer',
+        'refund_schedule' => 'array',
+        'early_bird_price' => 'decimal:2',
+        'early_bird_deadline' => 'datetime',
+        'group_discount_enabled' => 'boolean',
+        'group_size' => 'integer',
+        'group_price' => 'decimal:2',
+        'payment_deadline_hours' => 'integer',
     ];
 
     // Relations
     
     /**
-     * Organisateur de l'événement
+     * Organisateur de l'événement (alias pour user)
      */
     public function organizer()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Utilisateur créateur de l'événement
+     */
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -343,5 +392,160 @@ class Event extends Model
     public function isOrganizer($userId)
     {
         return $this->user_id == $userId;
+    }
+
+    // ========== Payment Related Methods ==========
+
+    /**
+     * Check if event is free
+     */
+    public function isFree()
+    {
+        return $this->price == 0;
+    }
+
+    /**
+     * Check if event is paid
+     */
+    public function isPaid()
+    {
+        return $this->price > 0;
+    }
+
+    /**
+     * Check if early bird pricing is active
+     */
+    public function hasActiveEarlyBird()
+    {
+        return $this->early_bird_price > 0 
+            && $this->early_bird_deadline 
+            && now()->lte($this->early_bird_deadline);
+    }
+
+    /**
+     * Get current event price (considering early bird)
+     */
+    public function getCurrentPrice()
+    {
+        if ($this->hasActiveEarlyBird()) {
+            return (float) $this->early_bird_price;
+        }
+
+        return (float) $this->price;
+    }
+
+    /**
+     * Get price with currency
+     */
+    public function getFormattedPrice()
+    {
+        $price = $this->getCurrentPrice();
+        
+        if ($price == 0) {
+            return 'Gratuit';
+        }
+
+        return number_format($price, 2) . ' TND';
+    }
+
+    /**
+     * Get early bird savings
+     */
+    public function getEarlyBirdSavings()
+    {
+        if (!$this->hasActiveEarlyBird()) {
+            return 0;
+        }
+
+        return (float) $this->price - (float) $this->early_bird_price;
+    }
+
+    /**
+     * Get cancellation policy label
+     */
+    public function getCancellationPolicyLabel()
+    {
+        return match($this->cancellation_policy) {
+            'no_refund' => 'Aucun remboursement',
+            'flexible' => 'Flexible - Remboursement complet jusqu\'à 24h avant',
+            'moderate' => 'Modéré - 50% de remboursement jusqu\'à 7 jours avant',
+            'strict' => 'Strict - 25% de remboursement jusqu\'à 30 jours avant',
+            'custom' => 'Politique personnalisée',
+            default => 'Non définie'
+        };
+    }
+
+    /**
+     * Get cancellation policy description
+     */
+    public function getCancellationPolicyDescription()
+    {
+        if ($this->cancellation_policy === 'custom' && $this->custom_cancellation_policy) {
+            return $this->custom_cancellation_policy;
+        }
+
+        return match($this->cancellation_policy) {
+            'no_refund' => 'Aucun remboursement ne sera accordé après l\'inscription.',
+            'flexible' => 'Remboursement complet si vous annulez au moins 24 heures avant l\'événement.',
+            'moderate' => 'Remboursement de 50% si vous annulez au moins 7 jours avant l\'événement.',
+            'strict' => 'Remboursement de 25% si vous annulez au moins 30 jours avant l\'événement.',
+            default => 'Veuillez contacter l\'organisateur pour plus d\'informations.'
+        };
+    }
+
+    /**
+     * Calculate total revenue from completed payments
+     */
+    public function getTotalRevenue()
+    {
+        return $this->participants()
+            ->where('payment_status', 'completed')
+            ->sum('amount_paid');
+    }
+
+    /**
+     * Get count of paid participants
+     */
+    public function getPaidParticipantsCount()
+    {
+        return $this->participants()
+            ->where('payment_status', 'completed')
+            ->count();
+    }
+
+    /**
+     * Get count of pending payments
+     */
+    public function getPendingPaymentsCount()
+    {
+        return $this->participants()
+            ->where('payment_status', 'pending')
+            ->count();
+    }
+
+    /**
+     * Check if group discount is available
+     */
+    public function hasGroupDiscount()
+    {
+        return $this->group_discount_enabled 
+            && $this->group_size > 0 
+            && $this->group_price > 0;
+    }
+
+    /**
+     * Check if participant count qualifies for group discount
+     */
+    public function qualifiesForGroupDiscount($participantCount)
+    {
+        return $this->hasGroupDiscount() && $participantCount >= $this->group_size;
+    }
+
+    /**
+     * Get payment deadline date for a registration
+     */
+    public function getPaymentDeadline()
+    {
+        return now()->addHours($this->payment_deadline_hours ?? 24);
     }
 }

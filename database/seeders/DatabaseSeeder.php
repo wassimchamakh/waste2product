@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
             ProjectStepSeeder::class,
             EventSeeder::class,     
             ParticipantSeeder::class, 
+            TutorialSeeder::class,
+            TutoStepSeeder::class,
+            TutoCommentSeeder::class,
+            ForumSeeder::class,
         ]);
 
         $this->command->info('');

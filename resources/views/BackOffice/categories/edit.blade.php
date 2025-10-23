@@ -51,18 +51,45 @@
                     <input type="text" id="name" name="name" value="{{ old('name', $category->name) }}" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ex: Plastique, Bois, Métal...">
                 </div>
 
-                <!-- Icon -->
+                <!-- Icon Picker -->
                 <div>
-                    <label for="icon" class="block text-sm font-semibold text-gray-700 mb-2">
-                        Icône FontAwesome <span class="text-red-500">*</span>
+                    <label for="icon-picker" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Icône <span class="text-red-500">*</span>
                     </label>
-                    <div class="relative">
-                        <input type="text" id="icon" name="icon" value="{{ old('icon', $category->icon) }}" required maxlength="50" class="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="fas fa-recycle">
-                        <div id="icon-preview" class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xl">
-                            <i class="{{ $category->icon }}"></i>
-                        </div>
-                    </div>
-                    <p class="text-xs text-gray-500 mt-1">Utilisez des classes FontAwesome (ex: fas fa-recycle)</p>
+                    <select id="icon-picker" onchange="selectIcon(this.value)" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" required>
+                        <option value="">Sélectionnez une icône...</option>
+                        <option value="fas fa-recycle" {{ $category->icon == 'fas fa-recycle' ? 'selected' : '' }}>♻️ Recyclage</option>
+                        <option value="fas fa-trash-alt" {{ $category->icon == 'fas fa-trash-alt' ? 'selected' : '' }}>🗑️ Déchet</option>
+                        <option value="fas fa-leaf" {{ $category->icon == 'fas fa-leaf' ? 'selected' : '' }}>🍃 Organique</option>
+                        <option value="fas fa-box" {{ $category->icon == 'fas fa-box' ? 'selected' : '' }}>📦 Emballage</option>
+                        <option value="fas fa-bottle-water" {{ $category->icon == 'fas fa-bottle-water' ? 'selected' : '' }}>🧴 Bouteille</option>
+                        <option value="fas fa-wine-bottle" {{ $category->icon == 'fas fa-wine-bottle' ? 'selected' : '' }}>🍾 Verre</option>
+                        <option value="fas fa-newspaper" {{ $category->icon == 'fas fa-newspaper' ? 'selected' : '' }}>📰 Papier</option>
+                        <option value="fas fa-tree" {{ $category->icon == 'fas fa-tree' ? 'selected' : '' }}>🌳 Bois</option>
+                        <option value="fas fa-industry" {{ $category->icon == 'fas fa-industry' ? 'selected' : '' }}>🏭 Industriel</option>
+                        <option value="fas fa-bolt" {{ $category->icon == 'fas fa-bolt' ? 'selected' : '' }}>⚡ Électronique</option>
+                        <option value="fas fa-laptop" {{ $category->icon == 'fas fa-laptop' ? 'selected' : '' }}>💻 Informatique</option>
+                        <option value="fas fa-mobile-alt" {{ $category->icon == 'fas fa-mobile-alt' ? 'selected' : '' }}>📱 Mobile</option>
+                        <option value="fas fa-battery-full" {{ $category->icon == 'fas fa-battery-full' ? 'selected' : '' }}>🔋 Batterie</option>
+                        <option value="fas fa-lightbulb" {{ $category->icon == 'fas fa-lightbulb' ? 'selected' : '' }}>💡 Ampoule</option>
+                        <option value="fas fa-couch" {{ $category->icon == 'fas fa-couch' ? 'selected' : '' }}>🛋️ Mobilier</option>
+                        <option value="fas fa-tshirt" {{ $category->icon == 'fas fa-tshirt' ? 'selected' : '' }}>👕 Textile</option>
+                        <option value="fas fa-car" {{ $category->icon == 'fas fa-car' ? 'selected' : '' }}>🚗 Automobile</option>
+                        <option value="fas fa-oil-can" {{ $category->icon == 'fas fa-oil-can' ? 'selected' : '' }}>🛢️ Huile</option>
+                        <option value="fas fa-paint-roller" {{ $category->icon == 'fas fa-paint-roller' ? 'selected' : '' }}>🎨 Peinture</option>
+                        <option value="fas fa-prescription-bottle" {{ $category->icon == 'fas fa-prescription-bottle' ? 'selected' : '' }}>💊 Médicament</option>
+                        <option value="fas fa-seedling" {{ $category->icon == 'fas fa-seedling' ? 'selected' : '' }}>🌱 Compost</option>
+                        <option value="fas fa-water" {{ $category->icon == 'fas fa-water' ? 'selected' : '' }}>💧 Liquide</option>
+                        <option value="fas fa-gas-pump" {{ $category->icon == 'fas fa-gas-pump' ? 'selected' : '' }}>⛽ Carburant</option>
+                        <option value="fas fa-skull-crossbones" {{ $category->icon == 'fas fa-skull-crossbones' ? 'selected' : '' }}>☠️ Dangereux</option>
+                        <option value="fas fa-radiation" {{ $category->icon == 'fas fa-radiation' ? 'selected' : '' }}>☢️ Radioactif</option>
+                        <option value="fas fa-flask" {{ $category->icon == 'fas fa-flask' ? 'selected' : '' }}>🧪 Chimique</option>
+                        <option value="fas fa-cubes" {{ $category->icon == 'fas fa-cubes' ? 'selected' : '' }}>📦 Matériaux</option>
+                        <option value="fas fa-hammer" {{ $category->icon == 'fas fa-hammer' ? 'selected' : '' }}>🔨 Construction</option>
+                        <option value="fas fa-home" {{ $category->icon == 'fas fa-home' ? 'selected' : '' }}>🏠 Domestique</option>
+                        <option value="fas fa-utensils" {{ $category->icon == 'fas fa-utensils' ? 'selected' : '' }}>🍴 Alimentaire</option>
+                    </select>
+                    <input type="hidden" id="icon" name="icon" value="{{ old('icon', $category->icon) }}" required>
                 </div>
 
                 <!-- Color -->
@@ -94,55 +121,52 @@
             </div>
         </div>
 
-        <!-- Image Upload Card -->
-        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                <i class="fas fa-image text-purple-500"></i>
-                Image de la Catégorie
-            </h2>
-
-            <div>
-                <label for="image" class="block text-sm font-semibold text-gray-700 mb-2">
-                    Image (optionnel)
-                </label>
-
-                @if($category->image)
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-600 mb-2">Image actuelle:</p>
-                        <div class="relative inline-block">
-                            <img src="{{ asset('storage/categories/' . $category->image) }}" alt="{{ $category->name }}" class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
-                            <label class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-50 rounded-lg cursor-pointer transition-all flex items-center justify-center group">
-                                <span class="text-white opacity-0 group-hover:opacity-100 font-semibold">Changer</span>
-                            </label>
-                        </div>
-                    </div>
-                @endif
-
-                <div class="flex items-start gap-4">
-                    <div class="flex-1">
-                        <input type="file" id="image" name="image" accept="image/jpeg,image/png,image/jpg,image/svg+xml,image/webp" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
-                        <p class="text-xs text-gray-500 mt-1">Formats acceptés: JPEG, PNG, JPG, SVG, WEBP (max 2MB)</p>
-                    </div>
-                    <div id="image-preview-container" class="hidden">
-                        <img id="image-preview" src="" alt="Preview" class="w-32 h-32 object-cover rounded-lg border-2 border-gray-200">
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- Certifications Card -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
-                <i class="fas fa-certificate text-yellow-500"></i>
-                Certifications
-            </h2>
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-certificate text-yellow-500"></i>
+                    Certifications & Normes
+                </h2>
+                <button type="button" onclick="suggestCertificationsAI()" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                    <i class="fas fa-magic"></i>
+                    <span>IA: Suggérer des certifications</span>
+                </button>
+            </div>
 
             <div id="certifications-container">
                 <div class="space-y-3" id="certifications-list">
                     @if(old('certifications', $category->certifications))
                         @foreach(old('certifications', $category->certifications) as $index => $cert)
                             <div class="certification-item flex gap-2">
-                                <input type="text" name="certifications[]" value="{{ $cert }}" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ex: ISO 14001, FSC, PEFC...">
+                                <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                                    <option value="">Sélectionnez une certification</option>
+                                    <optgroup label="ISO - Normes Environnementales">
+                                        <option value="ISO 14001" {{ $cert == 'ISO 14001' ? 'selected' : '' }}>ISO 14001 - Management Environnemental</option>
+                                        <option value="ISO 14040" {{ $cert == 'ISO 14040' ? 'selected' : '' }}>ISO 14040 - Analyse du Cycle de Vie</option>
+                                        <option value="ISO 14044" {{ $cert == 'ISO 14044' ? 'selected' : '' }}>ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                                        <option value="ISO 14046" {{ $cert == 'ISO 14046' ? 'selected' : '' }}>ISO 14046 - Empreinte Eau</option>
+                                        <option value="ISO 14064" {{ $cert == 'ISO 14064' ? 'selected' : '' }}>ISO 14064 - Gaz à Effet de Serre</option>
+                                    </optgroup>
+                                    <optgroup label="Certifications Forestières">
+                                        <option value="FSC" {{ $cert == 'FSC' ? 'selected' : '' }}>FSC - Forest Stewardship Council</option>
+                                        <option value="PEFC" {{ $cert == 'PEFC' ? 'selected' : '' }}>PEFC - Programme for Endorsement of Forest Certification</option>
+                                    </optgroup>
+                                    <optgroup label="Recyclage & Économie Circulaire">
+                                        <option value="Green Dot" {{ $cert == 'Green Dot' ? 'selected' : '' }}>Point Vert (Der Grüne Punkt)</option>
+                                        <option value="Cradle to Cradle" {{ $cert == 'Cradle to Cradle' ? 'selected' : '' }}>Cradle to Cradle Certified</option>
+                                        <option value="EU Ecolabel" {{ $cert == 'EU Ecolabel' ? 'selected' : '' }}>Écolabel Européen</option>
+                                    </optgroup>
+                                    <optgroup label="Qualité & Sécurité">
+                                        <option value="ISO 9001" {{ $cert == 'ISO 9001' ? 'selected' : '' }}>ISO 9001 - Management de la Qualité</option>
+                                        <option value="ISO 45001" {{ $cert == 'ISO 45001' ? 'selected' : '' }}>ISO 45001 - Santé et Sécurité au Travail</option>
+                                    </optgroup>
+                                    <optgroup label="Autres">
+                                        <option value="GRS" {{ $cert == 'GRS' ? 'selected' : '' }}>GRS - Global Recycled Standard</option>
+                                        <option value="RCS" {{ $cert == 'RCS' ? 'selected' : '' }}>RCS - Recycled Claim Standard</option>
+                                        <option value="Autre" {{ $cert == 'Autre' ? 'selected' : '' }}>Autre (préciser en description)</option>
+                                    </optgroup>
+                                </select>
                                 <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
                                     <i class="fas fa-trash"></i>
                                 </button>
@@ -150,7 +174,34 @@
                         @endforeach
                     @else
                         <div class="certification-item flex gap-2">
-                            <input type="text" name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ex: ISO 14001, FSC, PEFC...">
+                            <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                                <option value="">Sélectionnez une certification</option>
+                                <optgroup label="ISO - Normes Environnementales">
+                                    <option value="ISO 14001">ISO 14001 - Management Environnemental</option>
+                                    <option value="ISO 14040">ISO 14040 - Analyse du Cycle de Vie</option>
+                                    <option value="ISO 14044">ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                                    <option value="ISO 14046">ISO 14046 - Empreinte Eau</option>
+                                    <option value="ISO 14064">ISO 14064 - Gaz à Effet de Serre</option>
+                                </optgroup>
+                                <optgroup label="Certifications Forestières">
+                                    <option value="FSC">FSC - Forest Stewardship Council</option>
+                                    <option value="PEFC">PEFC - Programme for Endorsement of Forest Certification</option>
+                                </optgroup>
+                                <optgroup label="Recyclage & Économie Circulaire">
+                                    <option value="Green Dot">Point Vert (Der Grüne Punkt)</option>
+                                    <option value="Cradle to Cradle">Cradle to Cradle Certified</option>
+                                    <option value="EU Ecolabel">Écolabel Européen</option>
+                                </optgroup>
+                                <optgroup label="Qualité & Sécurité">
+                                    <option value="ISO 9001">ISO 9001 - Management de la Qualité</option>
+                                    <option value="ISO 45001">ISO 45001 - Santé et Sécurité au Travail</option>
+                                </optgroup>
+                                <optgroup label="Autres">
+                                    <option value="GRS">GRS - Global Recycled Standard</option>
+                                    <option value="RCS">RCS - Recycled Claim Standard</option>
+                                    <option value="Autre">Autre (préciser en description)</option>
+                                </optgroup>
+                            </select>
                             <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
                                 <i class="fas fa-trash"></i>
                             </button>
@@ -209,7 +260,7 @@
                 <i class="fas fa-times"></i>
                 <span>Annuler</span>
             </a>
-            <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-primary to-primary-dark text-white rounded-xl font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300">
+            <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-lg font-bold hover:from-blue-600 hover:to-indigo-700 transition-all shadow-lg hover:shadow-xl">
                 <i class="fas fa-save"></i>
                 <span>Enregistrer les Modifications</span>
             </button>
@@ -239,14 +290,14 @@
 
 @push('scripts')
 <script>
-    // Icon preview
-    document.getElementById('icon').addEventListener('input', function(e) {
-        const iconClass = e.target.value;
-        const preview = document.getElementById('icon-preview');
-        const cardPreview = document.getElementById('preview-icon');
-        preview.innerHTML = `<i class="${iconClass}"></i>`;
-        cardPreview.className = iconClass + ' text-2xl';
-    });
+    // Icon selector function
+    function selectIcon(iconClass) {
+        const iconInput = document.getElementById('icon');
+        const previewIcon = document.getElementById('preview-icon');
+        
+        iconInput.value = iconClass;
+        previewIcon.className = iconClass + ' text-2xl';
+    }
 
     // Color sync
     document.getElementById('color').addEventListener('input', function(e) {
@@ -299,7 +350,34 @@
         const item = document.createElement('div');
         item.className = 'certification-item flex gap-2';
         item.innerHTML = `
-            <input type="text" name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ex: ISO 14001, FSC, PEFC...">
+            <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <option value="">Sélectionnez une certification</option>
+                <optgroup label="ISO - Normes Environnementales">
+                    <option value="ISO 14001">ISO 14001 - Management Environnemental</option>
+                    <option value="ISO 14040">ISO 14040 - Analyse du Cycle de Vie</option>
+                    <option value="ISO 14044">ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                    <option value="ISO 14046">ISO 14046 - Empreinte Eau</option>
+                    <option value="ISO 14064">ISO 14064 - Gaz à Effet de Serre</option>
+                </optgroup>
+                <optgroup label="Certifications Forestières">
+                    <option value="FSC">FSC - Forest Stewardship Council</option>
+                    <option value="PEFC">PEFC - Programme for Endorsement of Forest Certification</option>
+                </optgroup>
+                <optgroup label="Recyclage & Économie Circulaire">
+                    <option value="Green Dot">Point Vert (Der Grüne Punkt)</option>
+                    <option value="Cradle to Cradle">Cradle to Cradle Certified</option>
+                    <option value="EU Ecolabel">Écolabel Européen</option>
+                </optgroup>
+                <optgroup label="Qualité & Sécurité">
+                    <option value="ISO 9001">ISO 9001 - Management de la Qualité</option>
+                    <option value="ISO 45001">ISO 45001 - Santé et Sécurité au Travail</option>
+                </optgroup>
+                <optgroup label="Autres">
+                    <option value="GRS">GRS - Global Recycled Standard</option>
+                    <option value="RCS">RCS - Recycled Claim Standard</option>
+                    <option value="Autre">Autre (préciser en description)</option>
+                </optgroup>
+            </select>
             <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
                 <i class="fas fa-trash"></i>
             </button>
@@ -313,6 +391,75 @@
             button.closest('.certification-item').remove();
         } else {
             button.previousElementSibling.value = '';
+        }
+    }
+
+    // AI Certification Suggestions using Gemini API
+    async function suggestCertificationsAI() {
+        const categoryName = document.getElementById('name').value || 'Non spécifié';
+        const categoryDescription = document.getElementById('description').value || '';
+        
+        if (!categoryName || categoryName === 'Non spécifié') {
+            alert('⚠️ Veuillez d\'abord entrer un nom de catégorie');
+            return;
+        }
+
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>IA en cours...</span>';
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    name: categoryName,
+                    description: categoryDescription
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.certifications) {
+                // Clear existing certifications
+                document.getElementById('certifications-list').innerHTML = '';
+                
+                // Add suggested certifications
+                data.certifications.forEach((cert, index) => {
+                    if (index > 0) addCertification();
+                    const selects = document.querySelectorAll('#certifications-list select');
+                    const lastSelect = selects[selects.length - 1];
+                    
+                    // Try to select the suggested certification
+                    const options = Array.from(lastSelect.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase().includes(cert.toLowerCase()) ||
+                        cert.toLowerCase().includes(opt.value.toLowerCase())
+                    );
+                    
+                    if (matchingOption) {
+                        lastSelect.value = matchingOption.value;
+                    }
+                });
+
+                // Show success message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mt-3 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm';
+                messageDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${data.message || 'Certifications suggérées avec succès!'}`;
+                document.getElementById('certifications-container').appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 5000);
+            } else {
+                throw new Error(data.message || 'Erreur lors de la suggestion');
+            }
+        } catch (error) {
+            alert('❌ Erreur: ' + error.message);
+        } finally {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
         }
     }
 </script>

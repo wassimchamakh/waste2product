@@ -38,6 +38,11 @@ class Project extends Model
     {
         return $this->hasMany(ProjectStep::class)->orderBy('step_number');
     }
+    
+    public function likes()
+    {
+        return $this->hasMany(ProjectLike::class);
+    }
 
     public function user()
     {
@@ -47,6 +52,14 @@ class Project extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /**
+     * Commentaires associés au projet
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
     }
 
     // Accessors & Mutators

@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
                 'total_co2_saved' => 203.40,
                 'projects_completed' => 15,
             ],
-            [
+            [ 
                 'name' => 'Leila Gharbi',
                 'email' => 'leila@waste2product.tn',
                 'password' => Hash::make('password'),

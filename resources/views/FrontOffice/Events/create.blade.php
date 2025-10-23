@@ -139,15 +139,15 @@
         
         <!-- Step 1: General Information -->
         <div class="wizard-step active" data-step="1">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-info-circle mr-3 text-primary"></i>
                     Informations générales
                 </h2>
                 
                 <!-- Title -->
                 <div class="mb-6">
-                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="title" class="block text-sm font-medium text-gray-700 mb-2">
                         Titre de l'événement <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="title" id="title" required
@@ -163,7 +163,7 @@
 
                 <!-- Type -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Type d'événement <span class="text-red-500">*</span>
                     </label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -199,7 +199,7 @@
 
                 <!-- Description -->
                 <div class="mb-6">
-                    <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                         Description complète <span class="text-red-500">*</span>
                     </label>
                     <textarea name="description" id="description" rows="6" required
@@ -214,6 +214,75 @@
                     <div class="error-message mt-1" id="description-error"></div>
                 </div>
 
+                <!-- Learning Objectives -->
+                <div class="mb-6">
+                    <label for="learning_objectives" class="block text-sm font-medium text-gray-700 mb-2">
+                        Ce que les participants vont apprendre/faire (optionnel)
+                    </label>
+                    <textarea name="learning_objectives" id="learning_objectives" rows="4"
+                              class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              placeholder="Ex: - Techniques de réparation de base&#10;- Utilisation d'outils de bricolage&#10;- Méthodes de recyclage créatif&#10;- Diagnostiquer et réparer des objets du quotidien">{{ $duplicateEvent->learning_objectives ?? old('learning_objectives') }}</textarea>
+                    <div class="text-sm text-gray-500 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Listez les compétences ou connaissances que les participants acquerront
+                    </div>
+                </div>
+
+                <!-- Required Materials -->
+                <div class="mb-6">
+                    <label for="required_materials" class="block text-sm font-medium text-gray-700 mb-2">
+                        Matériel nécessaire (optionnel)
+                    </label>
+                    <textarea name="required_materials" id="required_materials" rows="3"
+                              class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              placeholder="Ex: Apportez vos objets à réparer. Outils de base fournis sur place. Matériaux de récupération bienvenus.">{{ $duplicateEvent->required_materials ?? old('required_materials') }}</textarea>
+                    <div class="text-sm text-gray-500 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Indiquez ce que les participants doivent apporter
+                    </div>
+                </div>
+
+                <!-- Skill Level -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Niveau requis <span class="text-red-500">*</span>
+                    </label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="skill_level" value="beginner" 
+                                   {{ ($duplicateEvent->skill_level ?? old('skill_level', 'beginner')) == 'beginner' ? 'checked' : '' }}
+                                   class="sr-only peer" required>
+                            <div class="p-3 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all text-center">
+                                <div class="font-medium text-sm">Débutant</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="skill_level" value="intermediate" 
+                                   {{ ($duplicateEvent->skill_level ?? old('skill_level')) == 'intermediate' ? 'checked' : '' }}
+                                   class="sr-only peer">
+                            <div class="p-3 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all text-center">
+                                <div class="font-medium text-sm">Intermédiaire</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="skill_level" value="advanced" 
+                                   {{ ($duplicateEvent->skill_level ?? old('skill_level')) == 'advanced' ? 'checked' : '' }}
+                                   class="sr-only peer">
+                            <div class="p-3 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all text-center">
+                                <div class="font-medium text-sm">Avancé</div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="skill_level" value="all" 
+                                   {{ ($duplicateEvent->skill_level ?? old('skill_level')) == 'all' ? 'checked' : '' }}
+                                   class="sr-only peer">
+                            <div class="p-3 border-2 border-gray-200 rounded-lg peer-checked:border-primary peer-checked:bg-primary/5 hover:border-gray-300 transition-all text-center">
+                                <div class="font-medium text-sm">Tous niveaux</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Navigation -->
                 <div class="flex justify-between">
                     <div></div>
@@ -226,8 +295,8 @@
 
         <!-- Step 2: Date and Location -->
         <div class="wizard-step" data-step="2">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-calendar-map mr-3 text-primary"></i>
                     Date et lieu
                 </h2>
@@ -235,7 +304,7 @@
                 <!-- Date Start -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                     <div>
-                        <label for="date_start" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="date_start" class="block text-sm font-medium text-gray-700 mb-2">
                             Date et heure de début <span class="text-red-500">*</span>
                         </label>
                         <input type="datetime-local" name="date_start" id="date_start" required
@@ -246,7 +315,7 @@
                     </div>
 
                     <div>
-                        <label for="date_end" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        <label for="date_end" class="block text-sm font-medium text-gray-700 mb-2">
                             Date et heure de fin <span class="text-red-500">*</span>
                         </label>
                         <input type="datetime-local" name="date_end" id="date_end" required
@@ -257,8 +326,8 @@
                 </div>
 
                 <!-- Duration Display -->
-                <div class="mb-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-300">
+                <div class="mb-6 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex items-center text-sm text-gray-600">
                         <i class="fas fa-clock mr-2"></i>
                         <span>Durée de l'événement : </span>
                         <span id="duration-display" class="font-medium ml-1">Non calculée</span>
@@ -267,7 +336,7 @@
 
                 <!-- City -->
                 <div class="mb-6">
-                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
                         Ville <span class="text-red-500">*</span>
                     </label>
                     <select name="city" id="city" required
@@ -284,7 +353,7 @@
 
                 <!-- Location -->
                 <div class="mb-6">
-                    <label for="location" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="location" class="block text-sm font-medium text-gray-700 mb-2">
                         Adresse complète <span class="text-red-500">*</span>
                     </label>
                     <input type="text" name="location" id="location" required
@@ -296,7 +365,7 @@
 
                 <!-- Google Maps Link -->
                 <div class="mb-6">
-                    <label for="maps_link" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="maps_link" class="block text-sm font-medium text-gray-700 mb-2">
                         Lien Google Maps (optionnel)
                     </label>
                     <input type="url" name="maps_link" id="maps_link"
@@ -305,7 +374,89 @@
                            placeholder="https://maps.google.com/...">
                     <div class="text-sm text-gray-500 mt-1">
                         <i class="fas fa-info-circle mr-1"></i>
-                        Facilitera l'accès pour les participants
+                        Collez le lien partagé de Google Maps ou sélectionnez un emplacement sur la carte ci-dessous
+                    </div>
+                </div>
+
+                <!-- Interactive Map Picker -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Sélectionner l'emplacement sur la carte (optionnel)
+                    </label>
+                    <div class="text-sm text-gray-500 mb-2">
+                        <i class="fas fa-map-marker-alt mr-1"></i>
+                        Cliquez sur la carte pour placer le marqueur à l'emplacement exact
+                    </div>
+                    
+                    <!-- Map Container -->
+                    <div id="map-picker" class="rounded-lg overflow-hidden border border-gray-300" style="height: 400px;"></div>
+                    
+                    <!-- Hidden inputs for coordinates -->
+                    <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude') }}">
+                    <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude') }}">
+                    
+                    <div class="mt-2 p-3 bg-gray-50 rounded-lg">
+                        <div class="text-sm text-gray-600">
+                            <span class="font-medium">Coordonnées sélectionnées:</span><br>
+                            <span class="text-xs">Latitude: <span id="lat-display" class="font-mono text-primary">-</span></span><br>
+                            <span class="text-xs">Longitude: <span id="lng-display" class="font-mono text-primary">-</span></span>
+                        </div>
+                    </div>
+                    
+                    <button type="button" id="clear-map" class="mt-2 text-sm text-red-500 hover:text-red-700 transition-colors">
+                        <i class="fas fa-times mr-1"></i>Effacer la sélection
+                    </button>
+                </div>
+
+                <!-- Access Instructions -->
+                <div class="mb-6">
+                    <label for="access_instructions" class="block text-sm font-medium text-gray-700 mb-2">
+                        Instructions d'accès (optionnel)
+                    </label>
+                    <textarea name="access_instructions" id="access_instructions" rows="3"
+                              class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+                              placeholder="Ex: Entrée par la porte principale, parking disponible à gauche, accessible en métro ligne 5...">{{ $duplicateEvent->access_instructions ?? old('access_instructions') }}</textarea>
+                    <div class="text-sm text-gray-500 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Indiquez comment accéder au lieu (transport en commun, parking, etc.)
+                    </div>
+                </div>
+
+                <!-- Location Facilities -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Installations disponibles
+                    </label>
+                    <div class="space-y-3">
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="parking_available" value="1"
+                                   {{ ($duplicateEvent->parking_available ?? old('parking_available')) ? 'checked' : '' }}
+                                   class="mr-3 text-primary focus:ring-primary rounded">
+                            <div class="flex items-center">
+                                <i class="fas fa-car text-primary mr-2"></i>
+                                <span>Parking disponible</span>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="accessible_pmr" value="1"
+                                   {{ ($duplicateEvent->accessible_pmr ?? old('accessible_pmr')) ? 'checked' : '' }}
+                                   class="mr-3 text-primary focus:ring-primary rounded">
+                            <div class="flex items-center">
+                                <i class="fas fa-wheelchair text-primary mr-2"></i>
+                                <span>Accessible PMR (Personnes à Mobilité Réduite)</span>
+                            </div>
+                        </label>
+                        
+                        <label class="flex items-center cursor-pointer">
+                            <input type="checkbox" name="wifi_available" value="1"
+                                   {{ ($duplicateEvent->wifi_available ?? old('wifi_available')) ? 'checked' : '' }}
+                                   class="mr-3 text-primary focus:ring-primary rounded">
+                            <div class="flex items-center">
+                                <i class="fas fa-wifi text-primary mr-2"></i>
+                                <span>WiFi gratuit</span>
+                            </div>
+                        </label>
                     </div>
                 </div>
 
@@ -323,15 +474,15 @@
 
         <!-- Step 3: Participants and Price -->
         <div class="wizard-step" data-step="3">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-users-cog mr-3 text-primary"></i>
                     Participants et prix
                 </h2>
 
                 <!-- Max Participants -->
                 <div class="mb-6">
-                    <label for="max_participants" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    <label for="max_participants" class="block text-sm font-medium text-gray-700 mb-2">
                         Nombre maximum de participants <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
@@ -355,7 +506,7 @@
 
                 <!-- Price -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Prix de participation <span class="text-red-500">*</span>
                     </label>
                     
@@ -404,9 +555,31 @@
                     </div>
                 </div>
 
+                <!-- Program Builder -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
+                        Programme de l'événement (optionnel)
+                    </label>
+                    <div class="text-sm text-gray-500 mb-3">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        Ajoutez les différentes étapes de votre événement. Si vide, un programme par défaut sera généré.
+                    </div>
+                    
+                    <div id="program-container" class="space-y-3">
+                        <!-- Program items will be added here dynamically -->
+                    </div>
+                    
+                    <button type="button" id="add-program-item" class="mt-3 border-2 border-dashed border-gray-300 text-gray-600 px-4 py-2 rounded-lg hover:border-primary hover:text-primary transition-colors">
+                        <i class="fas fa-plus mr-2"></i>Ajouter une étape
+                    </button>
+                    
+                    <!-- Hidden input to store program JSON -->
+                    <input type="hidden" name="program" id="program-data">
+                </div>
+
                 <!-- Options -->
                 <div class="mb-6">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Options avancées
                     </label>
                     
@@ -464,15 +637,15 @@
 
         <!-- Step 4: Media and Publication -->
         <div class="wizard-step" data-step="4">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                <h2 class="text-2xl font-bold mb-6 text-gray-900">
                     <i class="fas fa-images mr-3 text-primary"></i>
                     Média et publication
                 </h2>
 
                 <!-- Image Upload -->
                 <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Image de l'événement
                     </label>
                     
@@ -526,7 +699,7 @@
 
                 <!-- Publication Status -->
                 <div class="mb-8">
-                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    <label class="block text-sm font-medium text-gray-700 mb-3">
                         Statut de publication <span class="text-red-500">*</span>
                     </label>
                     
@@ -1028,6 +1201,204 @@
         console.log('Auto-saving draft...');
     }
 
+    // Program Builder functionality
+    let programItems = [];
+    let programItemCounter = 0;
+
+    document.getElementById('add-program-item').addEventListener('click', function() {
+        addProgramItem();
+    });
+
+    function addProgramItem(time = '', title = '', description = '', duration = '') {
+        const itemId = programItemCounter++;
+        const container = document.getElementById('program-container');
+        
+        const itemHtml = `
+            <div class="program-item border border-gray-200 rounded-lg p-4" data-item-id="${itemId}">
+                <div class="flex items-center justify-between mb-3">
+                    <span class="font-medium text-gray-700">Étape ${itemId + 1}</span>
+                    <button type="button" class="text-red-500 hover:text-red-700 remove-program-item" data-item-id="${itemId}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Heure</label>
+                        <input type="time" class="program-time w-full px-3 py-2 text-sm border border-gray-300 rounded" 
+                               value="${time}" placeholder="09:00">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-gray-600 mb-1">Durée (minutes)</label>
+                        <input type="number" class="program-duration w-full px-3 py-2 text-sm border border-gray-300 rounded" 
+                               value="${duration}" placeholder="30" min="5">
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label class="block text-xs text-gray-600 mb-1">Titre</label>
+                    <input type="text" class="program-title w-full px-3 py-2 text-sm border border-gray-300 rounded" 
+                           value="${title}" placeholder="Ex: Accueil et présentation">
+                </div>
+                <div class="mt-3">
+                    <label class="block text-xs text-gray-600 mb-1">Description (optionnel)</label>
+                    <textarea class="program-description w-full px-3 py-2 text-sm border border-gray-300 rounded" 
+                              rows="2" placeholder="Détails de cette étape...">${description}</textarea>
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', itemHtml);
+        
+        // Add event listener for remove button
+        const newItem = container.lastElementChild;
+        newItem.querySelector('.remove-program-item').addEventListener('click', function() {
+            newItem.remove();
+            updateProgramData();
+            renumberProgramItems();
+        });
+        
+        // Add event listeners for input changes
+        newItem.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('input', updateProgramData);
+        });
+        
+        updateProgramData();
+    }
+
+    function removeProgramItem(itemId) {
+        document.querySelector(`[data-item-id="${itemId}"]`).remove();
+        updateProgramData();
+        renumberProgramItems();
+    }
+
+    function renumberProgramItems() {
+        const items = document.querySelectorAll('.program-item');
+        items.forEach((item, index) => {
+            item.querySelector('span').textContent = `Étape ${index + 1}`;
+        });
+    }
+
+    function updateProgramData() {
+        const items = document.querySelectorAll('.program-item');
+        const programData = [];
+        
+        items.forEach(item => {
+            const time = item.querySelector('.program-time').value;
+            const title = item.querySelector('.program-title').value;
+            const description = item.querySelector('.program-description').value;
+            const duration = item.querySelector('.program-duration').value;
+            
+            if (time && title) {  // Only add if time and title are filled
+                programData.push({
+                    time: time,
+                    title: title,
+                    description: description,
+                    duration: duration ? parseInt(duration) : null
+                });
+            }
+        });
+        
+        document.getElementById('program-data').value = JSON.stringify(programData);
+    }
+
+    // Leaflet Map Picker (OpenStreetMap - Free, No API Key Required)
+    let map;
+    let marker;
+    const defaultLat = 36.8065; // Tunisia default (Tunis)
+    const defaultLng = 10.1815;
+
+    // Initialize map when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        initLeafletMap();
+    });
+
+    function initLeafletMap() {
+        const initialLat = parseFloat(document.getElementById('latitude').value) || defaultLat;
+        const initialLng = parseFloat(document.getElementById('longitude').value) || defaultLng;
+        
+        // Create map
+        map = L.map('map-picker').setView([initialLat, initialLng], 13);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        // Add marker if coordinates exist
+        if (document.getElementById('latitude').value && document.getElementById('longitude').value) {
+            addMarker([initialLat, initialLng]);
+        }
+
+        // Click event to place marker
+        map.on('click', function(e) {
+            addMarker([e.latlng.lat, e.latlng.lng]);
+            updateCoordinates(e.latlng.lat, e.latlng.lng);
+        });
+    }
+
+    function addMarker(latlng) {
+        // Remove existing marker
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        // Add new marker
+        marker = L.marker(latlng, {
+            draggable: true,
+            title: "Emplacement de l'événement"
+        }).addTo(map);
+
+        // Update coordinates when marker is dragged
+        marker.on('dragend', function(e) {
+            const position = e.target.getLatLng();
+            updateCoordinates(position.lat, position.lng);
+        });
+    }
+
+    function updateCoordinates(lat, lng) {
+        document.getElementById('latitude').value = lat.toFixed(7);
+        document.getElementById('longitude').value = lng.toFixed(7);
+        document.getElementById('lat-display').textContent = lat.toFixed(7);
+        document.getElementById('lng-display').textContent = lng.toFixed(7);
+    }
+
+    // Clear map selection
+    document.getElementById('clear-map').addEventListener('click', function() {
+        if (marker) {
+            map.removeLayer(marker);
+            marker = null;
+        }
+        document.getElementById('latitude').value = '';
+        document.getElementById('longitude').value = '';
+        document.getElementById('lat-display').textContent = '-';
+        document.getElementById('lng-display').textContent = '-';
+    });
+
+    // Try to geocode address when location field changes (using Nominatim - OSM free geocoding)
+    document.getElementById('location').addEventListener('blur', function() {
+        const address = this.value;
+        if (address && !document.getElementById('latitude').value) {
+            geocodeAddress(address);
+        }
+    });
+
+    function geocodeAddress(address) {
+        fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address + ', Tunisia')}&limit=1`)
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat);
+                    const lng = parseFloat(data[0].lon);
+                    map.setView([lat, lng], 15);
+                    addMarker([lat, lng]);
+                    updateCoordinates(lat, lng);
+                }
+            })
+            .catch(error => {
+                console.log('Geocoding error:', error);
+            });
+    }
+
     // Dark mode detection
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.classList.add('dark');
@@ -1040,4 +1411,12 @@
         }
     });
 </script>
+
+<!-- Leaflet CSS and JS for Map Picker (OpenStreetMap - No API Key Required) -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" 
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" 
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" 
+        crossorigin=""></script>
 @endpush

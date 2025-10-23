@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(test -d .git)",
+      "Bash(sed -n '1105,1110p' \"resources/views/BackOffice/categories/create.blade.php\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

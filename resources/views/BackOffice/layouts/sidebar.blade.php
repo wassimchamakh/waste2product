@@ -29,6 +29,7 @@
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a href="/admin/analytics" class="nav-link {{ Request::is('admin/analytics') ? 'active' : '' }}">
                         <i class="fas fa-chart-line nav-icon"></i>
@@ -36,6 +37,7 @@
                         <span class="nav-badge">Nouveau</span>
                     </a>
                 </li>
+                !-->
             </ul>
         </div>
 
@@ -43,11 +45,17 @@
         <div class="nav-section">
             <h3 class="nav-section-title">Gestion de contenu</h3>
             <ul>
-                <li class="nav-item">
+                 <li class="nav-item">
                     <a href="/admin/projects" class="nav-link {{ Request::is('admin/projects*') ? 'active' : '' }}">
                         <i class="fas fa-project-diagram nav-icon"></i>
                         <span class="nav-text">Projets</span>
                         <span class="nav-badge">12</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.categories.index') }}" class="nav-link {{ Request::is('admin/categories*') ? 'active' : '' }}">
+                        <i class="fas fa-tags nav-icon"></i>
+                        <span class="nav-text">Catégories</span>
                     </a>
                 </li>
                 <li class="nav-item">
@@ -57,13 +65,20 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/events" class="nav-link {{ Request::is('admin/evenements*') ? 'active' : '' }}">
+                    <a href="/admin/events" class="nav-link {{ Request::is('admin/events*') ? 'active' : '' }}">
                         <i class="fas fa-calendar-alt nav-icon"></i>
                         <span class="nav-text">Événements</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="/admin/tutoriels" class="nav-link {{ Request::is('admin/tutoriels*') ? 'active' : '' }}">
+                    <a href="{{ route('admin.forum.index') }}" class="nav-link {{ Request::is('admin/forum*') ? 'active' : '' }}">
+                        <i class="fas fa-comments nav-icon"></i>
+                        <span class="nav-text">Forum</span>
+                        <span class="nav-badge">Nouveau</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/admin/tutorials" class="nav-link {{ Request::is('admin/tutorials*') ? 'active' : '' }}">
                         <i class="fas fa-book nav-icon"></i>
                         <span class="nav-text">Tutoriels</span>
                     </a>
@@ -81,12 +96,12 @@
                         <span class="nav-text">Utilisateurs</span>
                     </a>
                 </li>
-                <li class="nav-item">
+                <!--<li class="nav-item">
                     <a href="/admin/roles" class="nav-link {{ Request::is('admin/roles*') ? 'active' : '' }}">
                         <i class="fas fa-user-shield nav-icon"></i>
                         <span class="nav-text">Rôles & Permissions</span>
                     </a>
-                </li>
+                </li>!-->
             </ul>
         </div>
 
@@ -95,23 +110,30 @@
             <h3 class="nav-section-title">Système</h3>
             <ul>
                 <li class="nav-item">
-                    <a href="/admin/settings" class="nav-link {{ Request::is('admin/settings*') ? 'active' : '' }}">
+                    <a href="/admin/profile" class="nav-link {{ Request::is('admin/profile*') ? 'active' : '' }}">
                         <i class="fas fa-cog nav-icon"></i>
                         <span class="nav-text">Paramètres</span>
                     </a>
                 </li>
+                <!--
                 <li class="nav-item">
                     <a href="/admin/logs" class="nav-link {{ Request::is('admin/logs*') ? 'active' : '' }}">
                         <i class="fas fa-file-alt nav-icon"></i>
                         <span class="nav-text">Logs</span>
                     </a>
                 </li>
+                !-->
                 <li class="nav-item">
-                    <a href="/logout" class="nav-link">
-                        <i class="fas fa-sign-out-alt nav-icon"></i>
-                        <span class="nav-text">Déconnexion</span>
-                    </a>
+                <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-link w-full text-left">
+                            <i class="fas fa-sign-out-alt nav-icon"></i>
+                            <span class="nav-text">Déconnexion</span>
+                        </button>
+                    </form>
                 </li>
+    
+
             </ul>
         </div>
     </nav>

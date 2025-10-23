@@ -122,4 +122,86 @@ class CategoryController extends Controller
         return redirect()->route('admin.categories.index')
                         ->with('success', '✅ Catégorie supprimée avec succès !');
     }
+
+    public function aiSuggest(Request $request)
+    {
+        try {
+            $materialType = $request->input('material_type', '');
+            $recyclingPurpose = $request->input('recycling_purpose', '');
+            $environmentalImpact = $request->input('environmental_impact', '');
+            
+            $geminiKey = env('GEMINI_API_KEY');
+            
+            if (!$geminiKey) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Clé API Gemini non configurée'
+                ], 500);
+            }
+
+            // Build the enhanced prompt based on user inputs
+            $prompt = "En tant qu'expert en gestion environnementale, crée une suggestion de catégorie de déchets avec les informations suivantes:\n\n";
+            $prompt .= "Type de matériau: {$materialType}\n";
+            $prompt .= "Objectif de recyclage: {$recyclingPurpose}\n";
+            $prompt .= "Impact environnemental: {$environmentalImpact}\n\n";
+            $prompt .= "Génère un JSON avec:\n";
+            $prompt .= "{\n";
+            $prompt .= '  "name": "Nom court de la catégorie (20-40 caractères)",'."\n";
+            $prompt .= '  "description": "Description détaillée (100-200 caractères)",'."\n";
+            $prompt .= '  "certifications": ["2-3 certifications ISO ou environnementales pertinentes parmi: ISO 14001, ISO 14040, ISO 14044, ISO 14046, ISO 14064, FSC, PEFC, Green Dot, Cradle to Cradle, EU Ecolabel, ISO 9001, ISO 45001, GRS, RCS"],'."\n";
+            $prompt .= '  "tips": "Conseils pratiques de recyclage (80-150 caractères)"'."\n";
+            $prompt .= "}\n\n";
+            $prompt .= "Réponds uniquement avec le JSON, sans texte supplémentaire.";
+
+            // Call Gemini API
+            $client = new \GuzzleHttp\Client([
+                'verify' => false // Disable SSL verification for local dev
+            ]);
+            $model = config('services.gemini.model', 'gemini-2.0-flash');
+            $response = $client->post("https://generativelanguage.googleapis.com/v1beta/models/{$model}:generateContent?key={$geminiKey}", [
+                'json' => [
+                    'contents' => [
+                        [
+                            'parts' => [
+                                ['text' => $prompt]
+                            ]
+                        ]
+                    ],
+                    'generationConfig' => [
+                        'temperature' => 0.8,
+                        'maxOutputTokens' => 500
+                    ]
+                ]
+            ]);
+
+            $result = json_decode($response->getBody(), true);
+            
+            if (isset($result['candidates'][0]['content']['parts'][0]['text'])) {
+                $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'];
+                
+                // Extract JSON from the response
+                preg_match('/\{[\s\S]*\}/', $aiResponse, $matches);
+                
+                if ($matches) {
+                    $suggestedData = json_decode($matches[0], true);
+                    
+                    if ($suggestedData) {
+                        return response()->json([
+                            'success' => true,
+                            'data' => $suggestedData,
+                            'message' => 'Suggestions générées avec succès ✨'
+                        ]);
+                    }
+                }
+            }
+
+            throw new \Exception('Format de réponse invalide de l\'API Gemini');
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la suggestion: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

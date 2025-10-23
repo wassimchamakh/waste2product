@@ -89,7 +89,7 @@
         <!-- Events Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse($participations as $event)
-            <div class="participation-card card-hover bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 event-type-{{ $event->type }}" 
+            <div class="participation-card card-hover bg-white rounded-xl shadow-sm border border-gray-200 event-type-{{ $event->type }}" 
                  data-status="{{ \Carbon\Carbon::parse($event->date_start)->isFuture() ? 'upcoming' : 'past' }}">
                 <div class="relative">
                     <img src="{{ $event->image ?? 'https://picsum.photos/400/200?random=' . $event->id }}" 
@@ -135,7 +135,7 @@
                     
                     <h3 class="font-bold text-lg mb-2 line-clamp-2">{{ $event->title }}</h3>
                     
-                    <div class="space-y-1 mb-4 text-sm text-gray-600 dark:text-gray-300">
+                    <div class="space-y-1 mb-4 text-sm text-gray-600">
                         <div class="flex items-center">
                             <i class="fas fa-calendar-alt mr-2 w-4"></i>
                             {{ \Carbon\Carbon::parse($event->date_start)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}
@@ -185,49 +185,49 @@
     <div id="organised" class="tab-content">
         <!-- Stats Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-primary rounded-lg">
                         <i class="fas fa-calendar-plus text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Événements créés</p>
+                        <p class="text-sm font-medium text-gray-600">Événements créés</p>
                         <p class="text-2xl font-bold">{{ $organizedEvents->count() }}</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-success rounded-lg">
                         <i class="fas fa-users text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Participants totaux</p>
+                        <p class="text-sm font-medium text-gray-600">Participants totaux</p>
                         <p class="text-2xl font-bold">{{ $organizedEvents->sum('current_participants') }}</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-warning rounded-lg">
                         <i class="fas fa-star text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Note moyenne</p>
+                        <p class="text-sm font-medium text-gray-600">Note moyenne</p>
                         <p class="text-2xl font-bold">4.8</p>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+            <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
                 <div class="flex items-center">
                     <div class="p-3 bg-secondary rounded-lg">
                         <i class="fas fa-percentage text-white text-xl"></i>
                     </div>
                     <div class="ml-4">
-                        <p class="text-sm font-medium text-gray-600 dark:text-gray-300">Taux de présence</p>
+                        <p class="text-sm font-medium text-gray-600">Taux de présence</p>
                         <p class="text-2xl font-bold">92%</p>
                     </div>
                 </div>
@@ -245,7 +245,7 @@
         <!-- Organized Events List -->
         <div class="space-y-4">
             @forelse($organizedEvents as $event)
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 event-type-{{ $event->type }}">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 event-type-{{ $event->type }}">
                 <div class="p-6">
                     <div class="flex flex-col md:flex-row md:items-center justify-between">
                         <div class="flex-1">
@@ -260,7 +260,7 @@
                             
                             <h3 class="text-xl font-bold mb-2">{{ $event->title }}</h3>
                             
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 dark:text-gray-300">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600">
                                 <div class="flex items-center">
                                     <i class="fas fa-calendar-alt mr-2"></i>
                                     {{ \Carbon\Carbon::parse($event->date_start)->locale('fr')->isoFormat('ddd D MMM, HH:mm') }}
@@ -278,11 +278,11 @@
                             <!-- Progress Bar -->
                             @php $progressPercent = $event->max_participants > 0 ? ($event->current_participants / $event->max_participants) * 100 : 0; @endphp
                             <div class="mt-3">
-                                <div class="flex justify-between text-xs text-gray-600 dark:text-gray-300 mb-1">
+                                <div class="flex justify-between text-xs text-gray-600 mb-1">
                                     <span>Inscriptions</span>
                                     <span>{{ round($progressPercent) }}%</span>
                                 </div>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div class="w-full bg-gray-200 rounded-full h-2">
                                     <div class="bg-gradient-to-r from-success to-primary h-2 rounded-full transition-all duration-500" 
                                          style="width: {{ $progressPercent }}%"></div>
                                 </div>
@@ -291,7 +291,7 @@
                         
                         <!-- Actions -->
                         <div class="mt-4 md:mt-0 md:ml-6 flex flex-wrap gap-2">
-                            <a href="{{ route('Events.show', $event) }}" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            <a href="{{ route('Events.show', $event) }}" class="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fas fa-eye mr-2"></i>Voir
                             </a>
                             
@@ -299,9 +299,9 @@
                                 <i class="fas fa-edit mr-2"></i>Modifier
                             </a>
                             
-                            <a href="{{ route('Events.participants', $event) }}" class="inline-flex items-center px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary hover:text-white transition-colors">
+                            <button onclick="openParticipantsModal({{ $event->id }})" class="inline-flex items-center px-3 py-2 border border-primary text-primary rounded-lg text-sm font-medium hover:bg-primary hover:text-white transition-colors">
                                 <i class="fas fa-users mr-2"></i>Participants
-                            </a>
+                            </button>
                             
                             <button onclick="showDuplicateModal({{ $event->id }})" class="inline-flex items-center px-3 py-2 border border-success text-success rounded-lg text-sm font-medium hover:bg-success hover:text-white transition-colors">
                                 <i class="fas fa-copy mr-2"></i>Dupliquer
@@ -332,6 +332,10 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Container -->
+<div id="participantsModalContainer"></div>
+
 @endsection
 
 @push('scripts')
@@ -381,6 +385,131 @@
                 }
             });
         });
+    });
+
+    // Open participants modal
+    function openParticipantsModal(eventId) {
+        // Show loading state
+        const container = document.getElementById('participantsModalContainer');
+        container.innerHTML = `
+            <div class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg p-8 text-center">
+                    <i class="fas fa-spinner fa-spin text-4xl text-primary mb-4"></i>
+                    <p class="text-gray-600">Chargement des participants...</p>
+                </div>
+            </div>
+        `;
+        
+        // Load modal content via AJAX
+        fetch(`/events/${eventId}/participants-modal-content`)
+            .then(response => {
+                if (!response.ok) throw new Error('Failed to load modal');
+                return response.text();
+            })
+            .then(html => {
+                container.innerHTML = html;
+                console.log('Modal HTML loaded successfully');
+                
+                // Execute any scripts in the loaded HTML
+                const scripts = container.querySelectorAll('script');
+                console.log(`Found ${scripts.length} script tags in modal`);
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    if (script.src) {
+                        newScript.src = script.src;
+                    } else {
+                        newScript.textContent = script.textContent;
+                    }
+                    document.body.appendChild(newScript);
+                    // Remove after execution
+                    setTimeout(() => document.body.removeChild(newScript), 100);
+                });
+                
+                // Show the modal with animation
+                setTimeout(() => {
+                    const modal = document.getElementById('participantsModal');
+                    const dialog = document.getElementById('participantsDialog');
+                    console.log('Modal element found:', modal ? 'Yes' : 'No');
+                    
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        
+                        // Trigger animations
+                        requestAnimationFrame(() => {
+                            modal.classList.add('show');
+                            modal.style.opacity = '1';
+                            modal.style.pointerEvents = 'auto';
+                            
+                            if (dialog) {
+                                dialog.style.transform = 'scale(1)';
+                            }
+                        });
+                        
+                        // Prevent body scroll
+                        document.body.style.overflow = 'hidden';
+                        
+                        // Initialize participants data if the function exists
+                        setTimeout(() => {
+                            console.log('Checking for loadParticipantsData function:', typeof loadParticipantsData);
+                            if (typeof loadParticipantsData === 'function') {
+                                console.log('Calling loadParticipantsData()');
+                                loadParticipantsData();
+                            } else {
+                                console.error('loadParticipantsData function not found!');
+                            }
+                        }, 200);
+                    }
+                }, 100);
+            })
+            .catch(error => {
+                console.error('Error loading modal:', error);
+                container.innerHTML = '';
+                alert('Erreur lors du chargement des participants. Veuillez réessayer.');
+            });
+    }
+
+    // Close participants modal - make it globally available
+    window.hideParticipantsModal = function() {
+        const modal = document.getElementById('participantsModal');
+        const dialog = document.getElementById('participantsDialog');
+        
+        if (modal) {
+            // Scale down and fade out
+            modal.style.opacity = '0';
+            modal.style.pointerEvents = 'none';
+            
+            if (dialog) {
+                dialog.style.transform = 'scale(0.95)';
+            }
+            
+            // Remove from DOM after animation
+            setTimeout(() => {
+                modal.classList.remove('show', 'flex');
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                
+                // Clear the modal container
+                document.getElementById('participantsModalContainer').innerHTML = '';
+            }, 300);
+        }
+    }
+
+    // Close modal when clicking outside or ESC key
+    document.addEventListener('click', (e) => {
+        const modal = document.getElementById('participantsModal');
+        if (modal && e.target === modal) {
+            hideParticipantsModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('participantsModal');
+            if (modal && !modal.classList.contains('hidden')) {
+                hideParticipantsModal();
+            }
+        }
     });
 
     function showDuplicateModal(eventId) {

@@ -287,4 +287,121 @@ class DechetController extends Controller
 
         return back()->with('success', '✅ Déchet réservé ! Le propriétaire a été notifié.');
     }
+
+    /**
+     * Predict category from image using Google Cloud Vision API
+     */
+    public function predictCategory(Request $request)
+    {
+        try {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
+            ]);
+
+            if (!$request->hasFile('image')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucune image fournie'
+                ], 400);
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->getRealPath();
+            
+            // Initialize Google Cloud Vision client
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . base_path('google-vision-credentials.json'));
+            
+            $imageAnnotator = new \Google\Cloud\Vision\V1\ImageAnnotatorClient();
+            $imageContent = file_get_contents($imagePath);
+            $visionImage = (new \Google\Cloud\Vision\V1\Image())->setContent($imageContent);
+
+            // Detect labels
+            $response = $imageAnnotator->labelDetection($visionImage);
+            $labels = $response->getLabelAnnotations();
+
+            if (!$labels) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Impossible d\'analyser l\'image'
+                ], 400);
+            }
+
+            // Map detected labels to categories
+            $categoryMapping = [
+                'plastic' => ['plastic', 'bottle', 'container', 'packaging', 'polymer'],
+                'paper' => ['paper', 'cardboard', 'newspaper', 'magazine', 'document'],
+                'glass' => ['glass', 'bottle', 'jar', 'window'],
+                'metal' => ['metal', 'aluminum', 'steel', 'iron', 'can'],
+                'organic' => ['food', 'organic', 'vegetable', 'fruit', 'plant', 'leaf'],
+                'electronic' => ['electronic', 'computer', 'phone', 'device', 'gadget', 'circuit'],
+                'wood' => ['wood', 'timber', 'lumber', 'furniture', 'plank'],
+                'textile' => ['textile', 'fabric', 'clothing', 'cloth', 'garment'],
+            ];
+
+            $detectedLabels = [];
+            foreach ($labels as $label) {
+                $detectedLabels[] = strtolower($label->getDescription());
+            }
+
+            // Find best matching category
+            $bestMatch = null;
+            $highestScore = 0;
+
+            foreach ($categoryMapping as $categoryKey => $keywords) {
+                $score = 0;
+                foreach ($keywords as $keyword) {
+                    if (in_array($keyword, $detectedLabels)) {
+                        $score++;
+                    }
+                }
+                if ($score > $highestScore) {
+                    $highestScore = $score;
+                    $bestMatch = $categoryKey;
+                }
+            }
+
+            // Find category in database by name
+            $category = Category::where('name', 'LIKE', "%{$bestMatch}%")
+                               ->orWhere('name', 'LIKE', '%' . ucfirst($bestMatch) . '%')
+                               ->first();
+
+            // If no exact match, try French translations
+            $frenchTranslations = [
+                'plastic' => 'Plastique',
+                'paper' => 'Papier',
+                'glass' => 'Verre',
+                'metal' => 'Métal',
+                'organic' => 'Organique',
+                'electronic' => 'Électronique',
+                'wood' => 'Bois',
+                'textile' => 'Textile',
+            ];
+
+            if (!$category && isset($frenchTranslations[$bestMatch])) {
+                $frenchName = $frenchTranslations[$bestMatch];
+                $category = Category::where('name', 'LIKE', "%{$frenchName}%")->first();
+            }
+
+            // If still no match, get first category as fallback
+            if (!$category) {
+                $category = Category::first();
+            }
+
+            $imageAnnotator->close();
+
+            return response()->json([
+                'success' => true,
+                'category_id' => $category->id,
+                'category_name' => $category->name,
+                'detected_labels' => array_slice($detectedLabels, 0, 5),
+                'confidence' => $highestScore > 0 ? round(($highestScore / count($categoryMapping[$bestMatch])) * 100) : 50
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'analyse: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

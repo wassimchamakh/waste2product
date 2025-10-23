@@ -70,41 +70,71 @@
 
                     <div>
                         <label for="location" class="block text-sm font-semibold text-gray-700 mb-2">
-                            Localisation
+                            Localisation (Gouvernorat) <span class="text-red-500">*</span>
                         </label>
                         <div class="relative">
-                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                            <input type="text" 
-                                   name="location" 
+                            <select name="location" 
                                    id="location" 
-                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all"
-                                   placeholder="Ex: Entrepôt A, Zone Nord">
+                                   class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all appearance-none bg-white"
+                                   required>
+                                <option value="">Sélectionnez un gouvernorat</option>
+                                <option value="Tunis">Tunis</option>
+                                <option value="Ariana">Ariana</option>
+                                <option value="Ben Arous">Ben Arous</option>
+                                <option value="Manouba">Manouba</option>
+                                <option value="Nabeul">Nabeul</option>
+                                <option value="Zaghouan">Zaghouan</option>
+                                <option value="Bizerte">Bizerte</option>
+                                <option value="Béja">Béja</option>
+                                <option value="Jendouba">Jendouba</option>
+                                <option value="Kef">Kef</option>
+                                <option value="Siliana">Siliana</option>
+                                <option value="Sousse">Sousse</option>
+                                <option value="Monastir">Monastir</option>
+                                <option value="Mahdia">Mahdia</option>
+                                <option value="Sfax">Sfax</option>
+                                <option value="Kairouan">Kairouan</option>
+                                <option value="Kasserine">Kasserine</option>
+                                <option value="Sidi Bouzid">Sidi Bouzid</option>
+                                <option value="Gabès">Gabès</option>
+                                <option value="Medenine">Medenine</option>
+                                <option value="Tataouine">Tataouine</option>
+                                <option value="Gafsa">Gafsa</option>
+                                <option value="Tozeur">Tozeur</option>
+                                <option value="Kebili">Kebili</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- Category -->
+                <!-- Category Selection (Select Dropdown) -->
                 <div>
                     <label for="category_id" class="block text-sm font-semibold text-gray-700 mb-2">
                         Catégorie <span class="text-red-500">*</span>
                     </label>
                     <div class="relative">
-                        <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                        </svg>
                         <select name="category_id" 
-                                id="category_id" 
-                                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg appearance-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all bg-white"
-                                required>
+                               id="category_id" 
+                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all appearance-none bg-white"
+                               required>
                             <option value="">Sélectionnez une catégorie</option>
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                <option value="{{ $category->id }}" data-icon="{{ $category->icon }}" data-color="{{ $category->color }}">
+                                    {{ $category->name }} @if($category->description) - {{ Str::limit($category->description, 50) }} @endif
+                                </option>
                             @endforeach
                         </select>
+                        <div class="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
                     </div>
+                    <p class="mt-2 text-xs text-gray-500">Sélectionnez la catégorie de déchets appropriée</p>
                 </div>
 
                 <!-- Photo Upload -->
