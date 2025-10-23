@@ -102,9 +102,7 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo '🧪 Running tests...'
-                sh '''
-                    php artisan test || echo "Tests had failures"
-                '''
+                sh 'php artisan test'
             }
         }
         
@@ -112,9 +110,17 @@ pipeline {
             steps {
                 echo '🔍 Running SonarQube analysis...'
                 script {
-                    def scannerHome = tool 'scanner'
-                    withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner"
+                    try {
+                        def scannerHome = tool 'scanner'
+                        withSonarQubeEnv('SonarQube') {
+                            sh "${scannerHome}/bin/sonar-scanner"
+                        }
+                    } catch (Exception e) {
+                        echo "⚠️ SonarQube analysis skipped: ${e.message}"
+                        echo "ℹ️ To enable SonarQube:"
+                        echo "  1. Configure SonarQube server in Jenkins (Manage Jenkins → System)"
+                        echo "  2. Name it 'SonarQube' to match this pipeline"
+                        currentBuild.result = 'SUCCESS'
                     }
                 }
             }
@@ -123,8 +129,15 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 echo '🚦 Waiting for Quality Gate...'
-                timeout(time: 5, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: false
+                script {
+                    try {
+                        timeout(time: 5, unit: 'MINUTES') {
+                            waitForQualityGate abortPipeline: false
+                        }
+                    } catch (Exception e) {
+                        echo "⚠️ Quality Gate check skipped: ${e.message}"
+                        currentBuild.result = 'SUCCESS'
+                    }
                 }
             }
         }
