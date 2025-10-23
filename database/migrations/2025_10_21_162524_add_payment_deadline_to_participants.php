@@ -15,7 +15,8 @@ return new class extends Migration
         // Check if column doesn't already exist before adding
         if (!Schema::hasColumn('participants', 'payment_deadline')) {
             Schema::table('participants', function (Blueprint $table) {
-                $table->timestamp('payment_deadline')->nullable()->after('payment_completed_at');
+                // Don't use after() to avoid dependency on columns that might not exist yet
+                $table->timestamp('payment_deadline')->nullable();
 
                 // Add index for performance when querying expired payments
                 $table->index(['payment_status', 'payment_deadline']);
