@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo '🎵 Installing Composer dependencies...'
                 script {
-                    sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                    sh 'composer install --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs'
                 }
             }
         }
