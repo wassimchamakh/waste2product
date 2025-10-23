@@ -103,7 +103,7 @@ pipeline {
             steps {
                 echo '🧪 Running tests...'
                 sh '''
-                    php artisan test --parallel || echo "Tests had failures"
+                    php artisan test || echo "Tests had failures"
                 '''
             }
         }
