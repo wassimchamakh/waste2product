@@ -83,6 +83,9 @@
                 <!-- Search & Filter -->
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                     <form method="GET" action="{{ route('forum.index') }}" class="flex flex-col md:flex-row gap-4">
+                        @if(request('mine'))
+                            <input type="hidden" name="mine" value="1">
+                        @endif
                         <div class="flex-1">
                             <input type="text" 
                                    name="search" 
@@ -137,6 +140,7 @@
             <div class="lg:col-span-1">
                 
                 <!-- Quick Actions -->
+                <!-- Quick Actions -->
                 @auth
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6">
                     <h3 class="text-lg font-bold text-gray-800 mb-4">Actions Rapides</h3>
@@ -145,10 +149,17 @@
                            class="block w-full px-4 py-3 bg-primary text-white text-center rounded-lg hover:bg-primary/90 transition font-semibold">
                             <i class="fas fa-plus mr-2"></i> Nouveau Post
                         </a>
-                        <a href="{{ route('forum.index', ['search' => auth()->user()->name]) }}" 
-                           class="block w-full px-4 py-3 bg-gray-100 text-gray-700 text-center rounded-lg hover:bg-gray-200 transition font-semibold">
-                            <i class="fas fa-user mr-2"></i> Mes Posts
-                        </a>
+                        @if(request('mine'))
+                            <a href="{{ route('forum.index') }}" 
+                               class="block w-full px-4 py-3 bg-gray-100 text-gray-700 text-center rounded-lg hover:bg-gray-200 transition font-semibold">
+                                <i class="fas fa-list mr-2"></i> Tous les Posts
+                            </a>
+                        @else
+                            <a href="{{ route('forum.index', ['mine' => 1]) }}" 
+                               class="block w-full px-4 py-3 bg-gray-100 text-gray-700 text-center rounded-lg hover:bg-gray-200 transition font-semibold">
+                                <i class="fas fa-user mr-2"></i> Mes Posts
+                            </a>
+                        @endif
                     </div>
                 </div>
 

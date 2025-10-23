@@ -31,6 +31,10 @@ class ForumPostController extends Controller
             ->published()
             ->pinned();
 
+            // Filter: only my posts
+        if (auth()->check() && $request->boolean('mine')) {
+            $query->where('user_id', Auth::id());
+        }
         // Search filter
         if ($request->filled('search')) {
             $search = $request->search;
