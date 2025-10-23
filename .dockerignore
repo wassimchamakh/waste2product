@@ -1,0 +1,63 @@
+# Git files
+.git
+.gitignore
+.gitattributes
+
+# CI/CD
+.github
+Jenkinsfile
+sonar-project.properties
+
+# Documentation
+*.md
+BACKOFFICE_TUTORIALS_SYSTEM.md
+EMAIL_DIAGNOSTIC.md
+EMAIL_SENDING_FIX.md
+EMAIL_TEST_INSTRUCTIONS.md
+FEATURES_ADDED.md
+FIX_FILE_UPLOAD.md
+QUICK_FIX.md
+README.md
+
+# Environment files
+.env
+.env.example
+.env.backup
+.env.testing
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Node modules and build files
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Storage and cache
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+bootstrap/cache/*
+
+# Testing
+tests
+phpunit.xml
+.phpunit.result.cache
+
+# Build artifacts
+build
+.scannerwork
+
+# Docker files (not needed inside the image)
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+# OS files
+.DS_Store
+Thumbs.db

@@ -54,6 +54,22 @@ pipeline {
             }
         }
         
+        stage('Building Docker Images') {
+            steps {
+                echo '🐳 Building Docker images (Laravel and MySQL)...'
+                script {
+                    sh '''
+                        # Build Docker images using docker-compose
+                        docker-compose build
+                        
+                        echo "✅ Docker images built successfully!"
+                        echo "📦 Images created:"
+                        docker images | grep -E "laravelapp|mysql"
+                    '''
+                }
+            }
+        }
+        
         stage('Setup Environment') {
             steps {
                 echo '⚙️ Setting up environment...'

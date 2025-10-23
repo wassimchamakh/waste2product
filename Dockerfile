@@ -1,34 +1,41 @@
-# Custom Jenkins build image with PHP 8.2 + Node.js 18
-FROM php:8.2-cli
+FROM php:8.2-fpm
+
+WORKDIR /var/www/html
 
 # Install system dependencies
-RUN apt-get update -qq && \
-    apt-get install -y -qq \
+RUN apt-get update && apt-get install -y \
     git \
-    unzip \
     curl \
-    libzip-dev \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
     zip \
-    && docker-php-ext-install zip \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    unzip \
+    nodejs \
+    npm
+
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+# Copy application files
+COPY . /var/www/html
 
-# Set working directory
-WORKDIR /workspace
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Verify installations
-RUN php --version && \
-    composer --version && \
-    node --version && \
-    npm --version
+# Install Node dependencies and build assets
+RUN npm install
+RUN npm run build
 
-ENV COMPOSER_ALLOW_SUPERUSER=1
+# Set permissions
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
