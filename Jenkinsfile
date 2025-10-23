@@ -108,6 +108,27 @@ pipeline {
             }
         }
         
+        stage('SonarQube Analysis') {
+            steps {
+                echo '🔍 Running SonarQube analysis...'
+                script {
+                    def scannerHome = tool 'SonarScanner'
+                    withSonarQubeEnv('SonarQube') {
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
+                }
+            }
+        }
+        
+        stage('Quality Gate') {
+            steps {
+                echo '🚦 Waiting for Quality Gate...'
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false
+                }
+            }
+        }
+        
         stage('Code Quality Check') {
             steps {
                 echo '✨ Checking code quality...'
