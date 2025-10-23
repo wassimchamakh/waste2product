@@ -4,12 +4,15 @@ pipeline {
     environment {
         PHP_VERSION = '8.2'
         NODE_VERSION = '18'
+        DB_DATABASE = 'waste2product_test'
+        DB_USERNAME = 'jenkins'
+        DB_PASSWORD = 'jenkins_password'
     }
     
     stages {
         stage('Verify Environment') {
             steps {
-                echo '� Verifying installed tools...'
+                echo '🔍 Verifying installed tools...'
                 sh '''
                     echo "PHP Version:"
                     php --version
@@ -55,47 +58,66 @@ pipeline {
             steps {
                 echo '⚙️ Setting up environment...'
                 sh '''
-                    [ ! -f .env ] && cp .env.example .env || true
+                    cp .env.example .env
                     php artisan key:generate --force
                     
                     # Configure database for testing
-                    sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
-                    sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
-                    sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
-                    sed -i 's/DB_DATABASE=.*/DB_DATABASE=waste2product_test/' .env
-                    sed -i 's/DB_USERNAME=.*/DB_USERNAME=jenkins/' .env
-                    sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=jenkins_password/' .env
+                    sed -i "s/DB_CONNECTION=.*/DB_CONNECTION=mysql/" .env
+                    sed -i "s/DB_HOST=.*/DB_HOST=127.0.0.1/" .env
+                    sed -i "s/DB_PORT=.*/DB_PORT=3306/" .env
+                    sed -i "s/DB_DATABASE=.*/DB_DATABASE=${DB_DATABASE}/" .env
+                    sed -i "s/DB_USERNAME=.*/DB_USERNAME=${DB_USERNAME}/" .env
+                    sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/" .env
                 '''
             }
         }
         
         stage('Setup Test Database') {
             steps {
-                echo '🗄️ Creating test database...'
+                echo '🗄️ Setting up test database...'
                 sh '''
-                    # Create test database using sudo (auth_socket authentication)
-                    sudo mysql -e "CREATE DATABASE IF NOT EXISTS waste2product_test;" || true
-                    sudo mysql -e "CREATE USER IF NOT EXISTS 'jenkins'@'localhost' IDENTIFIED BY 'jenkins_password';" || true
-                    sudo mysql -e "GRANT ALL PRIVILEGES ON waste2product_test.* TO 'jenkins'@'localhost';" || true
-                    sudo mysql -e "FLUSH PRIVILEGES;" || true
+                    # Drop and recreate database for clean state
+                    sudo mysql -e "DROP DATABASE IF EXISTS ${DB_DATABASE};"
+                    sudo mysql -e "CREATE DATABASE ${DB_DATABASE};"
                     
-                    # Run migrations
-                    php artisan migrate --force --seed || true
+                    # Recreate user with proper privileges
+                    sudo mysql -e "DROP USER IF EXISTS '${DB_USERNAME}'@'localhost';"
+                    sudo mysql -e "CREATE USER '${DB_USERNAME}'@'localhost' IDENTIFIED BY '${DB_PASSWORD}';"
+                    sudo mysql -e "GRANT ALL PRIVILEGES ON ${DB_DATABASE}.* TO '${DB_USERNAME}'@'localhost';"
+                    sudo mysql -e "FLUSH PRIVILEGES;"
+                    
+                    # Verify connection
+                    mysql -u${DB_USERNAME} -p${DB_PASSWORD} -e "SELECT 1;" ${DB_DATABASE}
                 '''
+            }
+        }
+        
+        stage('Run Migrations') {
+            steps {
+                echo '🔄 Running database migrations...'
+                sh 'php artisan migrate:fresh --force --seed'
             }
         }
         
         stage('Run Tests') {
             steps {
-                echo '🧪 Running PHP tests...'
-                sh 'php artisan test || true'
+                echo '🧪 Running tests...'
+                sh '''
+                    php artisan test --parallel || echo "Tests had failures"
+                '''
             }
         }
         
         stage('Code Quality Check') {
             steps {
                 echo '✨ Checking code quality...'
-                sh 'php artisan route:list || true'
+                sh '''
+                    echo "Route List:"
+                    php artisan route:list || echo "Route list failed"
+                    
+                    echo "\nRunning Pint (Code Style):"
+                    ./vendor/bin/pint --test || echo "Code style check had issues"
+                '''
             }
         }
     }
@@ -109,6 +131,8 @@ pipeline {
         }
         always {
             echo '🏁 Pipeline completed.'
+            // Archive test results if they exist
+            junit(testResults: 'storage/logs/*.xml', allowEmptyResults: true)
             cleanWs()
         }
     }
