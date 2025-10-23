@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo '🎵 Installing Composer dependencies...'
                 script {
-                    bat 'composer install --no-interaction --prefer-dist --optimize-autoloader'
+                    sh 'composer install --no-interaction --prefer-dist --optimize-autoloader'
                 }
             }
         }
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 echo '📦 Installing NPM dependencies...'
                 script {
-                    bat 'npm install'
+                    sh 'npm install'
                 }
             }
         }
@@ -37,7 +37,7 @@ pipeline {
             steps {
                 echo '🏗️ Building frontend assets...'
                 script {
-                    bat 'npm run build'
+                    sh 'npm run build'
                 }
             }
         }
@@ -47,8 +47,8 @@ pipeline {
                 echo '⚙️ Setting up environment...'
                 script {
                     // Copy .env.example to .env if not exists
-                    bat '''
-                        if not exist .env copy .env.example .env
+                    sh '''
+                        [ ! -f .env ] && cp .env.example .env || true
                         php artisan key:generate --force
                     '''
                 }
@@ -59,7 +59,7 @@ pipeline {
             steps {
                 echo '🗄️ Running database migrations...'
                 script {
-                    bat 'php artisan migrate --force'
+                    sh 'php artisan migrate --force'
                 }
             }
         }
@@ -68,7 +68,7 @@ pipeline {
             steps {
                 echo '🧪 Running PHP tests...'
                 script {
-                    bat 'php artisan test || exit 0'
+                    sh 'php artisan test || true'
                 }
             }
         }
@@ -78,16 +78,16 @@ pipeline {
                 echo '✨ Checking code quality...'
                 script {
                     // Optional: Run PHP code sniffer or other linters
-                    bat 'php artisan route:list || exit 0'
+                    sh 'php artisan route:list || true'
                 }
             }
         }
         
         stage('Clear Cache') {
             steps {
-                echo '🧹 Clearing application cache...'
+                echo '🧹 Clearing cache...'
                 script {
-                    bat '''
+                    sh '''
                         php artisan config:clear
                         php artisan cache:clear
                         php artisan view:clear
@@ -99,9 +99,9 @@ pipeline {
         
         stage('Optimize') {
             steps {
-                echo '⚡ Optimizing application...'
+                echo '🚀 Optimizing application...'
                 script {
-                    bat '''
+                    sh '''
                         php artisan config:cache
                         php artisan route:cache
                         php artisan view:cache
