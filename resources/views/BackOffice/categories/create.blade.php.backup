@@ -1,0 +1,952 @@
+@extends('BackOffice.layouts.app')
+
+@section('title', 'Créer une Catégorie')
+
+@section('content')
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <div class="flex items-center gap-3 mb-2">
+            <a href="{{ route('admin.categories.index') }}" class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center hover:bg-gray-200 transition-colors">
+                <i class="fas fa-arrow-left text-gray-600"></i>
+            </a>
+            <h1 class="text-3xl font-bold text-gray-900">Créer une Nouvelle Catégorie</h1>
+        </div>
+        <p class="text-gray-600 ml-13">Ajoutez une nouvelle catégorie pour classifier les déchets</p>
+    </div>
+
+    @if($errors->any())
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded-lg mb-6">
+            <div class="flex items-start">
+                <i class="fas fa-exclamation-circle text-red-500 mr-3 mt-0.5"></i>
+                <div>
+                    <p class="font-semibold text-red-800 mb-2">Erreurs de validation:</p>
+                    <ul class="list-disc list-inside text-red-700 text-sm">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            </div>
+        </div>
+    @endif
+
+    <form action="{{ route('admin.categories.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+        @csrf
+
+        <!-- Main Info Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <i class="fas fa-info-circle text-blue-500"></i>
+                Informations Principales
+            </h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Name -->
+                <div class="md:col-span-2">
+                    <label for="name" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Nom de la Catégorie <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required maxlength="100" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Ex: Plastique, Bois, Métal...">
+                </div>
+
+                <!-- Icon -->
+                                <!-- Icon -->
+                <div>
+                    <label for="icon" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Icône <span class="text-red-500">*</span>
+                    </label>
+                    <select id="icon" name="icon" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                        <option value="">Choisissez une icône...</option>
+                        <optgroup label="♻️ Recyclage & Environnement">
+                            <option value="fas fa-recycle" selected>♻️ Recycle</option>
+                            <option value="fas fa-leaf">🍃 Feuille</option>
+                            <option value="fas fa-seedling">🌱 Plante</option>
+                            <option value="fas fa-tree">🌳 Arbre</option>
+                            <option value="fas fa-globe">🌍 Globe</option>
+                            <option value="fas fa-water">💧 Eau</option>
+                        </optgroup>
+                        <optgroup label="📦 Matériaux">
+                            <option value="fas fa-box">📦 Boîte</option>
+                            <option value="fas fa-cubes">🧊 Cubes</option>
+                            <option value="fas fa-drum">🛢️ Baril</option>
+                            <option value="fas fa-trash">🗑️ Poubelle</option>
+                            <option value="fas fa-dumpster">🚮 Conteneur</option>
+                        </optgroup>
+                        <optgroup label="🔧 Électronique & Métaux">
+                            <option value="fas fa-microchip">🖥️ Puce</option>
+                            <option value="fas fa-mobile-alt">📱 Téléphone</option>
+                            <option value="fas fa-laptop">💻 Ordinateur</option>
+                            <option value="fas fa-plug">🔌 Prise</option>
+                            <option value="fas fa-battery-full">🔋 Batterie</option>
+                            <option value="fas fa-cog">⚙️ Engrenage</option>
+                        </optgroup>
+                        <optgroup label="🏗️ Construction & Bois">
+                            <option value="fas fa-hammer">🔨 Marteau</option>
+                            <option value="fas fa-wrench">🔧 Clé</option>
+                            <option value="fas fa-toolbox">🧰 Boîte à outils</option>
+                            <option value="fas fa-hard-hat">👷 Casque</option>
+                        </optgroup>
+                        <optgroup label="🧪 Chimique & Dangereux">
+                            <option value="fas fa-flask">🧪 Flacon</option>
+                            <option value="fas fa-biohazard">☣️ Biohazard</option>
+                            <option value="fas fa-radiation">☢️ Radiation</option>
+                            <option value="fas fa-fire">🔥 Feu</option>
+                        </optgroup>
+                        <optgroup label="🍽️ Alimentaire & Organique">
+                            <option value="fas fa-apple-alt">🍎 Pomme</option>
+                            <option value="fas fa-wine-bottle">🍾 Bouteille</option>
+                            <option value="fas fa-glass-martini">🍷 Verre</option>
+                            <option value="fas fa-utensils">🍴 Couverts</option>
+                        </optgroup>
+                        <optgroup label="👕 Textile">
+                            <option value="fas fa-tshirt">👕 T-shirt</option>
+                            <option value="fas fa-shoe-prints">👟 Chaussures</option>
+                            <option value="fas fa-cut">✂️ Ciseaux</option>
+                        </optgroup>
+                        <optgroup label="📄 Papier & Carton">
+                            <option value="fas fa-file-alt">📄 Fichier</option>
+                            <option value="fas fa-newspaper">📰 Journal</option>
+                            <option value="fas fa-book">📚 Livre</option>
+                        </optgroup>
+                        <optgroup label="🔋 Autres">
+                            <option value="fas fa-lightbulb">💡 Ampoule</option>
+                            <option value="fas fa-gas-pump">⛽ Pompe</option>
+                            <option value="fas fa-car-battery">🔋 Batterie auto</option>
+                            <option value="fas fa-oil-can">🛢️ Huile</option>
+                        </optgroup>
+                    </select>
+                    <div class="mt-2 flex items-center gap-2">
+                        <div id="icon-preview-large" class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-2xl">
+                            <i class="fas fa-recycle text-gray-600"></i>
+                        </div>
+                        <span class="text-xs text-gray-500">Aperçu de l'icône sélectionnée</span>
+                    </div>
+                </div>
+
+                <!-- Icon Picker Modal -->
+                <div id="iconPickerModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[80vh] overflow-hidden">
+                        <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-2xl font-bold">Choisir une icône</h3>
+                                <button onclick="closeIconPicker()" class="text-white hover:bg-white/20 rounded-lg p-2">
+                                    <i class="fas fa-times text-xl"></i>
+                                </button>
+                            </div>
+                            <div class="mt-4">
+                                <input type="text" id="iconSearch" placeholder="Rechercher une icône..." class="w-full px-4 py-3 rounded-lg text-gray-800 focus:ring-2 focus:ring-white" oninput="filterIcons(this.value)">
+                            </div>
+                        </div>
+                        <div class="p-6 overflow-y-auto max-h-[500px]" id="iconGrid">
+                            <!-- Icons will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Color -->
+                <div>
+                    <label for="color" class="block text-sm font-semibold text-gray-700 mb-2">
+                        Couleur <span class="text-red-500">*</span>
+                    </label>
+                    <div class="flex gap-3">
+                        <input type="color" id="color" name="color" value="{{ old('color', '#059669') }}" required class="w-16 h-12 rounded-lg border border-gray-300 cursor-pointer">
+                        <input type="text" id="color-text" value="{{ old('color', '#059669') }}" maxlength="20" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="#059669">
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="description" class="block text-sm font-semibold text-gray-700">
+                            Description <span class="text-red-500">*</span>
+                        </label>
+                        <button type="button" onclick="suggestDescription()" class="text-xs inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 rounded-full hover:bg-green-100 transition-all">
+                            <i class="fas fa-sparkles"></i>
+                            ✨ Suggérer avec IA
+                        </button>
+                    </div>
+                    <textarea id="description" name="description" rows="3" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Décrivez cette catégorie...">{{ old('description') }}</textarea>
+                </div>
+
+                <!-- Tips -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center justify-between mb-2">
+                        <label for="tips" class="block text-sm font-semibold text-gray-700">
+                            Conseils de Recyclage
+                        </label>
+                        <button type="button" onclick="suggestTips()" class="text-xs inline-flex items-center gap-1 px-3 py-1 bg-green-50 text-green-600 rounded-full hover:bg-green-100 transition-all">
+                            <i class="fas fa-sparkles"></i>
+                            ✨ Suggérer avec IA
+                        </button>
+                    </div>
+                    <textarea id="tips" name="tips" rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition-all" placeholder="Conseils pour recycler cette catégorie...">{{ old('tips') }}</textarea>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Certifications Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                    <i class="fas fa-certificate text-yellow-500"></i>
+                    Certifications & Normes
+                </h2>
+                <button type="button" onclick="suggestCertifications()" class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-medium hover:shadow-lg transition-all">
+                    <i class="fas fa-sparkles"></i>
+                    <span>✨ Suggérer avec IA</span>
+                </button>
+            </div>
+
+            <div id="certifications-container">
+                <div class="space-y-3" id="certifications-list">
+                    @if(old('certifications'))
+                        @foreach(old('certifications') as $index => $cert)
+                            <div class="certification-item flex gap-2">
+                                <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                                    <option value="">Sélectionnez une certification</option>
+                                    <optgroup label="ISO - Normes Environnementales">
+                                        <option value="ISO 14001" {{ $cert == 'ISO 14001' ? 'selected' : '' }}>ISO 14001 - Management Environnemental</option>
+                                        <option value="ISO 14040" {{ $cert == 'ISO 14040' ? 'selected' : '' }}>ISO 14040 - Analyse du Cycle de Vie</option>
+                                        <option value="ISO 14044" {{ $cert == 'ISO 14044' ? 'selected' : '' }}>ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                                        <option value="ISO 14046" {{ $cert == 'ISO 14046' ? 'selected' : '' }}>ISO 14046 - Empreinte Eau</option>
+                                        <option value="ISO 14064" {{ $cert == 'ISO 14064' ? 'selected' : '' }}>ISO 14064 - Gaz à Effet de Serre</option>
+                                    </optgroup>
+                                    <optgroup label="Certifications Forestières">
+                                        <option value="FSC" {{ $cert == 'FSC' ? 'selected' : '' }}>FSC - Forest Stewardship Council</option>
+                                        <option value="PEFC" {{ $cert == 'PEFC' ? 'selected' : '' }}>PEFC - Programme for Endorsement of Forest Certification</option>
+                                    </optgroup>
+                                    <optgroup label="Recyclage & Économie Circulaire">
+                                        <option value="Green Dot" {{ $cert == 'Green Dot' ? 'selected' : '' }}>Point Vert (Der Grüne Punkt)</option>
+                                        <option value="Cradle to Cradle" {{ $cert == 'Cradle to Cradle' ? 'selected' : '' }}>Cradle to Cradle Certified</option>
+                                        <option value="EU Ecolabel" {{ $cert == 'EU Ecolabel' ? 'selected' : '' }}>Écolabel Européen</option>
+                                    </optgroup>
+                                    <optgroup label="Qualité & Sécurité">
+                                        <option value="ISO 9001" {{ $cert == 'ISO 9001' ? 'selected' : '' }}>ISO 9001 - Management de la Qualité</option>
+                                        <option value="ISO 45001" {{ $cert == 'ISO 45001' ? 'selected' : '' }}>ISO 45001 - Santé et Sécurité au Travail</option>
+                                    </optgroup>
+                                    <optgroup label="Autres">
+                                        <option value="GRS" {{ $cert == 'GRS' ? 'selected' : '' }}>GRS - Global Recycled Standard</option>
+                                        <option value="RCS" {{ $cert == 'RCS' ? 'selected' : '' }}>RCS - Recycled Claim Standard</option>
+                                        <option value="Autre" {{ $cert == 'Autre' ? 'selected' : '' }}>Autre (préciser en description)</option>
+                                    </optgroup>
+                                </select>
+                                <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="certification-item flex gap-2">
+                            <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                                <option value="">Sélectionnez une certification</option>
+                                <optgroup label="ISO - Normes Environnementales">
+                                    <option value="ISO 14001">ISO 14001 - Management Environnemental</option>
+                                    <option value="ISO 14040">ISO 14040 - Analyse du Cycle de Vie</option>
+                                    <option value="ISO 14044">ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                                    <option value="ISO 14046">ISO 14046 - Empreinte Eau</option>
+                                    <option value="ISO 14064">ISO 14064 - Gaz à Effet de Serre</option>
+                                </optgroup>
+                                <optgroup label="Certifications Forestières">
+                                    <option value="FSC">FSC - Forest Stewardship Council</option>
+                                    <option value="PEFC">PEFC - Programme for Endorsement of Forest Certification</option>
+                                </optgroup>
+                                <optgroup label="Recyclage & Économie Circulaire">
+                                    <option value="Green Dot">Point Vert (Der Grüne Punkt)</option>
+                                    <option value="Cradle to Cradle">Cradle to Cradle Certified</option>
+                                    <option value="EU Ecolabel">Écolabel Européen</option>
+                                </optgroup>
+                                <optgroup label="Qualité & Sécurité">
+                                    <option value="ISO 9001">ISO 9001 - Management de la Qualité</option>
+                                    <option value="ISO 45001">ISO 45001 - Santé et Sécurité au Travail</option>
+                                </optgroup>
+                                <optgroup label="Autres">
+                                    <option value="GRS">GRS - Global Recycled Standard</option>
+                                    <option value="RCS">RCS - Recycled Claim Standard</option>
+                                    <option value="Autre">Autre (préciser en description)</option>
+                                </optgroup>
+                            </select>
+                            <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    @endif
+                </div>
+
+                <button type="button" onclick="addCertification()" class="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-yellow-50 text-yellow-700 rounded-lg font-medium hover:bg-yellow-100 transition-colors">
+                    <i class="fas fa-plus"></i>
+                    <span>Ajouter une Certification</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Preview Card -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                <i class="fas fa-eye text-green-500"></i>
+                Aperçu de la Carte
+            </h2>
+
+            <div class="max-w-sm mx-auto">
+                <label id="preview-card" class="category-card relative cursor-pointer group">
+                    <div class="category-card-inner bg-white border-2 border-gray-200 rounded-xl p-4 text-center hover:border-primary transition-all duration-300 hover:shadow-lg">
+                        <div id="preview-icon-wrapper" class="w-16 h-16 rounded-full mx-auto mb-3 flex items-center justify-center transition-all duration-300" style="background: #05966920; color: #059669">
+                            <i id="preview-icon" class="fas fa-recycle text-2xl"></i>
+                        </div>
+                        <h4 id="preview-name" class="font-bold text-gray-900 mb-2">Nom de la Catégorie</h4>
+                        <p id="preview-description" class="text-xs text-gray-600 line-clamp-2">Description de la catégorie...</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-4">
+            <a href="{{ route('admin.categories.index') }}" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors">
+                <i class="fas fa-times"></i>
+                <span>Annuler</span>
+            </a>
+            <button type="submit" class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-xl font-semibold hover:shadow-lg hover:from-green-700 hover:to-green-800 transition-all duration-300">
+                <i class="fas fa-check"></i>
+                <span>Créer la Catégorie</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- AI Assistant Modal -->
+<div id="aiAssistantModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-6 rounded-t-2xl">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-sparkles text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold">Assistant IA</h2>
+                        <p class="text-purple-100 text-sm">Je vais vous guider pour créer une catégorie parfaite</p>
+                    </div>
+                </div>
+                <button onclick="closeAIAssistant()" class="text-white hover:bg-white/20 rounded-lg p-2 transition-colors">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="p-6 space-y-6">
+            <!-- Step 1: Quick Questions -->
+            <div id="step1" class="space-y-4">
+                <div class="flex items-center gap-2 text-purple-600 font-semibold mb-4">
+                    <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                        <span>1</span>
+                    </div>
+                    <span>Quelques questions rapides</span>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Quel type de déchet représente cette catégorie? 🗑️
+                    </label>
+                    <input type="text" id="ai_waste_type" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500" placeholder="Ex: Plastique, Bois, Électronique...">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Quelle est la principale utilisation? ♻️
+                    </label>
+                    <select id="ai_usage" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="">Sélectionnez...</option>
+                        <option value="recyclage">Recyclage direct</option>
+                        <option value="transformation">Transformation en matière première</option>
+                        <option value="upcycling">Upcycling / Valorisation</option>
+                        <option value="compostage">Compostage</option>
+                        <option value="reutilisation">Réutilisation</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">
+                        Niveau de traitement requis? 🔬
+                    </label>
+                    <select id="ai_treatment" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500">
+                        <option value="">Sélectionnez...</option>
+                        <option value="simple">Simple - Nettoyage basique</option>
+                        <option value="moyen">Moyen - Tri et préparation</option>
+                        <option value="complexe">Complexe - Traitement spécialisé</option>
+                        <option value="dangereux">Dangereux - Manipulation spéciale requise</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- AI Response Area -->
+            <div id="aiResponse" class="hidden space-y-4">
+                <div class="flex items-center gap-2 text-green-600 font-semibold mb-4">
+                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Suggestions de l'IA</span>
+                </div>
+
+                <div class="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-xl p-6 border border-purple-200">
+                    <div id="aiSuggestions" class="space-y-4">
+                        <!-- AI suggestions will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="aiLoading" class="hidden text-center py-8">
+                <div class="inline-block">
+                    <i class="fas fa-sparkles text-4xl text-purple-500 animate-spin"></i>
+                    <p class="mt-4 text-gray-600 font-medium">L'IA analyse vos réponses...</p>
+                    <p class="text-sm text-gray-500">Cela prend quelques secondes ✨</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="bg-gray-50 p-6 rounded-b-2xl flex gap-3">
+            <button onclick="closeAIAssistant()" class="flex-1 px-6 py-3 bg-gray-200 text-gray-700 rounded-lg font-semibold hover:bg-gray-300 transition-colors">
+                Annuler
+            </button>
+            <button onclick="generateWithAI()" id="generateBtn" class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                <i class="fas fa-magic mr-2"></i>
+                Générer avec l'IA
+            </button>
+            <button onclick="applySuggestions()" id="applyBtn" class="hidden flex-1 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg font-semibold hover:shadow-lg transition-all">
+                <i class="fas fa-check mr-2"></i>
+                Appliquer
+            </button>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+<style>
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    #color::-webkit-color-swatch-wrapper {
+        padding: 0;
+    }
+
+    #color::-webkit-color-swatch {
+        border: none;
+        border-radius: 8px;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script>
+// GLOBAL FUNCTIONS (for onclick handlers)
+function selectIcon(iconClass) {
+    const iconInput = document.getElementById('icon');
+    const previewIcon = document.getElementById('preview-icon');
+    if (iconInput && previewIcon) {
+        iconInput.value = iconClass;
+        previewIcon.className = iconClass + ' text-2xl';
+    }
+}
+
+function updatePreviewColors(color) {
+    const wrapper = document.getElementById('preview-icon-wrapper');
+    if (wrapper) {
+        wrapper.style.background = color + '20';
+        wrapper.style.color = color;
+    }
+}
+
+// DOMContentLoaded - Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Icon selector change
+    const iconSelect = document.getElementById('icon');
+    if (iconSelect) {
+        iconSelect.addEventListener('change', function(e) {
+            const iconClass = e.target.value;
+            const cardPreview = document.getElementById('preview-icon');
+            if (cardPreview && iconClass) {
+                cardPreview.className = iconClass + ' text-2xl';
+            }
+        });
+    }
+
+    // Color sync
+    const colorInput = document.getElementById('color');
+    const colorTextInput = document.getElementById('color-text');
+
+    if (colorInput) {
+        colorInput.addEventListener('input', function(e) {
+            if (colorTextInput) colorTextInput.value = e.target.value;
+            updatePreviewColors(e.target.value);
+        });
+    }
+
+    if (colorTextInput) {
+        colorTextInput.addEventListener('input', function(e) {
+            const color = e.target.value;
+            if (/^#[0-9A-F]{6}$/i.test(color)) {
+                if (colorInput) colorInput.value = color;
+                updatePreviewColors(color);
+            }
+        });
+    }
+
+    // Name preview
+    document.getElementById('name').addEventListener('input', function(e) {
+        document.getElementById('preview-name').textContent = e.target.value || 'Nom de la Catégorie';
+    });
+
+    // Description preview
+    document.getElementById('description').addEventListener('input', function(e) {
+        const previewDesc = document.getElementById('preview-description');
+        if (previewDesc) {
+            previewDesc.textContent = e.target.value || 'Description de la catégorie';
+        }
+    });
+
+    // Tips preview  
+    document.getElementById('tips').addEventListener('input', function(e) {
+        const previewTips = document.getElementById('preview-tips');
+        if (previewTips) {
+            previewTips.textContent = e.target.value || 'Conseils de recyclage';
+        }
+    });
+
+    // Description preview
+    document.getElementById('description').addEventListener('input', function(e) {
+        document.getElementById('preview-description').textContent = e.target.value || 'Description de la catégorie...';
+    });
+
+    // Image preview
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('image-preview');
+                const container = document.getElementById('image-preview-container');
+                preview.src = e.target.result;
+                container.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Certifications management
+    function addCertification() {
+        const list = document.getElementById('certifications-list');
+        const item = document.createElement('div');
+        item.className = 'certification-item flex gap-2';
+        item.innerHTML = `
+            <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <option value="">Sélectionnez une certification</option>
+                <optgroup label="ISO - Normes Environnementales">
+                    <option value="ISO 14001">ISO 14001 - Management Environnemental</option>
+                    <option value="ISO 14040">ISO 14040 - Analyse du Cycle de Vie</option>
+                    <option value="ISO 14044">ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                    <option value="ISO 14046">ISO 14046 - Empreinte Eau</option>
+                    <option value="ISO 14064">ISO 14064 - Gaz à Effet de Serre</option>
+                </optgroup>
+                <optgroup label="Certifications Forestières">
+                    <option value="FSC">FSC - Forest Stewardship Council</option>
+                    <option value="PEFC">PEFC - Programme for Endorsement of Forest Certification</option>
+                </optgroup>
+                <optgroup label="Recyclage & Économie Circulaire">
+                    <option value="Green Dot">Point Vert (Der Grüne Punkt)</option>
+                    <option value="Cradle to Cradle">Cradle to Cradle Certified</option>
+                    <option value="EU Ecolabel">Écolabel Européen</option>
+                </optgroup>
+                <optgroup label="Qualité & Sécurité">
+                    <option value="ISO 9001">ISO 9001 - Management de la Qualité</option>
+                    <option value="ISO 45001">ISO 45001 - Santé et Sécurité au Travail</option>
+                </optgroup>
+                <optgroup label="Autres">
+                    <option value="GRS">GRS - Global Recycled Standard</option>
+                    <option value="RCS">RCS - Recycled Claim Standard</option>
+                    <option value="Autre">Autre (préciser en description)</option>
+                </optgroup>
+            </select>
+            <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        list.appendChild(item);
+    }
+
+    function removeCertification(button) {
+        const list = document.getElementById('certifications-list');
+        if (list.children.length > 1) {
+            button.closest('.certification-item').remove();
+        } else {
+            button.previousElementSibling.value = '';
+        }
+    }
+
+    // AI Assistant Modal Functions
+    let aiSuggestionsData = null;
+
+    function openAIAssistant() {
+        document.getElementById('aiAssistantModal').classList.remove('hidden');
+        document.getElementById('step1').classList.remove('hidden');
+        document.getElementById('aiResponse').classList.add('hidden');
+        document.getElementById('generateBtn').classList.remove('hidden');
+        document.getElementById('applyBtn').classList.add('hidden');
+        
+        // Clear previous inputs
+        document.getElementById('ai_waste_type').value = '';
+        document.getElementById('ai_usage').value = '';
+        document.getElementById('ai_treatment').value = '';
+    }
+
+    function closeAIAssistant() {
+        document.getElementById('aiAssistantModal').classList.add('hidden');
+    }
+
+    async function generateWithAI() {
+        const materialType = document.getElementById('ai_material_type').value;
+        const recyclingPurpose = document.getElementById('ai_recycling_purpose').value;
+        const environmentalImpact = document.getElementById('ai_environmental_impact').value;
+
+        if (!materialType || !recyclingPurpose || !environmentalImpact) {
+            alert('⚠️ Veuillez répondre à toutes les questions');
+            return;
+        }
+
+        // Show loading
+        document.getElementById('step1').classList.add('hidden');
+        document.getElementById('aiLoading').classList.remove('hidden');
+        document.getElementById('generateBtn').disabled = true;
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    material_type: materialType,
+                    recycling_purpose: recyclingPurpose,
+                    environmental_impact: environmentalImpact
+                })
+            });
+
+            const data = await response.json();
+            
+            const data = await response.json();
+            
+            if (data.success && data.data) {
+                aiSuggestionsData = data.data;
+                displaySuggestions(aiSuggestionsData);
+            } else {
+                throw new Error(data.message || 'Pas de réponse de l\'IA');
+            }
+        } catch (error) {
+            console.error('AI Error:', error);
+            alert('❌ Erreur: ' + error.message);
+            document.getElementById('step1').classList.remove('hidden');
+        } finally {
+            document.getElementById('aiLoading').classList.add('hidden');
+            document.getElementById('generateBtn').disabled = false;
+        }
+    }
+
+    function displaySuggestions(data) {
+        const container = document.getElementById('aiSuggestions');
+        container.innerHTML = `
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-tag text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Nom suggéré:</span>
+                    </div>
+                    <p class="text-gray-900 font-medium">${data.name}</p>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="${data.icon} text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Icône:</span>
+                    </div>
+                    <p class="text-gray-600">${data.icon}</p>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-palette text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Couleur:</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded" style="background: ${data.color}"></div>
+                        <p class="text-gray-600">${data.color}</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-align-left text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Description:</span>
+                    </div>
+                    <p class="text-gray-600">${data.description}</p>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-certificate text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Certifications:</span>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        ${data.certifications.map(cert => `
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">${cert}</span>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg p-4 border border-purple-200">
+                    <div class="flex items-center gap-2 mb-2">
+                        <i class="fas fa-lightbulb text-purple-500"></i>
+                        <span class="font-semibold text-gray-700">Conseils de recyclage:</span>
+                    </div>
+                    <p class="text-gray-600">${data.tips}</p>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('aiResponse').classList.remove('hidden');
+        document.getElementById('generateBtn').classList.add('hidden');
+        document.getElementById('applyBtn').classList.remove('hidden');
+    }
+
+    function applySuggestions() {
+        if (!aiSuggestionsData) return;
+
+        // Apply name
+        document.getElementById('name').value = aiSuggestionsData.name;
+        document.getElementById('preview-name').textContent = aiSuggestionsData.name;
+
+        // Apply icon
+        document.getElementById('icon').value = aiSuggestionsData.icon;
+        document.getElementById('icon-preview').innerHTML = `<i class="${aiSuggestionsData.icon}"></i>`;
+        document.getElementById('preview-icon').className = aiSuggestionsData.icon + ' text-2xl';
+
+        // Apply color
+        document.getElementById('color').value = aiSuggestionsData.color;
+        document.getElementById('color-text').value = aiSuggestionsData.color;
+        updatePreviewColors(aiSuggestionsData.color);
+
+        // Apply description
+        document.getElementById('description').value = aiSuggestionsData.description;
+        document.getElementById('preview-description').textContent = aiSuggestionsData.description;
+
+        // Apply tips
+        document.getElementById('tips').value = aiSuggestionsData.tips;
+
+        // Apply certifications
+        const certList = document.getElementById('certifications-list');
+        certList.innerHTML = '';
+        
+        aiSuggestionsData.certifications.forEach((cert, index) => {
+            if (index > 0) addCertification();
+            const selects = document.querySelectorAll('#certifications-list select');
+            const lastSelect = selects[selects.length - 1];
+            
+            const options = Array.from(lastSelect.options);
+            const matchingOption = options.find(opt => 
+                opt.value.toLowerCase().includes(cert.toLowerCase()) ||
+                cert.toLowerCase().includes(opt.value.toLowerCase())
+            );
+            
+            if (matchingOption) {
+                lastSelect.value = matchingOption.value;
+            }
+        });
+
+        // Close modal
+        closeAIAssistant();
+
+        // Show success message
+        const message = document.createElement('div');
+        message.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 animate-bounce';
+        message.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Suggestions appliquées avec succès! ✨';
+        document.body.appendChild(message);
+        setTimeout(() => message.remove(), 3000);
+
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Individual AI suggestion functions
+    async function suggestDescription() {
+        const name = document.getElementById('name').value;
+        const icon = document.getElementById('icon').value;
+
+        if (!name) {
+            alert('⚠️ Veuillez d\'abord entrer un nom de catégorie');
+            return;
+        }
+
+        const descField = document.getElementById('description');
+        descField.value = '⏳ Génération en cours...';
+        descField.disabled = true;
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    material_type: name,
+                    recycling_purpose: `Description pour la catégorie ${name}`,
+                    environmental_impact: 'Impact environnemental positif'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                descField.value = data.data.description;
+                showToast('✅ Description générée avec succès!', 'success');
+            } else {
+                throw new Error(data.message || 'Erreur');
+            }
+        } catch (error) {
+            descField.value = '';
+            showToast('❌ ' + error.message, 'error');
+        } finally {
+            descField.disabled = false;
+        }
+    }
+
+    async function suggestTips() {
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+
+        if (!name) {
+            alert('⚠️ Veuillez d\'abord entrer un nom de catégorie');
+            return;
+        }
+
+        const tipsField = document.getElementById('tips');
+        tipsField.value = '⏳ Génération en cours...';
+        tipsField.disabled = true;
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    material_type: name,
+                    recycling_purpose: description || `Conseils de recyclage pour ${name}`,
+                    environmental_impact: 'Bonnes pratiques environnementales'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data) {
+                tipsField.value = data.data.tips;
+                showToast('✅ Conseils générés avec succès!', 'success');
+            } else {
+                throw new Error(data.message || 'Erreur');
+            }
+        } catch (error) {
+            tipsField.value = '';
+            showToast('❌ ' + error.message, 'error');
+        } finally {
+            tipsField.disabled = false;
+        }
+    }
+
+    async function suggestCertifications() {
+        const name = document.getElementById('name').value;
+        const description = document.getElementById('description').value;
+
+        if (!name) {
+            alert('⚠️ Veuillez d\'abord entrer un nom de catégorie');
+            return;
+        }
+
+        showToast('⏳ Génération des certifications...', 'info');
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    material_type: name,
+                    recycling_purpose: description || `Certifications pour ${name}`,
+                    environmental_impact: 'Normes environnementales'
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.data && data.data.certifications) {
+                // Clear existing certifications
+                const certList = document.getElementById('certifications-list');
+                certList.innerHTML = '';
+                
+                // Add new certifications
+                data.data.certifications.forEach((cert, index) => {
+                    if (index > 0) addCertification();
+                    const selects = document.querySelectorAll('#certifications-list select');
+                    const lastSelect = selects[selects.length - 1];
+                    
+                    const options = Array.from(lastSelect.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase().includes(cert.toLowerCase()) ||
+                        cert.toLowerCase().includes(opt.value.toLowerCase())
+                    );
+                    
+                    if (matchingOption) {
+                        lastSelect.value = matchingOption.value;
+                    }
+                });
+
+                showToast('✅ Certifications suggérées avec succès!', 'success');
+            } else {
+                throw new Error(data.message || 'Erreur');
+            }
+        } catch (error) {
+            showToast('❌ ' + error.message, 'error');
+        }
+    }
+
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        const colors = {
+            success: 'bg-green-500',
+            error: 'bg-red-500',
+            info: 'bg-blue-500'
+        };
+        
+        toast.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg z-50 transform transition-all duration-300`;
+        toast.innerHTML = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+}); // End DOMContentLoaded
+</script>
+@endpush
+@endsection

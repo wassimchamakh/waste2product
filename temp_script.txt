@@ -1,0 +1,173 @@
+<script>
+    // Icon selector function
+    function selectIcon(iconClass) {
+        const iconInput = document.getElementById('icon');
+        const previewIcon = document.getElementById('preview-icon');
+        
+        iconInput.value = iconClass;
+        previewIcon.className = iconClass + ' text-2xl';
+    }
+
+    // Color sync
+    document.getElementById('color').addEventListener('input', function(e) {
+        document.getElementById('color-text').value = e.target.value;
+        updatePreviewColors(e.target.value);
+    });
+
+    document.getElementById('color-text').addEventListener('input', function(e) {
+        const color = e.target.value;
+        if (/^#[0-9A-F]{6}$/i.test(color)) {
+            document.getElementById('color').value = color;
+            updatePreviewColors(color);
+        }
+    });
+
+    function updatePreviewColors(color) {
+        const wrapper = document.getElementById('preview-icon-wrapper');
+        wrapper.style.background = color + '20';
+        wrapper.style.color = color;
+    }
+
+    // Name preview
+    document.getElementById('name').addEventListener('input', function(e) {
+        document.getElementById('preview-name').textContent = e.target.value || 'Nom de la Catégorie';
+    });
+
+    // Description preview
+    document.getElementById('description').addEventListener('input', function(e) {
+        document.getElementById('preview-description').textContent = e.target.value || 'Description de la catégorie...';
+    });
+
+    // Image preview
+    document.getElementById('image').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('image-preview');
+                const container = document.getElementById('image-preview-container');
+                preview.src = e.target.result;
+                container.classList.remove('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Certifications management
+    function addCertification() {
+        const list = document.getElementById('certifications-list');
+        const item = document.createElement('div');
+        item.className = 'certification-item flex gap-2';
+        item.innerHTML = `
+            <select name="certifications[]" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all">
+                <option value="">Sélectionnez une certification</option>
+                <optgroup label="ISO - Normes Environnementales">
+                    <option value="ISO 14001">ISO 14001 - Management Environnemental</option>
+                    <option value="ISO 14040">ISO 14040 - Analyse du Cycle de Vie</option>
+                    <option value="ISO 14044">ISO 14044 - ACV: Exigences et Lignes Directrices</option>
+                    <option value="ISO 14046">ISO 14046 - Empreinte Eau</option>
+                    <option value="ISO 14064">ISO 14064 - Gaz à Effet de Serre</option>
+                </optgroup>
+                <optgroup label="Certifications Forestières">
+                    <option value="FSC">FSC - Forest Stewardship Council</option>
+                    <option value="PEFC">PEFC - Programme for Endorsement of Forest Certification</option>
+                </optgroup>
+                <optgroup label="Recyclage & Économie Circulaire">
+                    <option value="Green Dot">Point Vert (Der Grüne Punkt)</option>
+                    <option value="Cradle to Cradle">Cradle to Cradle Certified</option>
+                    <option value="EU Ecolabel">Écolabel Européen</option>
+                </optgroup>
+                <optgroup label="Qualité & Sécurité">
+                    <option value="ISO 9001">ISO 9001 - Management de la Qualité</option>
+                    <option value="ISO 45001">ISO 45001 - Santé et Sécurité au Travail</option>
+                </optgroup>
+                <optgroup label="Autres">
+                    <option value="GRS">GRS - Global Recycled Standard</option>
+                    <option value="RCS">RCS - Recycled Claim Standard</option>
+                    <option value="Autre">Autre (préciser en description)</option>
+                </optgroup>
+            </select>
+            <button type="button" onclick="removeCertification(this)" class="px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors">
+                <i class="fas fa-trash"></i>
+            </button>
+        `;
+        list.appendChild(item);
+    }
+
+    function removeCertification(button) {
+        const list = document.getElementById('certifications-list');
+        if (list.children.length > 1) {
+            button.closest('.certification-item').remove();
+        } else {
+            button.previousElementSibling.value = '';
+        }
+    }
+
+    // AI Certification Suggestions using Gemini API
+    async function suggestCertificationsAI() {
+        const categoryName = document.getElementById('name').value || 'Non spécifié';
+        const categoryDescription = document.getElementById('description').value || '';
+        
+        if (!categoryName || categoryName === 'Non spécifié') {
+            alert('⚠️ Veuillez d\'abord entrer un nom de catégorie');
+            return;
+        }
+
+        const button = event.target.closest('button');
+        const originalHTML = button.innerHTML;
+        button.disabled = true;
+        button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>IA en cours...</span>';
+
+        try {
+            const response = await fetch('{{ route("admin.categories.ai-suggest") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    name: categoryName,
+                    description: categoryDescription
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.certifications) {
+                // Clear existing certifications
+                document.getElementById('certifications-list').innerHTML = '';
+                
+                // Add suggested certifications
+                data.certifications.forEach((cert, index) => {
+                    if (index > 0) addCertification();
+                    const selects = document.querySelectorAll('#certifications-list select');
+                    const lastSelect = selects[selects.length - 1];
+                    
+                    // Try to select the suggested certification
+                    const options = Array.from(lastSelect.options);
+                    const matchingOption = options.find(opt => 
+                        opt.value.toLowerCase().includes(cert.toLowerCase()) ||
+                        cert.toLowerCase().includes(opt.value.toLowerCase())
+                    );
+                    
+                    if (matchingOption) {
+                        lastSelect.value = matchingOption.value;
+                    }
+                });
+
+                // Show success message
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'mt-3 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm';
+                messageDiv.innerHTML = `<i class="fas fa-check-circle"></i> ${data.message || 'Certifications suggérées avec succès!'}`;
+                document.getElementById('certifications-container').appendChild(messageDiv);
+                setTimeout(() => messageDiv.remove(), 5000);
+            } else {
+                throw new Error(data.message || 'Erreur lors de la suggestion');
+            }
+        } catch (error) {
+            alert('❌ Erreur: ' + error.message);
+        } finally {
+            button.disabled = false;
+            button.innerHTML = originalHTML;
+        }
+    }
