@@ -17,9 +17,9 @@ return new class extends Migration
             Schema::table('participants', function (Blueprint $table) {
                 // Don't use after() to avoid dependency on columns that might not exist yet
                 $table->timestamp('payment_deadline')->nullable();
-
-                // Add index for performance when querying expired payments
-                $table->index(['payment_status', 'payment_deadline']);
+                
+                // Note: Index with payment_status will be added in a later migration
+                // after payment_status column is created (2025_10_22_000001)
             });
         }
 
@@ -35,7 +35,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('participants', function (Blueprint $table) {
-            $table->dropIndex(['payment_status', 'payment_deadline']);
             $table->dropColumn('payment_deadline');
         });
     }
