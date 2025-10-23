@@ -11,6 +11,7 @@ use App\Http\Controllers\Backoffice\Dechet1Controller;
 use App\Http\Controllers\Backoffice\CategoryController;
 use App\Http\Controllers\Backoffice\Tutorial1Controller;
 use App\Http\Controllers\Frontoffice\EventController;
+use App\Http\Controllers\FrontOffice\NotificationController;
 use App\Http\Controllers\Frontoffice\PaymentController;
 use App\Http\Controllers\Frontoffice\RefundController;
 use App\Http\Controllers\Frontoffice\ProjectController;
@@ -369,11 +370,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });     
 // FrontOffice Notifications (for regular users)
     Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'index'])->name('index');
-        Route::post('/mark-all-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
-        Route::patch('/{id}/mark-read', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'markAsRead'])->name('mark-read');
-        Route::delete('/{id}', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'destroy'])->name('destroy');
-        Route::delete('/read/all', [\App\Http\Controllers\FrontOffice\NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
+        Route::get('/', [NotificationController::class, 'index'])->name('index');
+        Route::post('/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('mark-all-read');
+        Route::patch('/{id}/mark-read', [NotificationController::class, 'markAsRead'])->name('mark-read');
+        Route::delete('/{id}', [NotificationController::class, 'destroy'])->name('destroy');
+        Route::delete('/read/all', [NotificationController::class, 'deleteAllRead'])->name('delete-all-read');
     });
 }); // Close auth middleware group
 

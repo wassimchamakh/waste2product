@@ -112,7 +112,7 @@ pipeline {
                 script {
                     try {
                         def scannerHome = tool 'scanner'
-                        withSonarQubeEnv('SonarQube') {
+                        withSonarQubeEnv {
                             sh "${scannerHome}/bin/sonar-scanner"
                         }
                     } catch (Exception e) {
