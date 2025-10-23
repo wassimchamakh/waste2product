@@ -57,6 +57,30 @@ pipeline {
                 sh '''
                     [ ! -f .env ] && cp .env.example .env || true
                     php artisan key:generate --force
+                    
+                    # Configure database for testing
+                    sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=mysql/' .env
+                    sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' .env
+                    sed -i 's/DB_PORT=.*/DB_PORT=3306/' .env
+                    sed -i 's/DB_DATABASE=.*/DB_DATABASE=waste2product_test/' .env
+                    sed -i 's/DB_USERNAME=.*/DB_USERNAME=jenkins/' .env
+                    sed -i 's/DB_PASSWORD=.*/DB_PASSWORD=jenkins_password/' .env
+                '''
+            }
+        }
+        
+        stage('Setup Test Database') {
+            steps {
+                echo '🗄️ Creating test database...'
+                sh '''
+                    # Create test database using sudo (auth_socket authentication)
+                    sudo mysql -e "CREATE DATABASE IF NOT EXISTS waste2product_test;" || true
+                    sudo mysql -e "CREATE USER IF NOT EXISTS 'jenkins'@'localhost' IDENTIFIED BY 'jenkins_password';" || true
+                    sudo mysql -e "GRANT ALL PRIVILEGES ON waste2product_test.* TO 'jenkins'@'localhost';" || true
+                    sudo mysql -e "FLUSH PRIVILEGES;" || true
+                    
+                    # Run migrations
+                    php artisan migrate --force --seed || true
                 '''
             }
         }
