@@ -25,3 +25,7 @@ EMAIL_DIAGNOSTIC.md
 EMAIL_SENDING_FIX.md
 EMAIL_TEST_INSTRUCTIONS.md
 /python_ai_service/venv/
+
+# Coverage reports
+/build/
+/.scannerwork/
