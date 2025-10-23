@@ -112,7 +112,7 @@ pipeline {
             steps {
                 echo '🔍 Running SonarQube analysis...'
                 script {
-                    def scannerHome = tool 'SonarScanner'
+                    def scannerHome = tool 'scanner'
                     withSonarQubeEnv('SonarQube') {
                         sh "${scannerHome}/bin/sonar-scanner"
                     }
