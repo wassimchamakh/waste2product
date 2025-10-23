@@ -103,18 +103,23 @@ pipeline {
             steps {
                 echo '🧪 Running tests with coverage...'
                 sh '''
-                    # Install PCOV for code coverage (if not already installed)
-                    if ! php -m | grep -q pcov; then
-                        echo "Installing PCOV extension..."
-                        sudo apt-get update
-                        sudo apt-get install -y php8.2-pcov
-                    fi
-                    
                     # Create build directory if it doesn't exist
                     mkdir -p build/logs
                     
-                    # Run tests with coverage
-                    php artisan test --coverage-clover build/logs/clover.xml || echo "Tests completed with coverage"
+                    # Check if PCOV or Xdebug is available
+                    if php -m | grep -q pcov; then
+                        echo "✅ PCOV extension found - running tests with coverage"
+                        php artisan test --coverage-clover build/logs/clover.xml
+                    elif php -m | grep -q xdebug; then
+                        echo "✅ Xdebug extension found - running tests with coverage"
+                        php artisan test --coverage-clover build/logs/clover.xml
+                    else
+                        echo "⚠️ No coverage driver found (PCOV or Xdebug)"
+                        echo "ℹ️ To enable coverage, install PCOV manually on the Jenkins server:"
+                        echo "   sudo apt-get install -y php8.2-pcov"
+                        echo "📝 Running tests without coverage..."
+                        php artisan test
+                    fi
                 '''
             }
         }
