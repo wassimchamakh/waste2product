@@ -219,6 +219,18 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Run Application') {
+            steps {
+                echo '🚀 Deploying application with Docker...'
+                script {
+                    docker.withRegistry("http://"+registry, registryCredentials) {
+                        sh('docker pull $registry/laravelapp:1.0')
+                        sh('docker-compose up -d')
+                    }
+                }
+            }
+        }
     }
     
     post {
