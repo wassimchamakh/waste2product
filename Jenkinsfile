@@ -7,6 +7,8 @@ pipeline {
         DB_DATABASE = 'waste2product_test'
         DB_USERNAME = 'jenkins'
         DB_PASSWORD = 'jenkins_password'
+        registryCredentials = "nexus"
+        registry = "192.168.56.10:8083"
     }
     
     stages {
@@ -66,6 +68,16 @@ pipeline {
                         echo "📦 Images created:"
                         docker images | grep -E "laravelapp|mysql"
                     '''
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+                steps {
+            script {
+                        docker.withRegistry("http://"+registry, registryCredentials ) {
+                        sh('docker push $registry/laravelapp:5.0 ')
+                    }
                 }
             }
         }
