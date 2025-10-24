@@ -225,7 +225,9 @@ pipeline {
             steps {
                 echo '🚀 Deploying application with Docker...'
                 script {
-                    // Use locally built image instead of pulling from Nexus
+                    // Clean up any existing containers first
+                    sh('docker-compose down -v || true')
+                    // Start fresh containers
                     sh('docker-compose up -d')
                 }
             }
