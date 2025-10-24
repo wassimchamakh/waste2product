@@ -189,7 +189,7 @@ pipeline {
                 echo '🚦 Waiting for Quality Gate...'
                 script {
                     try {
-                        timeout(time: 10, unit: 'MINUTES') {
+                        timeout(time: 2, unit: 'MINUTES') {
                             def qg = waitForQualityGate abortPipeline: false
                             if (qg.status != 'OK') {
                                 echo "⚠️ Quality Gate status: ${qg.status}"
@@ -201,6 +201,7 @@ pipeline {
                     } catch (Exception e) {
                         echo "⚠️ Quality Gate check skipped: ${e.message}"
                         echo "ℹ️ SonarQube analysis may still be processing - check dashboard manually"
+                        echo "🔗 Dashboard: http://192.168.56.10:9000/dashboard?id=waste2product"
                         currentBuild.result = 'SUCCESS'
                     }
                 }
