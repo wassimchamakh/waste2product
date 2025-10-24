@@ -35,4 +35,22 @@ return [
         ],
     ],
 
+    'sentiment_api' => [
+        'url' => env('SENTIMENT_API_URL', 'http://127.0.0.1:5000'),
+        'timeout' => env('SENTIMENT_API_TIMEOUT', 10),
+    ],
+
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'currency' => env('STRIPE_CURRENCY', 'tnd'),
+    ],
+
+    'gemini' => [
+        'api_key' => env('GEMINI_API_KEY'),
+        'model' => env('GEMINI_MODEL', 'gemini-1.5-flash'),
+        'api_url' => 'https://generativelanguage.googleapis.com/v1beta/models/',
+    ],
+
 ];

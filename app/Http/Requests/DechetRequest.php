@@ -26,12 +26,8 @@ class DechetRequest extends FormRequest
             'notes' => 'nullable|string|max:500',
         ];
 
-        // Photo obligatoire seulement à la création
-        if ($this->isMethod('post')) {
-            $rules['photo'] = 'required|image|mimes:jpeg,png,jpg,webp|max:2048';
-        } else {
-            $rules['photo'] = 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048';
-        }
+        // Photo optional for now (to avoid temp file issues)
+        $rules['photo'] = 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120';
 
         return $rules;
     }

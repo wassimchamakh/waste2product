@@ -38,7 +38,11 @@
 </section>
 
 <!-- Stats Overview -->
+<<<<<<< HEAD
 <section class="py-12 bg-gray-50 dark:bg-gray-900">
+=======
+<section class="py-12 bg-gray-50">
+>>>>>>> tutoral-branch
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
             <!-- Stat 1 -->
@@ -46,8 +50,13 @@
                 <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg">
                     <i class="fas fa-hammer text-white text-2xl"></i>
                 </div>
+<<<<<<< HEAD
                 <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">12</div>
                 <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Projets Créés</div>
+=======
+                <div class="text-3xl font-bold text-gray-900 mb-2">12</div>
+                <div class="text-sm text-gray-600 font-medium">Projets Créés</div>
+>>>>>>> tutoral-branch
                 <div class="text-xs text-success mt-2 font-medium">+2 ce mois</div>
             </div>
 
@@ -56,8 +65,13 @@
                 <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -0.5s;">
                     <i class="fas fa-recycle text-white text-2xl"></i>
                 </div>
+<<<<<<< HEAD
                 <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">28</div>
                 <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Déchets Déclarés</div>
+=======
+                <div class="text-3xl font-bold text-gray-900 mb-2">28</div>
+                <div class="text-sm text-gray-600 font-medium">Déchets Déclarés</div>
+>>>>>>> tutoral-branch
                 <div class="text-xs text-success mt-2 font-medium">+5 cette semaine</div>
             </div>
 
@@ -66,8 +80,13 @@
                 <div class="w-20 h-20 bg-success rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -1s;">
                     <i class="fas fa-leaf text-white text-2xl"></i>
                 </div>
+<<<<<<< HEAD
                 <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">347</div>
                 <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Kg CO₂ Économisés</div>
+=======
+                <div class="text-3xl font-bold text-gray-900 mb-2">347</div>
+                <div class="text-sm text-gray-600 font-medium">Kg CO₂ Économisés</div>
+>>>>>>> tutoral-branch
                 <div class="text-xs text-success mt-2 font-medium">Objectif: 500kg</div>
             </div>
 
@@ -76,8 +95,13 @@
                 <div class="w-20 h-20 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -1.5s;">
                     <i class="fas fa-star text-white text-2xl"></i>
                 </div>
+<<<<<<< HEAD
                 <div class="text-3xl font-bold text-gray-900 dark:text-white mb-2">4.8</div>
                 <div class="text-sm text-gray-600 dark:text-gray-400 font-medium">Note Moyenne</div>
+=======
+                <div class="text-3xl font-bold text-gray-900 mb-2">4.8</div>
+                <div class="text-sm text-gray-600 font-medium">Note Moyenne</div>
+>>>>>>> tutoral-branch
                 <div class="text-xs text-success mt-2 font-medium">46 évaluations</div>
             </div>
         </div>
@@ -91,10 +115,17 @@
             <!-- Left Column -->
             <div class="lg:col-span-2 space-y-8">
                 <!-- Mes Projets Récents -->
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                         <div class="flex items-center justify-between">
                             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+=======
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <h2 class="text-xl font-semibold text-gray-900">
+>>>>>>> tutoral-branch
                                 Mes Projets Récents 🔨
                             </h2>
                             <a  class="text-primary hover:text-primary/80 text-sm font-medium">Voir tout</a>
@@ -103,13 +134,22 @@
                     <div class="p-6">
                         <div class="space-y-4">
                             <!-- Project 1 -->
+<<<<<<< HEAD
                             <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+=======
+                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+>>>>>>> tutoral-branch
                                 <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
                                     <i class="fas fa-table text-white"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <h3 class="font-medium text-gray-900 dark:text-white">Table Basse Palettes</h3>
                                     <p class="text-sm text-gray-600 dark:text-gray-300">En cours • 75% terminé</p>
+=======
+                                    <h3 class="font-medium text-gray-900">Table Basse Palettes</h3>
+                                    <p class="text-sm text-gray-600">En cours • 75% terminé</p>
+>>>>>>> tutoral-branch
                                 </div>
                                 <div class="flex items-center space-x-2">
                                     <div class="w-8 h-8">
@@ -124,13 +164,22 @@
                             </div>
 
                             <!-- Project 2 -->
+<<<<<<< HEAD
                             <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+=======
+                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+>>>>>>> tutoral-branch
                                 <div class="w-12 h-12 bg-success rounded-lg flex items-center justify-center">
                                     <i class="fas fa-seedling text-white"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <h3 class="font-medium text-gray-900 dark:text-white">Jardinière Suspendue</h3>
                                     <p class="text-sm text-gray-600 dark:text-gray-300">Terminé • 4.9/5 ⭐</p>
+=======
+                                    <h3 class="font-medium text-gray-900">Jardinière Suspendue</h3>
+                                    <p class="text-sm text-gray-600">Terminé • 4.9/5 ⭐</p>
+>>>>>>> tutoral-branch
                                 </div>
                                 <div class="flex items-center">
                                     <span class="bg-success text-white text-xs px-2 py-1 rounded-full">Terminé</span>
@@ -138,13 +187,22 @@
                             </div>
 
                             <!-- Project 3 -->
+<<<<<<< HEAD
                             <div class="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+=======
+                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
+>>>>>>> tutoral-branch
                                 <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
                                     <i class="fas fa-lightbulb text-white"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <h3 class="font-medium text-gray-900 dark:text-white">Luminaire Canettes</h3>
                                     <p class="text-sm text-gray-600 dark:text-gray-300">En attente matériaux</p>
+=======
+                                    <h3 class="font-medium text-gray-900">Luminaire Canettes</h3>
+                                    <p class="text-sm text-gray-600">En attente matériaux</p>
+>>>>>>> tutoral-branch
                                 </div>
                                 <div class="flex items-center">
                                     <span class="bg-warning text-gray-900 text-xs px-2 py-1 rounded-full">En attente</span>
@@ -155,9 +213,15 @@
                 </div>
 
                 <!-- Activité Récente -->
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+=======
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-xl font-semibold text-gray-900">
+>>>>>>> tutoral-branch
                             Activité Récente 📈
                         </h2>
                     </div>
@@ -169,7 +233,11 @@
                                     <i class="fas fa-check text-white text-xs"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <p class="text-sm text-gray-900 dark:text-white">
+=======
+                                    <p class="text-sm text-gray-900">
+>>>>>>> tutoral-branch
                                         <span class="font-medium">Projet terminé</span> - Jardinière Suspendue
                                     </p>
                                     <p class="text-xs text-gray-500">Il y a 2 heures</p>
@@ -182,7 +250,11 @@
                                     <i class="fas fa-recycle text-white text-xs"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <p class="text-sm text-gray-900 dark:text-white">
+=======
+                                    <p class="text-sm text-gray-900">
+>>>>>>> tutoral-branch
                                         <span class="font-medium">Nouveau déchet déclaré</span> - Palettes Européennes
                                     </p>
                                     <p class="text-xs text-gray-500">Hier à 14h30</p>
@@ -195,7 +267,11 @@
                                     <i class="fas fa-star text-white text-xs"></i>
                                 </div>
                                 <div class="flex-1">
+<<<<<<< HEAD
                                     <p class="text-sm text-gray-900 dark:text-white">
+=======
+                                    <p class="text-sm text-gray-900">
+>>>>>>> tutoral-branch
                                         <span class="font-medium">Nouvelle évaluation reçue</span> - 5 étoiles
                                     </p>
                                     <p class="text-xs text-gray-500">Il y a 3 jours</p>
@@ -209,9 +285,15 @@
             <!-- Right Column -->
             <div class="space-y-8">
                 <!-- Objectifs du Mois -->
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden border border-gray-100 dark:border-gray-700">
                     <div class="p-6 border-b border-gray-100 dark:border-gray-700">
                         <h2 class="text-lg font-bold text-gray-900 dark:text-white flex items-center">
+=======
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
+                    <div class="p-6 border-b border-gray-100">
+                        <h2 class="text-lg font-bold text-gray-900 flex items-center">
+>>>>>>> tutoral-branch
                             Objectifs Décembre <span class="ml-2">🎯</span>
                         </h2>
                     </div>
@@ -219,10 +301,17 @@
                         <!-- Goal 1 -->
                         <div>
                             <div class="flex items-center justify-between mb-3">
+<<<<<<< HEAD
                                 <span class="text-sm font-semibold text-gray-900 dark:text-white">Projets créés</span>
                                 <span class="text-sm font-bold text-gray-600 dark:text-gray-300">2/3</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+=======
+                                <span class="text-sm font-semibold text-gray-900">Projets créés</span>
+                                <span class="text-sm font-bold text-gray-600">2/3</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+>>>>>>> tutoral-branch
                                 <div class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 67%"></div>
                             </div>
                         </div>
@@ -230,10 +319,17 @@
                         <!-- Goal 2 -->
                         <div>
                             <div class="flex items-center justify-between mb-3">
+<<<<<<< HEAD
                                 <span class="text-sm font-semibold text-gray-900 dark:text-white">CO₂ économisé</span>
                                 <span class="text-sm font-bold text-gray-600 dark:text-gray-300">347/500kg</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+=======
+                                <span class="text-sm font-semibold text-gray-900">CO₂ économisé</span>
+                                <span class="text-sm font-bold text-gray-600">347/500kg</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+>>>>>>> tutoral-branch
                                 <div class="bg-success h-2.5 rounded-full transition-all duration-500" style="width: 69%"></div>
                             </div>
                         </div>
@@ -241,10 +337,17 @@
                         <!-- Goal 3 -->
                         <div>
                             <div class="flex items-center justify-between mb-3">
+<<<<<<< HEAD
                                 <span class="text-sm font-semibold text-gray-900 dark:text-white">Événements participés</span>
                                 <span class="text-sm font-bold text-gray-600 dark:text-gray-300">1/2</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+=======
+                                <span class="text-sm font-semibold text-gray-900">Événements participés</span>
+                                <span class="text-sm font-bold text-gray-600">1/2</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+>>>>>>> tutoral-branch
                                 <div class="bg-secondary h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
                             </div>
                         </div>
@@ -252,9 +355,15 @@
                 </div>
 
                 <!-- Événements Suivis -->
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+=======
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">
+>>>>>>> tutoral-branch
                             Mes Événements 📅
                         </h2>
                     </div>
@@ -268,8 +377,13 @@
                                 </div>
                             </div>
                             <div class="flex-1">
+<<<<<<< HEAD
                                 <h3 class="font-medium text-gray-900 dark:text-white text-sm">Repair Café Tunis</h3>
                                 <p class="text-xs text-gray-600 dark:text-gray-300">Samedi 14h • Inscrit</p>
+=======
+                                <h3 class="font-medium text-gray-900 text-sm">Repair Café Tunis</h3>
+                                <p class="text-xs text-gray-600">Samedi 14h • Inscrit</p>
+>>>>>>> tutoral-branch
                             </div>
                         </div>
 
@@ -282,17 +396,28 @@
                                 </div>
                             </div>
                             <div class="flex-1">
+<<<<<<< HEAD
                                 <h3 class="font-medium text-gray-900 dark:text-white text-sm">Collecte Électroniques</h3>
                                 <p class="text-xs text-gray-600 dark:text-gray-300">Mercredi 9h • Organisateur</p>
+=======
+                                <h3 class="font-medium text-gray-900 text-sm">Collecte Électroniques</h3>
+                                <p class="text-xs text-gray-600">Mercredi 9h • Organisateur</p>
+>>>>>>> tutoral-branch
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Badges & Récompenses -->
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+=======
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                    <div class="p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-gray-900">
+>>>>>>> tutoral-branch
                             Mes Badges 🏆
                         </h2>
                     </div>
@@ -303,7 +428,11 @@
                                 <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-trophy text-white"></i>
                                 </div>
+<<<<<<< HEAD
                                 <div class="text-xs font-medium text-gray-900 dark:text-white">Éco-Warrior</div>
+=======
+                                <div class="text-xs font-medium text-gray-900">Éco-Warrior</div>
+>>>>>>> tutoral-branch
                             </div>
 
                             <!-- Badge 2 -->
@@ -311,7 +440,11 @@
                                 <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-recycle text-white"></i>
                                 </div>
+<<<<<<< HEAD
                                 <div class="text-xs font-medium text-gray-900 dark:text-white">Recycleur Pro</div>
+=======
+                                <div class="text-xs font-medium text-gray-900">Recycleur Pro</div>
+>>>>>>> tutoral-branch
                             </div>
 
                             <!-- Badge 3 -->
@@ -319,7 +452,11 @@
                                 <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
                                     <i class="fas fa-users text-white"></i>
                                 </div>
+<<<<<<< HEAD
                                 <div class="text-xs font-medium text-gray-900 dark:text-white">Communauté</div>
+=======
+                                <div class="text-xs font-medium text-gray-900">Communauté</div>
+>>>>>>> tutoral-branch
                             </div>
                         </div>
                     </div>

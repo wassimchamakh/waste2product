@@ -13,7 +13,15 @@
             <p class="text-xl opacity-90 mb-8">
                 Transformez vos déchets en créations utiles et esthétiques
             </p>
+<<<<<<< HEAD
             
+=======
+            <div class="mb-8 flex flex-col md:flex-row justify-center items-center gap-4">
+                <a href="{{ route('projects.my') }}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-3 rounded-lg shadow transition-colors">
+                    <i class="fas fa-folder-open mr-2"></i>Mes Projets
+                </a>
+            </div>
+>>>>>>> tutoral-branch
             <!-- Stats -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
                 <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
@@ -29,7 +37,17 @@
                     <div class="text-sm opacity-90">Projets vedettes</div>
                 </div>
                 <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
+<<<<<<< HEAD
                     <div class="text-3xl font-bold">{{ $stats['completed'] ?? 0 }}</div>
+=======
+                    <div class="text-3xl font-bold">
+                        @auth
+                            {{ \App\Models\Project::where('user_id', auth()->id())->count() }}
+                        @else
+                            0
+                        @endauth
+                    </div>
+>>>>>>> tutoral-branch
                     <div class="text-sm opacity-90">Réalisations</div>
                 </div>
             </div>

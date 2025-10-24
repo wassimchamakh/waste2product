@@ -18,7 +18,16 @@ class DechetController extends Controller
      */
     public function index(Request $request)
     {
+        $userId = 4; // Replace with Auth::id() when ready
+
         $query = Dechet::with(['category', 'user'])
+                      ->withCount([
+                          'favorites',
+                          'reviews',
+                          'favorites as is_favorited' => function($query) use ($userId) {
+                              $query->where('user_id', $userId);
+                          }
+                      ])
                       ->where('is_active', true);
 
         // Filtre par catégorie
@@ -119,22 +128,48 @@ class DechetController extends Controller
      */
     public function store(DechetRequest $request)
     {
-        $data = $request->validated();
-        $data['user_id'] = 4;
-        $data['status'] = 'available';
+        try {
+            $data = $request->validated();
+            $data['user_id'] = 4;
+            $data['status'] = 'available';
+            $data['is_active'] = true;
+            $data['views_count'] = 0;
 
-        // Upload photo
-        if ($request->hasFile('photo')) {
-            $file = $request->file('photo');
-            $filename = time() . '_' . uniqid() . '.' . $file->extension();
-            $file->move(public_path('uploads/dechets'), $filename);
-            $data['photo'] = $filename;
+            // Set default values for new rating columns
+            $data['average_rating'] = 0;
+            $data['reviews_count'] = 0;
+            $data['favorites_count'] = 0;
+
+            // Upload photo
+            if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+                $file = $request->file('photo');
+
+                // Ensure upload directory exists
+                $uploadPath = public_path('uploads/dechets');
+                if (!file_exists($uploadPath)) {
+                    mkdir($uploadPath, 0755, true);
+                }
+
+                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                // Use move for file upload
+                $file->move($uploadPath, $filename);
+                $data['photo'] = $filename;
+            } else {
+                $data['photo'] = null; // No photo uploaded
+            }
+
+            $Dechet = Dechet::create($data);
+
+            return redirect()->route('dechets.show', $Dechet->id)
+                           ->with('success', '✅ Déchet déclaré avec succès !');
+        } catch (\Exception $e) {
+            \Log::error('Dechet creation error: ' . $e->getMessage());
+            \Log::error($e->getTraceAsString());
+
+            return back()->withInput()
+                        ->with('error', '❌ Erreur lors de la création: ' . $e->getMessage());
         }
-
-        $Dechet = Dechet::create($data);
-
-        return redirect()->route('dechets.show', $Dechet->id)
-                       ->with('success', '✅ Déchet déclaré avec succès !');
     }
 
      /**
@@ -251,5 +286,122 @@ class DechetController extends Controller
         $Dechet->update(['status' => 'reserved']);
 
         return back()->with('success', '✅ Déchet réservé ! Le propriétaire a été notifié.');
+    }
+
+    /**
+     * Predict category from image using Google Cloud Vision API
+     */
+    public function predictCategory(Request $request)
+    {
+        try {
+            $request->validate([
+                'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120'
+            ]);
+
+            if (!$request->hasFile('image')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aucune image fournie'
+                ], 400);
+            }
+
+            $image = $request->file('image');
+            $imagePath = $image->getRealPath();
+            
+            // Initialize Google Cloud Vision client
+            putenv('GOOGLE_APPLICATION_CREDENTIALS=' . base_path('google-vision-credentials.json'));
+            
+            $imageAnnotator = new \Google\Cloud\Vision\V1\ImageAnnotatorClient();
+            $imageContent = file_get_contents($imagePath);
+            $visionImage = (new \Google\Cloud\Vision\V1\Image())->setContent($imageContent);
+
+            // Detect labels
+            $response = $imageAnnotator->labelDetection($visionImage);
+            $labels = $response->getLabelAnnotations();
+
+            if (!$labels) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Impossible d\'analyser l\'image'
+                ], 400);
+            }
+
+            // Map detected labels to categories
+            $categoryMapping = [
+                'plastic' => ['plastic', 'bottle', 'container', 'packaging', 'polymer'],
+                'paper' => ['paper', 'cardboard', 'newspaper', 'magazine', 'document'],
+                'glass' => ['glass', 'bottle', 'jar', 'window'],
+                'metal' => ['metal', 'aluminum', 'steel', 'iron', 'can'],
+                'organic' => ['food', 'organic', 'vegetable', 'fruit', 'plant', 'leaf'],
+                'electronic' => ['electronic', 'computer', 'phone', 'device', 'gadget', 'circuit'],
+                'wood' => ['wood', 'timber', 'lumber', 'furniture', 'plank'],
+                'textile' => ['textile', 'fabric', 'clothing', 'cloth', 'garment'],
+            ];
+
+            $detectedLabels = [];
+            foreach ($labels as $label) {
+                $detectedLabels[] = strtolower($label->getDescription());
+            }
+
+            // Find best matching category
+            $bestMatch = null;
+            $highestScore = 0;
+
+            foreach ($categoryMapping as $categoryKey => $keywords) {
+                $score = 0;
+                foreach ($keywords as $keyword) {
+                    if (in_array($keyword, $detectedLabels)) {
+                        $score++;
+                    }
+                }
+                if ($score > $highestScore) {
+                    $highestScore = $score;
+                    $bestMatch = $categoryKey;
+                }
+            }
+
+            // Find category in database by name
+            $category = Category::where('name', 'LIKE', "%{$bestMatch}%")
+                               ->orWhere('name', 'LIKE', '%' . ucfirst($bestMatch) . '%')
+                               ->first();
+
+            // If no exact match, try French translations
+            $frenchTranslations = [
+                'plastic' => 'Plastique',
+                'paper' => 'Papier',
+                'glass' => 'Verre',
+                'metal' => 'Métal',
+                'organic' => 'Organique',
+                'electronic' => 'Électronique',
+                'wood' => 'Bois',
+                'textile' => 'Textile',
+            ];
+
+            if (!$category && isset($frenchTranslations[$bestMatch])) {
+                $frenchName = $frenchTranslations[$bestMatch];
+                $category = Category::where('name', 'LIKE', "%{$frenchName}%")->first();
+            }
+
+            // If still no match, get first category as fallback
+            if (!$category) {
+                $category = Category::first();
+            }
+
+            $imageAnnotator->close();
+
+            return response()->json([
+                'success' => true,
+                'category_id' => $category->id,
+                'category_name' => $category->name,
+                'detected_labels' => array_slice($detectedLabels, 0, 5),
+                'confidence' => $highestScore > 0 ? round(($highestScore / count($categoryMapping[$bestMatch])) * 100) : 50
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de l\'analyse: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

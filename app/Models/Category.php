@@ -13,6 +13,13 @@ class Category extends Model
         'description',
         'icon',
         'color',
+        'image',
+        'certifications',
+        'tips',
+    ];
+
+    protected $casts = [
+        'certifications' => 'array',
     ];
 
     // Relation avec Wastes (One-to-Many)

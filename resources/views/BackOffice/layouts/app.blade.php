@@ -28,6 +28,11 @@
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             position: fixed;
+<<<<<<< HEAD
+=======
+            top: 0;
+            left: 0;
+>>>>>>> tutoral-branch
             height: 100vh;
             z-index: 40;
         }
@@ -246,6 +251,27 @@
             border-bottom: 1px solid #e2e8f0;
             padding: 0 2rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+<<<<<<< HEAD
+=======
+            position: fixed;
+            top: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            z-index: 30;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar.collapsed ~ .main-area .navbar {
+            left: var(--sidebar-collapsed);
+        }
+
+        .content-area {
+            padding: 2rem;
+            margin-top: var(--navbar-height);
+>>>>>>> tutoral-branch
         }
 
         .search-container {
@@ -370,6 +396,10 @@
 
         .content-area {
             padding: 2rem;
+<<<<<<< HEAD
+=======
+            margin-top: var(--navbar-height);
+>>>>>>> tutoral-branch
         }
 
         /* Mobile styles */
@@ -393,10 +423,18 @@
 
             .navbar {
                 padding: 0 1rem;
+<<<<<<< HEAD
+=======
+                left: 0 !important;
+>>>>>>> tutoral-branch
             }
 
             .content-area {
                 padding: 1rem;
+<<<<<<< HEAD
+=======
+                margin-top: var(--navbar-height);
+>>>>>>> tutoral-branch
             }
         }
 
@@ -427,11 +465,50 @@
             background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
             border-bottom-color: #374151;
         }
+<<<<<<< HEAD
+=======
+
+        /* Force light mode - disable all dark mode styles */
+        body, html {
+            background-color: #f9fafb !important;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Override dark mode backgrounds */
+        .dark\:bg-gray-900,
+        .dark\:bg-gray-800,
+        .dark\:bg-gray-700,
+        .dark\:bg-gray-600 {
+            background-color: white !important;
+        }
+
+        /* Force dark text on white backgrounds */
+        .dark\:text-white {
+            color: #1f2937 !important;
+        }
+
+        .dark\:text-gray-300,
+        .dark\:text-gray-400 {
+            color: #4b5563 !important;
+        }
+
+        /* Override dark mode borders */
+        .dark\:border-gray-600,
+        .dark\:border-gray-700 {
+            border-color: #e5e7eb !important;
+        }
+>>>>>>> tutoral-branch
     </style>
 
     @stack('styles')
 </head>
+<<<<<<< HEAD
 <body class="bg-gray-50 dark:bg-gray-900">
+=======
+<body class="bg-gray-50">
+>>>>>>> tutoral-branch
 
     @include('BackOffice.layouts.sidebar')
 
@@ -519,6 +596,7 @@
                 }
             }
 
+<<<<<<< HEAD
             // Dark mode handling
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.classList.add('dark');
@@ -527,6 +605,10 @@
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
                 document.documentElement.classList.toggle('dark', e.matches);
             });
+=======
+            // Force light mode (dark mode disabled)
+            document.documentElement.classList.remove('dark');
+>>>>>>> tutoral-branch
         });
     </script>
 

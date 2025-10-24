@@ -11,6 +11,10 @@
     
     <script>
         tailwind.config = {
+<<<<<<< HEAD
+=======
+            darkMode: 'class', // Disable auto dark mode
+>>>>>>> tutoral-branch
             theme: {
                 extend: {
                     colors: {
@@ -27,6 +31,19 @@
     </script>
     
     <style>
+<<<<<<< HEAD
+=======
+        /* Force light mode - override ALL dark classes */
+        * {
+            --tw-bg-opacity: 1 !important;
+        }
+
+        /* Ensure white backgrounds everywhere */
+        body, html {
+            background-color: white !important;
+        }
+
+>>>>>>> tutoral-branch
         .gradient-hero {
             background: linear-gradient(135deg, #2E7D47 0%, #06D6A0 100%);
         }
@@ -50,21 +67,62 @@
         .progress-ring-fill {
             transition: stroke-dasharray 0.3s ease;
         }
+<<<<<<< HEAD
+=======
+
+        /* Override dark mode backgrounds to white */
+        .dark\:bg-gray-900,
+        .dark\:bg-gray-800,
+        .dark\:bg-gray-700,
+        .dark\:bg-gray-600 {
+            background-color: white !important;
+        }
+
+        /* Force dark text on white backgrounds */
+        .dark\:text-white {
+            color: #1f2937 !important; /* gray-800 */
+        }
+
+        .dark\:text-gray-300,
+        .dark\:text-gray-400 {
+            color: #4b5563 !important; /* gray-600 */
+        }
+
+        /* Override dark mode borders */
+        .dark\:border-gray-600,
+        .dark\:border-gray-700 {
+            border-color: #e5e7eb !important;
+        }
+
+        /* Ensure all cards have proper text color */
+        .bg-white, .bg-gray-50 {
+            color: #1f2937;
+        }
+>>>>>>> tutoral-branch
     </style>
     
     @stack('styles')
 </head>
+<<<<<<< HEAD
 <body class="bg-gray-50 dark:bg-gray-900">
 
     @include('FrontOffice.layout1.navbar')
 
     <main class="pt-16 min-h-screen">
+=======
+<body class="bg-white">
+
+    @include('FrontOffice.layout1.navbar')
+
+    <main class="pt-16 min-h-screen bg-white">
+>>>>>>> tutoral-branch
         @yield('content')
     </main>
 
     @include('FrontOffice.layout1.footer')
     
     <script>
+<<<<<<< HEAD
         // Dark mode support
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
@@ -79,5 +137,13 @@
     </script>
     
     @stack('scripts')
+=======
+        // Force light mode (dark mode disabled)
+        document.documentElement.classList.remove('dark');
+    </script>
+    
+    @stack('scripts')
+    @yield('scripts')
+>>>>>>> tutoral-branch
 </body>
 </html>

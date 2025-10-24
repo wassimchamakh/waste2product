@@ -34,13 +34,21 @@
 </div>
 
 <!-- Actions Section -->
+<<<<<<< HEAD
 <div class="bg-white dark:bg-gray-800 shadow-lg">
+=======
+<div class="bg-white shadow-lg">
+>>>>>>> tutoral-branch
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <a 
                     href="{{ route('dechets.index') }}" 
+<<<<<<< HEAD
                     class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-white px-6 py-3 rounded-lg font-medium transition-colors"
+=======
+                    class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+>>>>>>> tutoral-branch
                 >
                     <i class="fas fa-arrow-left"></i>
                     Tous les déchets
@@ -82,7 +90,11 @@
     @if($Dechets->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($Dechets as $dechet)
+<<<<<<< HEAD
                 <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg card-hover">
+=======
+                <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+>>>>>>> tutoral-branch
                     <!-- Image -->
                     <div class="relative h-56 overflow-hidden group">
                         @if($dechet->photo)
@@ -92,7 +104,11 @@
                                 class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                             >
                         @else
+<<<<<<< HEAD
                             <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-gray-700 dark:to-gray-600 flex items-center justify-center">
+=======
+                            <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+>>>>>>> tutoral-branch
                                 <i class="fas fa-image text-6xl text-gray-400"></i>
                             </div>
                         @endif
@@ -113,7 +129,11 @@
                         
                         <!-- Badge Catégorie -->
                         <div class="absolute bottom-4 left-4">
+<<<<<<< HEAD
                             <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white dark:bg-gray-800 text-primary backdrop-blur-sm flex items-center gap-2">
+=======
+                            <span class="px-4 py-2 rounded-full text-xs font-semibold bg-white text-primary backdrop-blur-sm flex items-center gap-2">
+>>>>>>> tutoral-branch
                                 <i class="{{ $dechet->category->icon ?? 'fas fa-tag' }}"></i>
                                 {{ $dechet->category->name }}
                             </span>
@@ -122,32 +142,56 @@
                     
                     <!-- Content -->
                     <div class="p-6">
+<<<<<<< HEAD
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2">
                             {{ $dechet->title }}
                         </h3>
                         
                         <p class="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+=======
+                        <h3 class="text-xl font-bold text-gray-900 mb-3 line-clamp-2">
+                            {{ $dechet->title }}
+                        </h3>
+                        
+                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">
+>>>>>>> tutoral-branch
                             {{ Str::limit($dechet->description, 100) }}
                         </p>
                         
                         <!-- Meta Info -->
                         <div class="space-y-2 mb-6">
+<<<<<<< HEAD
                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+=======
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+>>>>>>> tutoral-branch
                                 <i class="fas fa-map-marker-alt text-accent"></i>
                                 <span>{{ $dechet->location }}</span>
                             </div>
                             
+<<<<<<< HEAD
                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+=======
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+>>>>>>> tutoral-branch
                                 <i class="fas fa-box text-secondary"></i>
                                 <span>Quantité: {{ $dechet->quantity }}</span>
                             </div>
                             
+<<<<<<< HEAD
                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+=======
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+>>>>>>> tutoral-branch
                                 <i class="fas fa-eye text-primary"></i>
                                 <span>{{ $dechet->views_count ?? 0 }} vues</span>
                             </div>
                             
+<<<<<<< HEAD
                             <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+=======
+                            <div class="flex items-center gap-2 text-sm text-gray-600">
+>>>>>>> tutoral-branch
                                 <i class="fas fa-calendar text-primary"></i>
                                 <span>{{ $dechet->created_at->format('d/m/Y') }}</span>
                             </div>
@@ -198,11 +242,19 @@
         </div>
     @else
         <div class="text-center py-16">
+<<<<<<< HEAD
             <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 dark:bg-gray-800 rounded-full mb-6">
                 <i class="fas fa-box-open text-4xl text-gray-400"></i>
             </div>
             <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Aucun déchet déclaré</h3>
             <p class="text-gray-600 dark:text-gray-400 mb-6">
+=======
+            <div class="inline-flex items-center justify-center w-24 h-24 bg-gray-100 rounded-full mb-6">
+                <i class="fas fa-box-open text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Aucun déchet déclaré</h3>
+            <p class="text-gray-600 mb-6">
+>>>>>>> tutoral-branch
                 Vous n'avez pas encore déclaré de déchet. Commencez maintenant !
             </p>
             
