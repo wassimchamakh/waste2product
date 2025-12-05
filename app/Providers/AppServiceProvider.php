@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use App\View\Composers\NotificationComposer;
 use App\View\Composers\FrontOfficeNotificationComposer;
+use Illuminate\Support\Facades\URL;  
 
 class AppServiceProvider extends ServiceProvider
 {

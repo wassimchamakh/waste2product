@@ -3,3 +3,4 @@ builder = "NIXPACKS"
 
 [build.nixpacks]
 php_extensions = ["bcmath"]
+
