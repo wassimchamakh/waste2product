@@ -17,11 +17,16 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
+    
     /**
      * Bootstrap any application services.
      */
     public function boot(): void
     {
+     
+    if(config('app.env') === 'production'){
+        URL::forceScheme('https');
+    }
         // Share notifications with BackOffice navbar
         View::composer('BackOffice.layouts.navbar', NotificationComposer::class);
         
