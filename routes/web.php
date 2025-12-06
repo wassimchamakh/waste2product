@@ -74,16 +74,21 @@ Route::middleware('auth')->group(function () {
 require __DIR__.'/auth.php';
 
 use App\Http\Controllers\Backoffice\DashboardController;
+use App\Http\Controllers\Frontoffice\HomeController;
 
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 
-Route::get('/', function () {
-    return view('FrontOffice.home');
-})->middleware('guest')->name('homee');
+Route::get('/', [HomeController::class, 'index'])->name('homee');
 
-Route::get('/home', function () {
-    return view('FrontOffice.pages.homestats');
-})->middleware(['auth', 'verified'])->name('home');
+Route::get('/home', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('home');
+
+// Static pages
+Route::view('/support', 'FrontOffice.pages.support')->name('support');
+Route::view('/aide', 'FrontOffice.pages.aide')->name('aide');
+Route::view('/contact', 'FrontOffice.pages.contact')->name('contact');
+Route::view('/mobile-app', 'FrontOffice.pages.mobile-app')->name('mobile-app');
+Route::view('/confidentialite', 'FrontOffice.pages.confidentialite')->name('confidentialite');
+Route::view('/cgu', 'FrontOffice.pages.cgu')->name('cgu');
 
 /*
 Route::get('/login', function () {

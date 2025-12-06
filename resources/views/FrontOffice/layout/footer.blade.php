@@ -55,11 +55,11 @@
             <div>
                 <h3 class="font-semibold mb-4">Support</h3>
                 <ul class="space-y-2 text-sm opacity-80">
-                    <li><a href="#" class="hover:opacity-100 transition-opacity">Aide</a></li>
-                    <li><a href="#" class="hover:opacity-100 transition-opacity">Contact</a></li>
-                    <li><a href="#" class="hover:opacity-100 transition-opacity">Mobile App</a></li>
-                    <li><a href="#" class="hover:opacity-100 transition-opacity">Confidentialité</a></li>
-                    <li><a href="#" class="hover:opacity-100 transition-opacity">CGU</a></li>
+                    <li><a href="{{ route('aide') }}" class="hover:opacity-100 transition-opacity">Aide</a></li>
+                    <li><a href="{{ route('contact') }}" class="hover:opacity-100 transition-opacity">Contact</a></li>
+                    <li><a href="{{ route('mobile-app') }}" class="hover:opacity-100 transition-opacity">Mobile App</a></li>
+                    <li><a href="{{ route('confidentialite') }}" class="hover:opacity-100 transition-opacity">Confidentialité</a></li>
+                    <li><a href="{{ route('cgu') }}" class="hover:opacity-100 transition-opacity">CGU</a></li>
                 </ul>
             </div>
         </div>

@@ -145,7 +145,7 @@
                     <!-- User Dropdown -->
                     <div id="user-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 z-50">
                         <div class="py-1">
-                            <a href="/dashboard" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="/" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-tachometer-alt w-4 mr-3"></i>Dashboard
                                 
                             </a>
@@ -153,17 +153,17 @@
                             <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-user w-4 mr-3"></i>Mon Profil
                             </a>
-                            <a href="/mes-projets" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                            <a href="/projects/mesprojets" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-project-diagram w-4 mr-3"></i>Mes Projets
                             </a>
                             <a href="/dechets/mesdechets" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                 <i class="fas fa-recycle w-4 mr-3"></i>Mes Déchets
                             </a>
-                            <a href="/impact" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-chart-line w-4 mr-3"></i>Mon Impact
+                            <a href="/events/myEvents" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-chart-line w-4 mr-3"></i>Mon Evenements
                             </a>
-                            <a href="/parametres" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                                <i class="fas fa-cog w-4 mr-3"></i>Paramètres
+                            <a href="/tutorials" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <i class="fas fa-cog w-4 mr-3"></i>Tutorials
                             </a>
                             <hr class="my-1 border-gray-200">
                             <form method="POST" action="{{ route('logout') }}">

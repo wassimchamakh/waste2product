@@ -3,120 +3,6 @@
 @section('title', 'Accueil - Waste2Product')
 
 @section('content')
-{{-- Données statiques simulées --}}
-@php
-    $stats = [
-        'co2_saved' => 2847,
-        'projects_count' => 156,
-        'wastes_count' => 89,
-        'users_count' => 423,
-    ];
-
-    $popularProjects = [
-        [
-            'title' => 'Table Basse Palettes Industrielle',
-            'difficulty' => 'Moyen',
-            'difficulty_color' => 'secondary',
-            'duration' => '6',
-            'creator' => 'Ahmed Ben Salem',
-            'city' => 'Tunis',
-            'rating' => 4.8,
-            'reviews_count' => 24,
-            'icon' => 'table'
-        ],
-        [
-            'title' => 'Jardinière Suspendue Bouteilles',
-            'difficulty' => 'Facile',
-            'difficulty_color' => 'success',
-            'duration' => '2',
-            'creator' => 'Sarah Mansouri',
-            'city' => 'Sfax',
-            'rating' => 4.9,
-            'reviews_count' => 31,
-            'icon' => 'seedling'
-        ],
-        [
-            'title' => 'Luminaire Créatif Canettes',
-            'difficulty' => 'Moyen',
-            'difficulty_color' => 'secondary',
-            'duration' => '4',
-            'creator' => 'Youssef Trabelsi',
-            'city' => 'Sousse',
-            'rating' => 4.7,
-            'reviews_count' => 18,
-            'icon' => 'lightbulb'
-        ]
-    ];
-
-    $recentWastes = [
-        [
-            'title' => 'Palettes Européennes',
-            'location' => 'Tunis, Ben Arous',
-            'time_ago' => 'Déclaré il y a 2h',
-            'icon' => 'pallet'
-        ],
-        [
-            'title' => 'Bouteilles Plastique',
-            'location' => 'Sfax',
-            'time_ago' => 'Lot de 50 • 1.5L',
-            'icon' => 'wine-bottle'
-        ],
-        [
-            'title' => 'Caisses de Vin',
-            'location' => 'Nabeul',
-            'time_ago' => 'Cave vinicole • 12 unités',
-            'icon' => 'box'
-        ],
-        [
-            'title' => 'Pneus Usagés',
-            'location' => 'Sousse',
-            'time_ago' => 'Garage • Diverses tailles',
-            'icon' => 'tire'
-        ]
-    ];
-
-    $upcomingEvents = [
-        [
-            'title' => 'Repair Café Tunis 🔧',
-            'date' => '15',
-            'month' => 'DÉC',
-            'time_location' => 'Samedi 14h • Maison des Jeunes Menzah',
-            'available_spots' => '15 places',
-            'color' => 'primary'
-        ],
-        [
-            'title' => 'Atelier Upcycling Textiles ✂️',
-            'date' => '16',
-            'month' => 'DÉC',
-            'time_location' => 'Dimanche 10h • Fab Lab ENSI',
-            'available_spots' => '8 places',
-            'color' => 'secondary'
-        ],
-        [
-            'title' => 'Collecte Déchets Électroniques 🔌',
-            'date' => '18',
-            'month' => 'DÉC',
-            'time_location' => 'Mercredi 9h • Place Pasteur',
-            'available_spots' => 'Illimité',
-            'color' => 'accent'
-        ]
-    ];
-
-    $testimonials = [
-        [
-            'name' => 'Ahmed Ben Salem',
-            'location' => 'Tunis • Créateur de projets',
-            'content' => 'Grâce à Waste2Product, j\'ai transformé 20 palettes en mobilier design ! Ma maison a un style unique et j\'ai économisé plus de 800 DT.',
-            'rating' => 5
-        ],
-        [
-            'name' => 'Sarah Mansouri',
-            'location' => 'Sfax • Collectionneuse',
-            'content' => 'Je collecte les bouteilles plastique dans mon quartier. La plateforme m\'aide à les valoriser et sensibiliser ma communauté !',
-            'rating' => 5
-        ]
-    ];
-@endphp
 
 <!-- Main Content -->
 <main class="pt-16">
@@ -136,7 +22,7 @@
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 bg-success"></span>
                     </span>
-                    <span class="text-sm font-medium">+423 membres actifs • Tunisie</span>
+                    <span class="text-sm font-medium">+{{ $stats['users_count'] }} membres actifs • Tunisie</span>
                 </div>
 
                 <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
@@ -256,16 +142,21 @@
                 <div class="group relative card-hover bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-300">
                     <!-- Image/Icon Section with Overlay -->
                     <div class="relative h-56 bg-gradient-to-br from-primary via-green-600 to-success flex items-center justify-center overflow-hidden">
+                        @if($project['image'])
+                            <img src="{{ $project['image'] }}" alt="{{ $project['title'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                        @else
+                            <i class="fas fa-{{ $project['icon'] }} text-white text-5xl transform group-hover:scale-110 transition-transform duration-300 relative z-10"></i>
+                        @endif
                         <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                        <i class="fas fa-{{ $project['icon'] }} text-white text-5xl transform group-hover:scale-110 transition-transform duration-300"></i>
 
                         <!-- Difficulty Badge -->
-                        <span class="absolute top-4 left-4 bg-{{ $project['difficulty_color'] }} text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg">
+                        <span class="absolute top-4 left-4 bg-{{ $project['difficulty_color'] }} text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-lg z-20">
                             {{ $project['difficulty'] }}
                         </span>
 
                         <!-- Duration Badge -->
-                        <span class="absolute top-4 right-4 bg-white bg-opacity-90 text-gray-800 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg">
+                        <span class="absolute top-4 right-4 bg-white bg-opacity-90 text-gray-800 px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1 shadow-lg z-20">
                             <i class="fas fa-clock text-primary"></i>
                             {{ $project['duration'] }}h
                         </span>
@@ -301,7 +192,7 @@
                                 </span>
                                 <span class="text-xs text-gray-500">({{ $project['reviews_count'] }})</span>
                             </div>
-                            <a href="{{ route('projects.index') }}" class="inline-flex items-center gap-1 text-primary hover:text-green-700 font-semibold text-sm group-hover:gap-2 transition-all">
+                            <a href="{{ route('projects.show', $project['id']) }}" class="inline-flex items-center gap-1 text-primary hover:text-green-700 font-semibold text-sm group-hover:gap-2 transition-all">
                                 Voir
                                 <i class="fas fa-arrow-right"></i>
                             </a>
@@ -338,11 +229,16 @@
                 <!-- Waste Item -->
                 <div class="group card-hover bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 hover:shadow-xl transition-all duration-300">
                     <div class="relative h-40 bg-gradient-to-br from-primary via-green-500 to-teal-500 flex items-center justify-center overflow-hidden">
+                        @if($waste['image'])
+                            <img src="{{ $waste['image'] }}" alt="{{ $waste['title'] }}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-125 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent"></div>
+                        @else
+                            <i class="fas fa-{{ $waste['icon'] }} text-white text-3xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 relative z-10"></i>
+                        @endif
                         <div class="absolute inset-0 bg-black opacity-0 group-hover:opacity-10 transition-opacity"></div>
-                        <i class="fas fa-{{ $waste['icon'] }} text-white text-3xl transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300"></i>
 
                         <!-- Available Badge -->
-                        <span class="absolute top-3 right-3 bg-success text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+                        <span class="absolute top-3 right-3 bg-success text-white px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg z-20">
                             <span class="w-2 h-2 bg-white rounded-full animate-pulse"></span>
                             Disponible
                         </span>
@@ -361,7 +257,7 @@
                             </div>
                         </div>
 
-                        <a href="{{ route('dechets.index') }}" class="block w-full bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center text-sm font-semibold py-2.5 rounded-lg shadow-md transition-all transform hover:scale-105">
+                        <a href="{{ route('dechets.show', $waste['id']) }}" class="block w-full bg-gradient-to-r from-primary to-green-600 hover:from-green-600 hover:to-primary text-white text-center text-sm font-semibold py-2.5 rounded-lg shadow-md transition-all transform hover:scale-105">
                             Voir détails
                         </a>
                     </div>
@@ -405,9 +301,9 @@
                             </p>
                             <div class="flex items-center justify-between">
                                 <span class="text-xs bg-success text-white px-2 py-1 rounded-full">
-                                    {{ $event['available_spots'] }}
+                                    {{ $event['available_spots'] }} places
                                 </span>
-                                <button class="btn-primary text-sm px-4 py-1">S'inscrire</button>
+                                <a href="{{ route('Events.show', $event['id']) }}" class="bg-primary hover:bg-primary/90 text-white text-sm px-4 py-1 rounded-lg font-medium transition-colors">S'inscrire</a>
                             </div>
                         </div>
                     </div>
