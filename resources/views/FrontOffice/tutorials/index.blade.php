@@ -54,16 +54,16 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative bg-gradient-to-r from-primary to-secondary py-16 overflow-hidden">
+<section class="relative bg-gradient-to-r from-primary to-secondary py-8 sm:py-12 md:py-16 overflow-hidden">
     <div class="absolute inset-0 bg-black opacity-20"></div>
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
             Parcourir les Tutoriels
         </h1>
-        <p class="text-xl text-white/90 max-w-2xl mx-auto">
+        <p class="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl mx-auto px-4">
             Découvrez des guides complets pour vous aider à apprendre des pratiques durables et avoir un impact environnemental positif
         </p>
-        <div class="mt-6 text-white/80">
+        <div class="mt-4 sm:mt-6 text-sm sm:text-base text-white/80">
             <span class="inline-flex items-center">
                 <i class="fas fa-graduation-cap mr-2"></i>
                 {{ $tutorials->total() }} tutoriels disponibles
@@ -73,63 +73,63 @@
 </section>
 
 <!-- Main Content -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
     <!-- Navigation Tabs and Create Button -->
     @auth
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-        <div class="flex flex-wrap gap-3">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
+        <div class="flex overflow-x-auto gap-2 sm:gap-3 pb-2 sm:pb-0 scrollbar-hide">
             <a href="{{ route('tutorials.index') }}" 
-               class="inline-flex items-center px-6 py-3 {{ !request()->has('filter') ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium">
-                <i class="fas fa-th-large mr-2"></i>
-                Tous les Tutoriels
-                <span class="ml-2 px-2 py-0.5 text-xs bg-white/20 rounded-full">{{ $tutorials->total() }}</span>
+               class="inline-flex items-center whitespace-nowrap px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base {{ !request()->has('filter') ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium flex-shrink-0">
+                <i class="fas fa-th-large mr-1.5 sm:mr-2"></i>
+                <span class="hidden sm:inline">Tous les Tutoriels</span> 
+                <span class="ml-1.5 sm:ml-2 px-1.5 sm:px-2 py-0.5 text-xs bg-white/20 rounded-full">{{ $tutorials->total() }}</span>
             </a>
         
         <a href="{{ route('tutorials.index', ['filter' => 'my-tutorials']) }}" 
-           class="inline-flex items-center px-6 py-3 {{ request('filter') == 'my-tutorials' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium">
-            <i class="fas fa-user-edit mr-2"></i>
-            Mes Tutoriels
+           class="inline-flex items-center whitespace-nowrap px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base {{ request('filter') == 'my-tutorials' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium flex-shrink-0">
+            <i class="fas fa-user-edit mr-1.5 sm:mr-2"></i>
+            <span class="hidden sm:inline">Mes Tutoriels</span>
         </a>
         
         <a href="{{ route('tutorials.index', ['filter' => 'in-progress']) }}" 
-           class="inline-flex items-center px-6 py-3 {{ request('filter') == 'in-progress' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium">
-            <i class="fas fa-book-reader mr-2"></i>
-            En Cours d'Apprentissage
+           class="inline-flex items-center whitespace-nowrap px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base {{ request('filter') == 'in-progress' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium flex-shrink-0">
+            <i class="fas fa-book-reader mr-1.5 sm:mr-2"></i>
+            En Cours
         </a>
         
         <a href="{{ route('tutorials.index', ['filter' => 'completed']) }}" 
-           class="inline-flex items-center px-6 py-3 {{ request('filter') == 'completed' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium">
-            <i class="fas fa-check-circle mr-2"></i>
+           class="inline-flex items-center whitespace-nowrap px-3 sm:px-4 md:px-6 py-2 sm:py-2.5 md:py-3 text-xs sm:text-sm md:text-base {{ request('filter') == 'completed' ? 'bg-primary text-white' : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600' }} rounded-lg hover:shadow-md transition-all font-medium flex-shrink-0">
+            <i class="fas fa-check-circle mr-1.5 sm:mr-2"></i>
             Terminés
         </a>
         </div>
         
         <!-- Create Tutorial Button -->
         <a href="{{ route('tutorials.create') }}" 
-           class="inline-flex items-center px-6 py-3 bg-secondary text-white rounded-lg hover:bg-teal-600 transition-all font-medium shadow-md hover:shadow-lg">
+           class="inline-flex items-center justify-center w-full sm:w-auto px-4 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base bg-secondary text-white rounded-lg hover:bg-teal-600 transition-all font-medium shadow-md hover:shadow-lg">
             <i class="fas fa-plus-circle mr-2"></i>
-            Créer un Tutoriel
+             <span class="hidden sm:inline">Créer un Tutoriel</span>
         </a>
     </div>
     @endauth
 
     <!-- Search and Filters -->
-    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-8">
-        <form method="GET" action="{{ route('tutorials.index') }}" class="space-y-4">
+    <div class="bg-white dark:bg-gray-800 rounded-lg sm:rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-6 sm:mb-8">
+        <form method="GET" action="{{ route('tutorials.index') }}" class="space-y-3 sm:space-y-4">
             <!-- Search Bar -->
             <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <i class="fas fa-search text-gray-400"></i>
+                    <i class="fas fa-search text-gray-400 text-sm sm:text-base"></i>
                 </div>
                 <input type="text" 
                        name="search"
                        value="{{ request('search') }}"
-                       placeholder="Rechercher des tutoriels par titre, description ou tags..." 
-                       class="block w-full pl-10 pr-3 py-3 text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                       placeholder="Rechercher..." 
+                       class="block w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
             </div>
             
             <!-- Filter Row -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                 <!-- Category Filter -->
                 <div>
                     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Catégorie</label>

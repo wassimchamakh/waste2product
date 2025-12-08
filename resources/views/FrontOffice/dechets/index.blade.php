@@ -4,34 +4,34 @@
 
 @section('content')
 <!-- Hero Section -->
-<div class="gradient-hero text-white py-16">
+<div class="gradient-hero text-white py-8 sm:py-12 md:py-16">
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                <i class="fas fa-recycle mr-3"></i>Déchets Disponibles
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+                <i class="fas fa-recycle mr-2 sm:mr-3"></i><span class="hidden sm:inline">Déchets Disponibles</span><span class="sm:hidden">Déchets</span>
             </h1>
-            <p class="text-xl opacity-90 mb-8">
-                Donnez une seconde vie aux déchets. Ensemble pour une Tunisie plus verte !
+            <p class="text-sm sm:text-base md:text-lg lg:text-xl opacity-90 mb-6 sm:mb-8 px-4">
+                Donnez une seconde vie aux déchets<span class="hidden sm:inline">. Ensemble pour une Tunisie plus verte !</span>
             </p>
             
             <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['total'] }}</div>
-                    <div class="text-sm opacity-90">Déchets actifs</div>
+            <div class="grid grid-cols-3 sm:grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto">
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['total'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90"><span class="hidden sm:inline">Déchets </span>actifs</div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['available'] }}</div>
-                    <div class="text-sm opacity-90">Disponibles</div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['available'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90">Disponibles</div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['reserved'] }}</div>
-                    <div class="text-sm opacity-90">Réservés</div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['reserved'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90">Réservés</div>
                 </div>
             </div>
         </div>
-        <div class="mt-4 flex flex-wrap gap-3 justify-center">
+        <div class="mt-4 sm:mt-6 flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 justify-center">
     <a 
         href="{{ route('dechets.create') }}" 
         class="inline-flex items-center gap-2 bg-gradient-to-r from-secondary to-accent text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all"
@@ -61,20 +61,20 @@
 
 <!-- Filters Section -->
 <div class="bg-white shadow-lg sticky top-16 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <form method="GET" action="{{ route('dechets.index') }}" class="space-y-4">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <form method="GET" action="{{ route('dechets.index') }}" class="space-y-3 sm:space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
                 <!-- Recherche -->
-                <div class="md:col-span-2">
+                <div class="sm:col-span-2">
                     <div class="relative">
                         <input 
                             type="text" 
                             name="search" 
                             value="{{ request('search') }}"
-                            placeholder="Rechercher un déchet..." 
-                            class="w-full pl-12 pr-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                            placeholder="Rechercher..." 
+                            class="w-full pl-10 sm:pl-12 pr-4 py-2 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                         >
-                        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        <i class="fas fa-search absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm sm:text-base"></i>
                     </div>
                 </div>
                 
@@ -82,7 +82,7 @@
                 <div>
                     <select 
                         name="category" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                     >
                         <option value="">Toutes les catégories</option>
                         @foreach($categories as $category)
@@ -97,7 +97,7 @@
                 <div>
                     <select 
                         name="status" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                     >
                         <option value="">Tous les statuts</option>
                         <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Disponible</option>
@@ -106,38 +106,38 @@
                 </div>
             </div>
             
-            <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="flex-1">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+                <div class="flex-1 w-full">
                     <input 
                         type="text" 
                         name="location" 
                         value="{{ request('location') }}"
-                        placeholder="Localisation (ville, gouvernorat...)" 
-                        class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent"
+                        placeholder="Localisation..." 
+                        class="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-transparent text-sm sm:text-base"
                     >
                 </div>
                 
-                <div class="flex gap-3 w-full sm:w-auto">
+                <div class="flex gap-2 sm:gap-3 w-full sm:w-auto">
                     <button 
                         type="submit" 
-                        class="flex-1 sm:flex-initial bg-primary hover:bg-green-700 text-white px-8 py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                        class="flex-1 sm:flex-initial bg-primary hover:bg-green-700 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
                         <i class="fas fa-search"></i>
-                        Filtrer
+                        <span class="hidden sm:inline">Filtrer</span>
                     </button>
                     
                     <button 
                         type="button"
                         onclick="openImageRecognition()"
-                        class="flex-1 sm:flex-initial bg-gradient-to-r from-purple-500 to-indigo-500 hover:shadow-lg text-white px-6 py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2"
+                        class="flex-1 sm:flex-initial bg-gradient-to-r from-purple-500 to-indigo-500 hover:shadow-lg text-white px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-lg font-medium transition-all flex items-center justify-center gap-2 text-sm sm:text-base"
                     >
                         <i class="fas fa-camera"></i>
-                        Reconnaître
+                        <span class="hidden sm:inline">Reconnaître</span>
                     </button>
                     
                     <a 
                         href="{{ route('dechets.index') }}" 
-                        class="flex-1 sm:flex-initial bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                        class="flex items-center justify-center bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors text-sm sm:text-base"
                     >
                         <i class="fas fa-redo"></i>
                     </a>
@@ -179,9 +179,9 @@
 @endif
 
 <!-- Dechets Grid -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
     @if($Dechets->count() > 0)
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
             @foreach($Dechets as $dechet)
                 <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
                     <!-- Image -->

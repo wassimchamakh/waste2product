@@ -57,20 +57,20 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="bg-gradient-to-br from-primary to-success text-white py-16">
+<section class="bg-gradient-to-br from-primary to-success text-white py-8 sm:py-12 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div class="floating-icon mb-6">
-            <i class="fas fa-calendar-alt text-6xl opacity-80"></i>
+        <div class="floating-icon mb-4 sm:mb-6">
+            <i class="fas fa-calendar-alt text-4xl sm:text-5xl md:text-6xl opacity-80"></i>
         </div>
-        <h1 class="text-4xl md:text-6xl font-bold mb-4">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-6xl font-bold mb-3 sm:mb-4">
             Événements Communautaires
         </h1>
-        <p class="text-xl md:text-2xl mb-8 opacity-90">
+        <p class="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 opacity-90 px-4">
             Rejoignez notre mouvement pour une économie circulaire en Tunisie
         </p>
         
         <!-- Stats Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mt-8 sm:mt-12">
             <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6">
                 <div class="text-3xl font-bold">{{ $stats['events_this_month'] }}</div>
                 <div class="text-sm opacity-80">Événements ce mois</div>
@@ -88,27 +88,27 @@
 </section>
 
 <!-- Navigation Tabs -->
-<section class="bg-white border-b border-gray-200 sticky top-0 z-50">
+<section class="bg-white border-b border-gray-200 sticky top-16 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <nav class="flex items-center justify-between py-4">
-            <div class="flex space-x-4">
-                <button class="tab-btn active px-4 py-2 text-sm font-medium rounded-lg transition-all" data-view="list">
-                    <i class="fas fa-list mr-2"></i>
-                    Vue Liste
+        <nav class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between py-3 sm:py-4 gap-3 sm:gap-0">
+            <div class="flex overflow-x-auto space-x-2 sm:space-x-4 pb-2 sm:pb-0 scrollbar-hide">
+                <button class="tab-btn active px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg transition-all whitespace-nowrap flex-shrink-0" data-view="list">
+                    <i class="fas fa-list mr-1 sm:mr-2"></i>
+                    <span class="hidden sm:inline">Vue </span>Liste
                 </button>
-                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="calendar">
-                    <i class="fas fa-calendar-alt mr-2"></i>
-                    Vue Calendrier
+                <button class="tab-btn px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all whitespace-nowrap flex-shrink-0" data-view="calendar">
+                    <i class="fas fa-calendar-alt mr-1 sm:mr-2"></i>
+                    <span class="hidden sm:inline">Vue </span>Calendrier
                 </button>
-                <button class="tab-btn px-4 py-2 text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all" data-view="popular">
-                    <i class="fas fa-fire mr-2"></i>
-                    Événements Populaires
+                <button class="tab-btn px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-lg text-gray-600 hover:bg-gray-100 transition-all whitespace-nowrap flex-shrink-0" data-view="popular">
+                    <i class="fas fa-fire mr-1 sm:mr-2"></i>
+                    Populaires
                 </button>
             </div>
             
             @auth
-            <div>
-                <a href="{{ route('Events.mes-Events') }}" class="bg-gradient-to-r from-primary to-success text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all text-sm font-medium inline-flex items-center">
+            <div class="w-full sm:w-auto">
+                <a href="{{ route('Events.mes-Events') }}" class="bg-gradient-to-r from-primary to-success text-white px-3 sm:px-4 py-2 rounded-lg hover:shadow-lg transition-all text-xs sm:text-sm font-medium inline-flex items-center justify-center w-full sm:w-auto">
                     <i class="fas fa-user-check mr-2"></i>
                     Mes Événements
                 </a>
@@ -119,23 +119,23 @@
 </section>
 
 <!-- Filters -->
-<section class="bg-white border-b border-gray-200 py-4">
+<section class="bg-white border-b border-gray-200 py-3 sm:py-4">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <form method="GET" action="{{ route('Events.index') }}" id="filters-form">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-3 sm:mb-4">
                 <!-- Search -->
-                <div class="md:col-span-2">
+                <div class="sm:col-span-2">
                     <div class="relative">
-                        <input type="text" name="search" id="search-input" placeholder="Rechercher un événement..." 
+                        <input type="text" name="search" id="search-input" placeholder="Rechercher..." 
                             value="{{ request('search') }}"
-                            class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
-                        <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+                            class="w-full pl-10 pr-4 py-2 sm:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <i class="fas fa-search absolute left-3 top-2.5 sm:top-3.5 text-gray-400 text-sm"></i>
                     </div>
                 </div>
                 
                 <!-- Type Filter -->
                 <div>
-                    <select name="type" id="filter-type" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                    <select name="type" id="filter-type" class="w-full px-3 py-2 sm:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                         <option value="">Tous les types</option>
                         @foreach($types as $key => $type)
                             <option value="{{ $key }}" {{ request('type') == $key ? 'selected' : '' }}>
@@ -147,7 +147,7 @@
                 
                 <!-- City Filter -->
                 <div>
-                    <select name="city" id="filter-city" class="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
+                    <select name="city" id="filter-city" class="w-full px-3 py-2 sm:py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary">
                         <option value="">Toutes les villes</option>
                         @foreach($cities as $cityKey => $cityName)
                             <option value="{{ $cityKey }}" {{ request('city') == $cityKey ? 'selected' : '' }}>
@@ -159,7 +159,7 @@
             </div>
             
             <!-- Additional Filters -->
-            <div class="flex flex-wrap items-center gap-4">
+            <div class="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
                 <label class="flex items-center cursor-pointer">
                     <input type="checkbox" name="free_only" value="1" id="filter-free" 
                         {{ request('free_only') ? 'checked' : '' }}
@@ -184,9 +184,9 @@
 </section>
 
 <!-- List View -->
-<section id="list-view" class="view-section active py-8">
+<section id="list-view" class="view-section active py-4 sm:py-6 md:py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="events-grid">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6" id="events-grid">
             @forelse($events as $event)
                 @php
                     $currentParticipants = $event->participants->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])->count();

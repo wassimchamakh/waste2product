@@ -72,23 +72,23 @@
 
 @section('content')
 <!-- Header -->
-<div class="bg-gradient-to-r from-primary to-success text-white py-8">
+<div class="bg-gradient-to-r from-primary to-success text-white py-6 sm:py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-                <h1 class="text-3xl font-bold mb-2">
+                <h1 class="text-2xl sm:text-3xl font-bold mb-2">
                     {{ $duplicateEvent ? 'Dupliquer un Événement' : 'Créer un Événement' }}
                 </h1>
-                <p class="opacity-90">Partagez votre passion pour l'économie circulaire</p>
+                <p class="opacity-90 text-sm sm:text-base">Partagez votre passion pour l'économie circulaire</p>
             </div>
-            <a href="{{ route('Events.index') }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors">
+            <a href="{{ route('Events.index') }}" class="bg-white/20 text-white px-4 py-2 rounded-lg hover:bg-white/30 transition-colors text-sm sm:text-base inline-flex items-center justify-center sm:justify-start">
                 <i class="fas fa-arrow-left mr-2"></i>Retour
             </a>
         </div>
     </div>
 </div>
 
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
     <!-- Progress Indicator -->
     <div class="mb-8">
         <div class="flex items-center justify-between mb-4">

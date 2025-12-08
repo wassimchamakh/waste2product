@@ -5,12 +5,12 @@
 @section('content')
 
 <!-- Section principale avec background coloré -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-    <div class="rounded-3xl bg-gradient-to-br from-green-50 to-green-100 shadow-xl p-8 mb-12 border border-green-200">
-        <div class="flex flex-col md:flex-row gap-8 items-center md:items-start">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 md:pt-8">
+    <div class="rounded-2xl sm:rounded-3xl bg-gradient-to-br from-green-50 to-green-100 shadow-xl p-4 sm:p-6 md:p-8 mb-8 sm:mb-12 border border-green-200">
+        <div class="flex flex-col md:flex-row gap-4 sm:gap-6 md:gap-8 items-center md:items-start">
             <!-- Project Image -->
             <div class="w-full md:w-1/3 flex justify-center">
-                <div class="bg-white rounded-2xl shadow-2xl overflow-hidden w-72 h-72 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
+                <div class="bg-white rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden w-full max-w-xs sm:w-56 sm:h-56 md:w-72 md:h-72 flex items-center justify-center transform hover:scale-105 transition-transform duration-300">
                     @if($project->photo)
                         <img 
                             src="{{ asset('uploads/projects/' . $project->photo) }}" 
@@ -29,22 +29,22 @@
             <!-- Project Info -->
             <div class="w-full md:w-2/3">
                 <!-- Breadcrumb -->
-                <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+                <nav class="flex items-center space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
                     <a href="{{ route('projects.my') }}" class="hover:text-green-600 transition-colors font-medium">
-                        <i class="fas fa-tools mr-2"></i>Mes Projets
+                        <i class="fas fa-tools mr-1 sm:mr-2"></i><span class="hidden sm:inline">Mes Projets</span><span class="sm:hidden">Projets</span>
                     </a>
                     <i class="fas fa-chevron-right text-xs text-gray-400"></i>
-                    <span class="text-green-600 font-semibold">{{ $project->title }}</span>
+                    <span class="text-green-600 font-semibold line-clamp-1">{{ $project->title }}</span>
                 </nav>
                 <!-- Project Header -->
-                <div class="mb-6">
-                    <div class="flex flex-wrap items-center gap-3 mb-6">
+                <div class="mb-4 sm:mb-6">
+                    <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
                         <!-- Category -->
-                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-white text-green-700 border-2 border-green-200 shadow-sm">
-                            <i class="fas fa-tag mr-2"></i>{{ $project->category->name ?? 'Général' }}
+                        <span class="px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-white text-green-700 border-2 border-green-200 shadow-sm">
+                            <i class="fas fa-tag mr-1 sm:mr-2"></i>{{ $project->category->name ?? 'Général' }}
                         </span>
                         <!-- Difficulty -->
-                        <span class="px-4 py-2 rounded-full text-sm font-bold text-white shadow-md
+                        <span class="px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold text-white shadow-md
                             @if($project->difficulty_level === 'facile') bg-gradient-to-r from-green-500 to-green-600
                             @elseif($project->difficulty_level === 'intermédiaire') bg-gradient-to-r from-orange-500 to-orange-600
                             @elseif($project->difficulty_level === 'difficile') bg-gradient-to-r from-red-500 to-red-600
@@ -58,34 +58,34 @@
                             @endif
                         </span>
                         <!-- Statut -->
-                        <span class="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md">
-                            <i class="fas fa-circle mr-2"></i>{{ ucfirst($project->status) }}
+                        <span class="px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md">
+                            <i class="fas fa-circle mr-1 sm:mr-2"></i>{{ ucfirst($project->status) }}
                         </span>
                         @if($project->status === 'featured')
-                            <span class="px-4 py-2 rounded-full text-sm font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 text-white shadow-md">
-                                <i class="fas fa-star mr-2"></i>Projet vedette
+                            <span class="px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full text-xs sm:text-sm font-bold bg-gradient-to-r from-yellow-400 to-yellow-500 text-white shadow-md">
+                                <i class="fas fa-star mr-1 sm:mr-2"></i><span class="hidden sm:inline">Projet vedette</span><span class="sm:hidden">Vedette</span>
                             </span>
                         @endif
                     </div>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 leading-tight">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-gray-900 mb-3 sm:mb-4 leading-tight">
                         {{ $project->title }}
                     </h1>
-                    <div class="flex flex-wrap items-center gap-6 text-gray-700">
-                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-2 shadow-sm">
+                    <div class="flex flex-wrap items-center gap-3 sm:gap-4 md:gap-6 text-gray-700 text-xs sm:text-sm md:text-base">
+                        <div class="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 shadow-sm">
                             <i class="fas fa-user text-green-500"></i>
-                            <span class="font-medium">Par {{ $project->user->name ?? 'Anonyme' }}</span>
+                            <span class="font-medium truncate">{{ $project->user->name ?? 'Anonyme' }}</span>
                         </div>
-                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-2 shadow-sm">
+                        <div class="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 shadow-sm">
                             <i class="fas fa-clock text-orange-500"></i>
                             <span class="font-medium">{{ $project->estimated_time }}</span>
                         </div>
-                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-2 shadow-sm">
+                        <div class="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 shadow-sm">
                             <i class="fas fa-leaf text-green-500"></i>
-                            <span class="font-medium">Impact: {{ $project->impact_score }}/10</span>
+                            <span class="font-medium"><span class="hidden sm:inline">Impact: </span>{{ $project->impact_score }}/10</span>
                         </div>
-                        <div class="flex items-center gap-3 bg-white rounded-xl px-4 py-2 shadow-sm">
+                        <div class="flex items-center gap-2 sm:gap-3 bg-white rounded-lg sm:rounded-xl px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 shadow-sm">
                             <i class="fas fa-list-ol text-blue-500"></i>
-                            <span class="font-medium">{{ $project->steps->count() }} étapes</span>
+                            <span class="font-medium">{{ $project->steps->count() }} <span class="hidden sm:inline">étapes</span></span>
                         </div>
                     </div>
                 </div>
@@ -95,104 +95,104 @@
 </div>
 
 <!-- Main Content -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 md:gap-12">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 md:gap-12">
         <!-- Main Content -->
-        <div class="lg:col-span-2 flex flex-col space-y-8 md:space-y-12">
+        <div class="lg:col-span-2 flex flex-col space-y-6 sm:space-y-8 md:space-y-12">
             
             <!-- Description -->
-            <section class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-info-circle text-white text-xl"></i>
+            <section class="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
+                <div class="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-info-circle text-white text-lg sm:text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-extrabold text-gray-900">Description du projet</h2>
-                        <p class="text-gray-600">Découvrez les détails de ce projet écologique</p>
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-extrabold text-gray-900">Description<span class="hidden sm:inline"> du projet</span></h2>
+                        <p class="text-xs sm:text-sm text-gray-600 hidden sm:block">Découvrez les détails de ce projet écologique</p>
                     </div>
                 </div>
-                <div class="prose prose-lg max-w-none">
-                    <p class="text-gray-700 leading-relaxed text-lg whitespace-pre-line bg-gray-50 rounded-xl p-6 border border-gray-200">
+                <div class="prose prose-sm sm:prose-base md:prose-lg max-w-none">
+                    <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed whitespace-pre-line bg-gray-50 rounded-lg sm:rounded-xl p-4 sm:p-6 border border-gray-200">
                         {{ $project->description }}
                     </p>
                 </div>
             </section>
             
             <!-- Project Steps -->
-            <section class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div class="flex items-center gap-4 mb-8">
-                    <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-list-ol text-white text-xl"></i>
+            <section class="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8 border border-gray-100">
+                <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-list-ol text-white text-lg sm:text-xl"></i>
                     </div>
                     <div>
-                        <h2 class="text-2xl font-extrabold text-gray-900">Étapes de réalisation</h2>
-                        <p class="text-gray-600">{{ $project->steps->count() }} étapes pour réussir votre projet</p>
+                        <h2 class="text-lg sm:text-xl md:text-2xl font-extrabold text-gray-900">Étapes<span class="hidden sm:inline"> de réalisation</span></h2>
+                        <p class="text-xs sm:text-sm text-gray-600">{{ $project->steps->count() }} étapes<span class="hidden sm:inline"> pour réussir votre projet</span></p>
                     </div>
                 </div>
                 
                 @if($project->steps->count() > 0)
-                    <div class="space-y-8">
+                    <div class="space-y-4 sm:space-y-6 md:space-y-8">
                         @foreach($project->steps->sortBy('step_number') as $step)
-                            <div class="relative bg-gradient-to-br from-white to-gray-50 rounded-2xl p-6 border-2 border-green-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                <div class="flex items-start gap-6">
+                            <div class="relative bg-gradient-to-br from-white to-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border-2 border-green-100 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <div class="flex items-start gap-3 sm:gap-4 md:gap-6">
                                     <div class="flex-shrink-0">
-                                        <span class="w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white font-extrabold text-xl shadow-lg border-4 border-white">
+                                        <span class="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-green-600 text-white font-extrabold text-base sm:text-lg md:text-xl shadow-lg border-2 sm:border-4 border-white">
                                             {{ $step->step_number }}
                                         </span>
                                     </div>
-                                    <div class="flex-1">
-                                        <div class="mb-4">
-                                            <h3 class="text-2xl font-extrabold text-gray-900 mb-3 flex items-center gap-3">
-                                                <i class="fas fa-arrow-right text-green-500"></i>
-                                                {{ $step->title }}
+                                    <div class="flex-1 min-w-0">
+                                        <div class="mb-3 sm:mb-4">
+                                            <h3 class="text-base sm:text-lg md:text-xl lg:text-2xl font-extrabold text-gray-900 mb-2 sm:mb-3 flex items-center gap-2 sm:gap-3">
+                                                <i class="fas fa-arrow-right text-green-500 text-sm sm:text-base"></i>
+                                                <span class="break-words">{{ $step->title }}</span>
                                             </h3>
                                             @if($step->duration)
-                                                <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 text-orange-700 text-sm font-semibold border border-orange-200 shadow-sm">
-                                                    <i class="fas fa-clock text-orange-500"></i> Durée estimée: {{ $step->duration }}
+                                                <span class="inline-flex items-center gap-1 sm:gap-2 px-2 sm:px-3 md:px-4 py-1 sm:py-2 rounded-full bg-orange-50 text-orange-700 text-xs sm:text-sm font-semibold border border-orange-200 shadow-sm">
+                                                    <i class="fas fa-clock text-orange-500"></i> <span class="hidden sm:inline">Durée estimée: </span>{{ $step->duration }}
                                                 </span>
                                             @endif
                                         </div>
-                                        <div class="mb-6">
-                                            <p class="text-gray-700 leading-relaxed text-lg bg-white rounded-xl p-4 border border-gray-200">
+                                        <div class="mb-4 sm:mb-6">
+                                            <p class="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 border border-gray-200 break-words">
                                                 {{ $step->description }}
                                             </p>
                                         </div>
-                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div class="bg-white rounded-xl p-5 border-2 border-green-200 shadow-sm">
-                                                <h4 class="font-extrabold text-green-700 mb-4 flex items-center gap-3">
-                                                    <i class="fas fa-cube text-green-500 text-lg"></i>
-                                                    Matériaux nécessaires
+                                        <div class="grid grid-cols-1 gap-4 sm:gap-6">
+                                            <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border-2 border-green-200 shadow-sm">
+                                                <h4 class="font-extrabold text-green-700 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3 text-sm sm:text-base">
+                                                    <i class="fas fa-cube text-green-500 text-base sm:text-lg"></i>
+                                                    Matériaux<span class="hidden sm:inline"> nécessaires</span>
                                                 </h4>
-                                                <div class="flex flex-wrap gap-2">
+                                                <div class="flex flex-wrap gap-1.5 sm:gap-2">
                                                     @if($step->materials_needed)
                                                         @foreach(explode("\n", $step->materials_needed) as $mat)
                                                             @if(trim($mat))
-                                                                <span class="inline-flex items-center px-3 py-2 rounded-lg bg-green-50 text-green-700 text-sm font-medium border border-green-200 shadow-sm">
-                                                                    <i class="fas fa-cube mr-2 text-green-500"></i>{{ trim($mat) }}
+                                                                <span class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 rounded-lg bg-green-50 text-green-700 text-xs sm:text-sm font-medium border border-green-200 shadow-sm">
+                                                                    <i class="fas fa-cube mr-1 sm:mr-2 text-green-500"></i>{{ trim($mat) }}
                                                                 </span>
                                                             @endif
                                                         @endforeach
                                                     @else
-                                                        <span class="text-gray-400 italic">Aucun matériau spécifié</span>
+                                                        <span class="text-xs sm:text-sm text-gray-400 italic">Aucun matériau spécifié</span>
                                                     @endif
                                                 </div>
                                             </div>
-                                            <div class="bg-white rounded-xl p-5 border-2 border-blue-200 shadow-sm">
-                                                <h4 class="font-extrabold text-blue-700 mb-4 flex items-center gap-3">
-                                                    <i class="fas fa-wrench text-blue-500 text-lg"></i>
-                                                    Outils requis
+                                            <div class="bg-white rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-5 border-2 border-blue-200 shadow-sm">
+                                                <h4 class="font-extrabold text-blue-700 mb-3 sm:mb-4 flex items-center gap-2 sm:gap-3 text-sm sm:text-base">
+                                                    <i class="fas fa-wrench text-blue-500 text-base sm:text-lg"></i>
+                                                    Outils<span class="hidden sm:inline"> requis</span>
                                                 </h4>
-                                                <div class="flex flex-wrap gap-2">
+                                                <div class="flex flex-wrap gap-1.5 sm:gap-2">
                                                     @if($step->tools_required)
                                                         @foreach(explode("\n", $step->tools_required) as $tool)
                                                             @if(trim($tool))
-                                                                <span class="inline-flex items-center px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-sm font-medium border border-blue-200 shadow-sm">
-                                                                    <i class="fas fa-wrench mr-2 text-blue-500"></i>{{ trim($tool) }}
+                                                                <span class="inline-flex items-center px-2 sm:px-3 py-1 sm:py-2 rounded-lg bg-blue-50 text-blue-700 text-xs sm:text-sm font-medium border border-blue-200 shadow-sm">
+                                                                    <i class="fas fa-wrench mr-1 sm:mr-2 text-blue-500"></i>{{ trim($tool) }}
                                                                 </span>
                                                             @endif
                                                         @endforeach
                                                     @else
-                                                        <span class="text-gray-400 italic">Aucun outil spécifié</span>
+                                                        <span class="text-xs sm:text-sm text-gray-400 italic">Aucun outil spécifié</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -215,36 +215,36 @@
         </div>
         
         <!-- Sidebar -->
-        <div class="flex flex-col space-y-8">
+        <div class="flex flex-col space-y-4 sm:space-y-6 md:space-y-8">
             
             <!-- Créateur du projet -->
-            <div class="bg-white rounded-2xl shadow-xl p-6 border border-gray-100">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                        <i class="fas fa-user text-white"></i>
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 border border-gray-100">
+                <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-user text-white text-sm sm:text-base"></i>
                     </div>
-                    <h3 class="text-xl font-extrabold text-gray-900">Créateur du projet</h3>
+                    <h3 class="text-base sm:text-lg md:text-xl font-extrabold text-gray-900">Créateur<span class="hidden sm:inline"> du projet</span></h3>
                 </div>
                 
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-white font-bold text-xl shadow-lg">
+                <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                    <div class="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center text-white font-bold text-base sm:text-lg md:text-xl shadow-lg">
                         {{ strtoupper(substr($project->user->name ?? 'A', 0, 1)) }}
                     </div>
-                    <div>
-                        <h4 class="font-extrabold text-gray-900 text-lg">
+                    <div class="min-w-0 flex-1">
+                        <h4 class="font-extrabold text-gray-900 text-sm sm:text-base md:text-lg truncate">
                             {{ $project->user->name ?? 'Anonyme' }}
                         </h4>
-                        <p class="text-gray-600 text-sm">
+                        <p class="text-gray-600 text-xs sm:text-sm">
                             Membre depuis {{ $project->user->created_at->format('Y') ?? 'N/A' }}
                         </p>
                     </div>
                 </div>
                 
                 <!-- Author Stats -->
-                <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
-                    <div class="text-center bg-green-50 rounded-xl p-3">
-                        <div class="text-2xl font-extrabold text-green-600">{{ $creatorProjectsCount ?? 0 }}</div>
-                        <div class="text-xs text-gray-600 font-medium">Projets</div>
+                <div class="grid grid-cols-2 gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-gray-200">
+                    <div class="text-center bg-green-50 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                        <div class="text-lg sm:text-xl md:text-2xl font-extrabold text-green-600">{{ $creatorProjectsCount ?? 0 }}</div>
+                        <div class="text-xs sm:text-sm text-gray-600 font-medium">Projets</div>
                     </div>
                     <div class="text-center bg-blue-50 rounded-xl p-3">
                         <div class="text-2xl font-extrabold text-blue-600"><!--{{ $project->user->followers_count ?? 0 }}--></div>
@@ -254,35 +254,35 @@
             </div>
             
             <!-- Statistiques -->
-            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-2xl p-6 shadow-xl">
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-white bg-opacity-20 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-chart-bar"></i>
+            <div class="bg-gradient-to-br from-green-500 to-green-700 text-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-xl">
+                <div class="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div class="w-8 h-8 sm:w-10 sm:h-10 bg-white bg-opacity-20 rounded-lg sm:rounded-xl flex items-center justify-center">
+                        <i class="fas fa-chart-bar text-sm sm:text-base"></i>
                     </div>
-                    <h3 class="text-xl font-extrabold">Statistiques</h3>
+                    <h3 class="text-base sm:text-lg md:text-xl font-extrabold">Statistiques</h3>
                 </div>
                 
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
-                        <span class="flex items-center gap-2">
+                <div class="space-y-2 sm:space-y-3 md:space-y-4">
+                    <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                        <span class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base">
                             <i class="fas fa-eye"></i>
                             Vues
                         </span>
-                        <span class="font-extrabold text-xl">{{ $project->views_count ?? 0 }}</span>
+                        <span class="font-extrabold text-base sm:text-lg md:text-xl">{{ $project->views_count ?? 0 }}</span>
                     </div>
-                   <!--  <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
-                        <span class="flex items-center gap-2">
+                   <!--  <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                        <span class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base">
                             <i class="fas fa-heart"></i>
                             Favoris
                         </span>
-                        <span class="font-extrabold text-xl">{{ $project->favorites_count ?? 0 }}</span>
+                        <span class="font-extrabold text-base sm:text-lg md:text-xl">{{ $project->favorites_count ?? 0 }}</span>
                     </div>-->
-                    <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-xl p-3">
-                        <span class="flex items-center gap-2">
+                    <div class="flex items-center justify-between bg-white bg-opacity-10 rounded-lg sm:rounded-xl p-2 sm:p-3">
+                        <span class="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm md:text-base">
                             <i class="fas fa-check-circle"></i>
                             Réalisations
                         </span>
-                        <span class="font-extrabold text-xl">
+                        <span class="font-extrabold text-base sm:text-lg md:text-xl">
                             @auth
                                 {{ \App\Models\Project::where('user_id', auth()->id())->count() }}
                             @else

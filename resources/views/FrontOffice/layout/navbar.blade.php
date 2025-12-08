@@ -82,22 +82,22 @@
             
             <nav class="space-y-4">
                 <a href="{{ route('homee') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('homee') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    🏠 Accueil
+                     Accueil
                 </a>
                 <a href="{{ route('dechets.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('dechets.*') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    ♻️ Déchets
+                     Déchets
                 </a>
                 <a href="{{ route('projects.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('projects.*') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    🛠️ Projets
+                     Projets
                 </a>
                 <a href="{{ route('Events.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('Events.*') || request()->routeIs('events.*') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    📅 Événements
+                     Événements
                 </a>
                 <a href="{{ route('tutorials.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('tutorials.*') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    📚 Tutoriels
+                     Tutoriels
                 </a>
                 <a href="{{ route('forum.index') }}" class="mobile-nav-link block py-3 px-4 rounded-lg transition-colors {{ request()->routeIs('forum.*') ? 'bg-primary text-white' : 'text-gray-600 hover:bg-gray-100' }}">
-                    💬 Forum
+                     Forum
                 </a>
             </nav>
             

@@ -188,22 +188,42 @@ class HomeController extends Controller
         $userStats = [
             'projects_created' => Project::where('user_id', $user->id)->count(),
             'wastes_posted' => Dechet::where('user_id', $user->id)->count(),
-            'events_joined' => $user->participants()->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])->count(),
-            'likes_received' => Project::where('user_id', $user->id)->withCount('likes')->get()->sum('likes_count'),
+            'events_joined' => \App\Models\Participant::where('user_id', $user->id)
+                ->whereIn('attendance_status', ['registered', 'confirmed', 'attended'])
+                ->count(),
+            'co2_saved' => $this->calculateUserCO2Saved($user->id),
+            'average_rating' => $this->calculateUserAverageRating($user->id),
+            'reviews_count' => $this->getUserReviewsCount($user->id),
         ];
 
-        // Recent activity
+        // Recent activity - get user's recent actions
+        $recentActivity = $this->getUserRecentActivity($user->id);
+
+        // Recent projects with progress
         $recentProjects = Project::where('user_id', $user->id)
+            ->with(['likes', 'reviews'])
+            ->withCount('likes')
             ->orderBy('created_at', 'desc')
             ->take(5)
-            ->get();
+            ->get()
+            ->map(function($project) {
+                return [
+                    'id' => $project->id,
+                    'title' => $project->title,
+                    'status' => $project->status,
+                    'icon' => $this->getProjectIcon($project->category ?? 'autre'),
+                    'rating' => $project->average_rating ?? 0,
+                    'likes_count' => $project->likes_count ?? 0,
+                ];
+            });
 
         $myWastes = Dechet::where('user_id', $user->id)
+            ->with('category')
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
-        $upcomingEvents = $user->participants()
+        $upcomingEvents = \App\Models\Participant::where('user_id', $user->id)
             ->with('event')
             ->whereHas('event', function($query) {
                 $query->where('date_start', '>', now());
@@ -213,11 +233,24 @@ class HomeController extends Controller
             ->get()
             ->map(fn($p) => $p->event);
 
+        // Monthly goals
+        $monthlyGoals = $this->getMonthlyGoals($user->id);
+
+        // Recommended content
+        $recommendations = $this->getRecommendations($user->id);
+
+        // User badges
+        $badges = $this->getUserBadges($user->id);
+
         return view('FrontOffice.pages.homestats', compact(
             'userStats',
             'recentProjects',
             'myWastes',
-            'upcomingEvents'
+            'upcomingEvents',
+            'recentActivity',
+            'monthlyGoals',
+            'recommendations',
+            'badges'
         ));
     }
 
@@ -274,6 +307,195 @@ class HomeController extends Controller
             'training', 'formation' => 'secondary',
             'repair_cafe' => 'accent',
             default => 'primary'
+        };
+    }
+
+    /**
+     * Calculate user's CO2 saved
+     */
+    private function calculateUserCO2Saved($userId)
+    {
+        $totalWaste = Dechet::where('user_id', $userId)
+            ->where('status', '!=', 'available')
+            ->sum('quantity');
+        return round($totalWaste * 2.5);
+    }
+
+    /**
+     * Calculate user's average rating
+     */
+    private function calculateUserAverageRating($userId)
+    {
+        if (!class_exists('App\Models\Review')) {
+            return 0;
+        }
+        
+        $avgRating = DB::table('reviews')
+            ->join('projects', 'reviews.project_id', '=', 'projects.id')
+            ->where('projects.user_id', $userId)
+            ->avg('reviews.rating');
+            
+        return round($avgRating ?? 0, 1);
+    }
+
+    /**
+     * Get user's total reviews count
+     */
+    private function getUserReviewsCount($userId)
+    {
+        if (!class_exists('App\Models\Review')) {
+            return 0;
+        }
+        
+        return DB::table('reviews')
+            ->join('projects', 'reviews.project_id', '=', 'projects.id')
+            ->where('projects.user_id', $userId)
+            ->count();
+    }
+
+    /**
+     * Get user's recent activity
+     */
+    private function getUserRecentActivity($userId)
+    {
+        $activities = collect();
+        
+        // Recent projects
+        $projects = Project::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get()
+            ->map(fn($p) => [
+                'type' => 'project',
+                'icon' => 'hammer',
+                'color' => 'primary',
+                'title' => 'Projet créé',
+                'description' => $p->title,
+                'time' => $p->created_at->diffForHumans(),
+            ]);
+            
+        // Recent wastes
+        $wastes = Dechet::where('user_id', $userId)
+            ->orderBy('created_at', 'desc')
+            ->take(2)
+            ->get()
+            ->map(fn($w) => [
+                'type' => 'waste',
+                'icon' => 'recycle',
+                'color' => 'success',
+                'title' => 'Déchet déclaré',
+                'description' => $w->title,
+                'time' => $w->created_at->diffForHumans(),
+            ]);
+            
+        return $activities->merge($projects)->merge($wastes)->sortByDesc('time')->take(5)->values();
+    }
+
+    /**
+     * Get monthly goals for user
+     */
+    private function getMonthlyGoals($userId)
+    {
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+        
+        $projectsThisMonth = Project::where('user_id', $userId)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+            
+        $wastesThisMonth = Dechet::where('user_id', $userId)
+            ->whereMonth('created_at', $currentMonth)
+            ->whereYear('created_at', $currentYear)
+            ->count();
+            
+        return [
+            [
+                'title' => 'Créer 3 projets',
+                'current' => $projectsThisMonth,
+                'target' => 3,
+                'icon' => 'hammer',
+                'color' => 'primary',
+            ],
+            [
+                'title' => 'Déclarer 5 déchets',
+                'current' => $wastesThisMonth,
+                'target' => 5,
+                'icon' => 'recycle',
+                'color' => 'success',
+            ],
+            [
+                'title' => 'Économiser 100kg CO₂',
+                'current' => $this->calculateUserCO2Saved($userId),
+                'target' => 100,
+                'icon' => 'leaf',
+                'color' => 'accent',
+            ],
+        ];
+    }
+
+    /**
+     * Get recommendations for user
+     */
+    private function getRecommendations($userId)
+    {
+        // Get popular projects user hasn't liked
+        $projects = Project::where('status', 'published')
+            ->where('user_id', '!=', $userId)
+            ->withCount('likes')
+            ->orderBy('likes_count', 'desc')
+            ->take(3)
+            ->get()
+            ->map(fn($p) => [
+                'type' => 'project',
+                'id' => $p->id,
+                'title' => $p->title,
+                'description' => \Str::limit($p->description, 100),
+                'route' => route('projects.show', $p->id),
+            ]);
+            
+        return $projects;
+    }
+
+    /**
+     * Get user badges
+     */
+    private function getUserBadges($userId)
+    {
+        $badges = [];
+        
+        $projectsCount = Project::where('user_id', $userId)->count();
+        $wastesCount = Dechet::where('user_id', $userId)->count();
+        $co2Saved = $this->calculateUserCO2Saved($userId);
+        
+        if ($projectsCount >= 1) {
+            $badges[] = ['name' => 'Premier Projet', 'icon' => '🔨', 'color' => 'primary'];
+        }
+        if ($projectsCount >= 5) {
+            $badges[] = ['name' => 'Créateur', 'icon' => '⭐', 'color' => 'secondary'];
+        }
+        if ($wastesCount >= 10) {
+            $badges[] = ['name' => 'Éco-Guerrier', 'icon' => '🌱', 'color' => 'success'];
+        }
+        if ($co2Saved >= 100) {
+            $badges[] = ['name' => 'Sauveur CO₂', 'icon' => '🌍', 'color' => 'accent'];
+        }
+        
+        return collect($badges);
+    }
+
+    /**
+     * Get project icon
+     */
+    private function getProjectIcon($category)
+    {
+        return match(strtolower($category)) {
+            'mobilier', 'furniture' => 'couch',
+            'décoration', 'decoration' => 'palette',
+            'jardin', 'garden' => 'seedling',
+            'électronique', 'electronic' => 'laptop',
+            'jouets', 'toys' => 'puzzle-piece',
+            default => 'hammer'
         };
     }
 }

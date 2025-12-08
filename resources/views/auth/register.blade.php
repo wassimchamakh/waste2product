@@ -33,7 +33,6 @@ body {
 
             <div class="space-y-4">
                 <!-- First Name and Last Name -->
-                <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label for="name" class="block text-sm font-medium text-gray-700">
                             Nom Complet
@@ -45,10 +44,6 @@ body {
                             <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
-
-                    
-                </div>
-
                 <!-- Email Address -->
                 <div>
                     <label for="email" class="block text-sm font-medium text-gray-700">
@@ -104,9 +99,15 @@ body {
                     <label for="password" class="block text-sm font-medium text-gray-700">
                         Mot de passe
                     </label>
-                    <input id="password" name="password" type="password" required autocomplete="new-password"
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-base @error('password') border-red-500 @enderror"
-                           placeholder="••••••••">
+                    <div class="relative">
+                        <input id="password" name="password" type="password" required autocomplete="new-password"
+                               class="mt-1 appearance-none relative block w-full px-3 py-3 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-base @error('password') border-red-500 @enderror"
+                               placeholder="••••••••">
+                        <button type="button" onclick="togglePassword('password', 'toggle-password-icon')" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700">
+                            <i id="toggle-password-icon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
                     @error('password')
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -117,9 +118,15 @@ body {
                     <label for="password_confirmation" class="block text-sm font-medium text-gray-700">
                         Confirmer le mot de passe
                     </label>
-                    <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password"
-                           class="mt-1 appearance-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-base"
+                    <div class="relative">
+                        <input id="password_confirmation" name="password_confirmation" type="password" required autocomplete="new-password"
+                           class="mt-1 appearance-none relative block w-full px-3 py-3 pr-10 border border-gray-300 placeholder-gray-500 text-gray-900 bg-white rounded-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 text-base"
                            placeholder="Répétez votre mot de passe">
+                        <button type="button" onclick="togglePassword('password_confirmation', 'toggle-password-confirm-icon')" 
+                                class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-gray-700">
+                            <i id="toggle-password-confirm-icon" class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Terms and Conditions -->
@@ -153,6 +160,22 @@ body {
 @endsection
 
 @section('scripts')
+// Toggle password visibility
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
 // Form submission enhancement
 const form = document.querySelector('form');
 form?.addEventListener('submit', function(e) {

@@ -135,19 +135,19 @@
 
 @section('content')
 <!-- Progress Bar -->
-<div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div class="flex items-center justify-between mb-3">
-            <div class="flex items-center space-x-4">
-                <button onclick="toggleMobileSidebar()" class="lg:hidden p-2 text-gray-600 dark:text-gray-400">
+<div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+        <div class="flex items-center justify-between mb-2 sm:mb-3">
+            <div class="flex items-center space-x-2 sm:space-x-4">
+                <button onclick="toggleMobileSidebar()" class="lg:hidden p-1.5 sm:p-2 text-gray-600 dark:text-gray-400">
                     <i class="fas fa-bars"></i>
                 </button>
-                <h1 class="text-lg font-semibold text-gray-900 dark:text-white">
-                    Étape {{ $step->step_number }} sur {{ $allSteps->count() }}
+                <h1 class="text-sm sm:text-base md:text-lg font-semibold text-gray-900 dark:text-white">
+                    Étape {{ $step->step_number }}<span class="hidden sm:inline"> sur {{ $allSteps->count() }}</span>
                 </h1>
             </div>
-            <div class="text-sm text-gray-600 dark:text-gray-400">
-                {{ number_format(($step->step_number / $allSteps->count()) * 100, 1) }}% Terminé
+            <div class="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                {{ number_format(($step->step_number / $allSteps->count()) * 100, 1) }}%<span class="hidden sm:inline"> Terminé</span>
             </div>
         </div>
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">

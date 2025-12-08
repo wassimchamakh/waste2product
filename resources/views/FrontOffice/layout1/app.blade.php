@@ -90,6 +90,23 @@
         .bg-white, .bg-gray-50 {
             color: #1f2937;
         }
+        
+        /* Responsive utilities */
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        
+        /* Mobile optimizations */
+        @media (max-width: 640px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
     </style>
     
     @stack('styles')

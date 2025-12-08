@@ -4,29 +4,29 @@
 
 @section('content')
 <!-- Hero Section -->
-<div class="gradient-hero text-white py-16">
+<div class="gradient-hero text-white py-8 sm:py-12 md:py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-            <h1 class="text-4xl md:text-5xl font-bold mb-4">
-                <i class="fas fa-box-open mr-3"></i>Mes Déchets
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+                <i class="fas fa-box-open mr-2 sm:mr-3"></i>Mes Déchets
             </h1>
-            <p class="text-xl opacity-90 mb-8">
-                Gérez vos déchets déclarés et suivez leurs statuts
+            <p class="text-sm sm:text-base md:text-lg lg:text-xl opacity-90 mb-6 sm:mb-8 px-4">
+                Gérez vos déchets<span class="hidden sm:inline"> déclarés et suivez leurs statuts</span>
             </p>
             
             <!-- Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['total'] }}</div>
-                    <div class="text-sm opacity-90">Total déchets</div>
+            <div class="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto">
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['total'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90">Total<span class="hidden sm:inline"> déchets</span></div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['available'] }}</div>
-                    <div class="text-sm opacity-90">Disponibles</div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['available'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90">Disponibles</div>
                 </div>
-                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-xl p-6">
-                    <div class="text-3xl font-bold">{{ $stats['reserved'] }}</div>
-                    <div class="text-sm opacity-90">Réservés</div>
+                <div class="bg-white bg-opacity-20 backdrop-blur-lg rounded-lg sm:rounded-xl p-3 sm:p-4 md:p-6">
+                    <div class="text-xl sm:text-2xl md:text-3xl font-bold">{{ $stats['reserved'] }}</div>
+                    <div class="text-xs sm:text-sm opacity-90">Réservés</div>
                 </div>
             </div>
         </div>
@@ -35,24 +35,24 @@
 
 <!-- Actions Section -->
 <div class="bg-white shadow-lg">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <a 
                     href="{{ route('dechets.index') }}" 
-                    class="inline-flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors"
+                    class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-700 px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                     <i class="fas fa-arrow-left"></i>
-                    Tous les déchets
+                    <span class="hidden sm:inline">Tous les déchets</span><span class="sm:hidden">Tous</span>
                 </a>
             </div>
             
             <a 
                 href="{{ route('dechets.create') }}" 
-                class="inline-flex items-center gap-2 bg-gradient-to-r from-secondary to-accent text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition-all"
+                class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-secondary to-accent text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-medium hover:shadow-lg transition-all text-sm sm:text-base"
             >
                 <i class="fas fa-plus-circle"></i>
-                Déclarer un nouveau déchet
+                <span class="hidden sm:inline">Déclarer un nouveau déchet</span><span class="sm:hidden">Déclarer</span>
             </a>
         </div>
     </div>

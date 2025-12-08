@@ -4,41 +4,41 @@
 
 @section('content')
 <!-- Hero Section with Navigation -->
-<div class="bg-gray-50 py-8">
+<div class="bg-gray-50 py-4 sm:py-6 md:py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <!-- Breadcrumb -->
-        <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+        <nav class="flex items-center space-x-2 text-xs sm:text-sm text-gray-600 mb-4 sm:mb-6">
             <a href="{{ route('dechets.index') }}" class="hover:text-primary transition-colors">
-                <i class="fas fa-home mr-1"></i>Déchets
+                <i class="fas fa-home mr-1"></i><span class="hidden sm:inline">Déchets</span>
             </a>
             <i class="fas fa-chevron-right text-xs"></i>
-            <span class="text-gray-900">{{ Str::limit($Dechet->title, 30) }}</span>
+            <span class="text-gray-900 truncate">{{ Str::limit($Dechet->title, 30) }}</span>
         </nav>
         
         <!-- Quick Actions -->
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+            <div class="flex items-center gap-2 sm:gap-3">
                 <a 
                     href="{{ route('dechets.index') }}" 
-                    class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm border border-gray-200"
+                    class="inline-flex items-center gap-2 bg-white hover:bg-gray-50 text-gray-700 px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors shadow-sm border border-gray-200 text-sm sm:text-base"
                 >
                     <i class="fas fa-arrow-left"></i>
-                    Retour à la liste
+                    <span class="hidden sm:inline">Retour à la liste</span><span class="sm:hidden">Retour</span>
                 </a>
             </div>
             
             @if($Dechet->user_id === 4)
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <a 
                     href="{{ route('dechets.edit', $Dechet->id) }}" 
-                    class="inline-flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                     <i class="fas fa-edit"></i>
                     Modifier
                 </a>
                 <button 
                     onclick="showDeleteModal()" 
-                    class="inline-flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium transition-colors"
+                    class="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm sm:text-base"
                 >
                     <i class="fas fa-trash"></i>
                     Supprimer
@@ -50,15 +50,15 @@
 </div>
 
 <!-- Main Content -->
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 md:py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
         
         <!-- Main Content Column -->
         <div class="lg:col-span-2">
-            <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden">
                 
                 <!-- Image Section -->
-                <div class="relative h-96 md:h-[28rem] overflow-hidden">
+                <div class="relative h-64 sm:h-80 md:h-96 lg:h-[28rem] overflow-hidden">
                     @if($Dechet->photo)
                         <img 
                             src="{{ asset('uploads/dechets/' . $Dechet->photo) }}" 
@@ -75,16 +75,16 @@
                     @endif
                     
                     <!-- Status Badge -->
-                    <div class="absolute top-6 right-6">
-                        <span class="px-6 py-3 rounded-full text-sm font-bold 
+                    <div class="absolute top-3 sm:top-4 md:top-6 right-3 sm:right-4 md:right-6">
+                        <span class="px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-3 rounded-full text-xs sm:text-sm font-bold 
                             @if($Dechet->status === 'available') bg-green-500
                             @elseif($Dechet->status === 'reserved') bg-orange-500
                             @else bg-gray-500
                             @endif text-white shadow-lg backdrop-blur-sm">
                             @if($Dechet->status === 'available') 
-                                <i class="fas fa-check-circle mr-2"></i>Disponible
+                                <i class="fas fa-check-circle mr-1 sm:mr-2"></i>Disponible
                             @elseif($Dechet->status === 'reserved') 
-                                <i class="fas fa-clock mr-2"></i>Réservé
+                                <i class="fas fa-clock mr-1 sm:mr-2"></i>Réservé
                             @else 
                                 {{ ucfirst($Dechet->status) }}
                             @endif
@@ -93,17 +93,17 @@
                 </div>
 
                 <!-- Content Section -->
-                <div class="p-8">
+                <div class="p-4 sm:p-6 md:p-8">
                     <!-- Header -->
-                    <div class="mb-8">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex-1">
-                                <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
+                    <div class="mb-6 sm:mb-8">
+                        <div class="flex items-start justify-between mb-3 sm:mb-4">
+                            <div class="flex-1 min-w-0">
+                                <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-2 sm:mb-3 break-words">
                                     {{ $Dechet->title }}
                                 </h1>
                                 
                                 <!-- Category Badge -->
-                                <div class="inline-flex items-center gap-2 bg-primary bg-opacity-10 text-primary px-4 py-2 rounded-full">
+                                <div class="inline-flex items-center gap-1.5 sm:gap-2 bg-primary bg-opacity-10 text-primary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm">
                                     <i class="{{ $Dechet->category->icon ?? 'fas fa-tag' }}"></i>
                                     <span class="font-medium">{{ $Dechet->category->name }}</span>
                                 </div>
@@ -111,7 +111,7 @@
                         </div>
                         
                         <!-- Meta Information -->
-                        <div class="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                        <div class="flex flex-wrap items-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm text-gray-600">
                             <div class="flex items-center gap-2">
                                 <i class="fas fa-calendar text-primary"></i>
                                 <span>{{ $Dechet->created_at->format('d/m/Y à H:i') }}</span>

@@ -4,22 +4,22 @@
 
 @section('content')
 <!-- Hero Section -->
-<div class="gradient-hero text-white py-12">
+<div class="gradient-hero text-white py-8 sm:py-10 md:py-12">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center">
-            <h1 class="text-3xl md:text-4xl font-bold mb-4">
-                <i class="fas fa-plus-circle mr-3"></i>Déclarer un Déchet
+            <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4">
+                <i class="fas fa-plus-circle mr-2 sm:mr-3"></i><span class="hidden sm:inline">Déclarer un Déchet</span><span class="sm:hidden">Nouveau Déchet</span>
             </h1>
-            <p class="text-lg opacity-90">
-                Partagez vos déchets pour qu'ils puissent être réutilisés et valorisés
+            <p class="text-sm sm:text-base md:text-lg opacity-90 px-4">
+                Partagez vos déchets<span class="hidden sm:inline"> pour qu'ils puissent être réutilisés et valorisés</span>
             </p>
         </div>
     </div>
 </div>
 
 <!-- Formulaire -->
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <div class="bg-white rounded-2xl shadow-xl p-8">
+<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+    <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl p-4 sm:p-6 md:p-8">
         
         <!-- Navigation -->
         <div class="mb-8">

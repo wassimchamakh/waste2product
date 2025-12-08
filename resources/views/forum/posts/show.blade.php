@@ -3,25 +3,25 @@
 @section('title', $post->title . ' - Forum Waste2Product')
 
 @section('content')
-<div class="min-h-screen bg-gray-50 py-12">
+<div class="min-h-screen bg-gray-50 py-6 sm:py-8 md:py-12">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <!-- Back Button -->
-        <div class="mb-6">
+        <div class="mb-4 sm:mb-6">
             <a href="{{ route('forum.index') }}" 
-               class="inline-flex items-center text-primary hover:text-primary/80 transition font-semibold">
+               class="inline-flex items-center text-sm sm:text-base text-primary hover:text-primary/80 transition font-semibold">
                 <i class="fas fa-arrow-left mr-2"></i> Retour au forum
             </a>
         </div>
 
         <!-- Post Card -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div class="bg-white rounded-xl sm:rounded-2xl shadow-xl overflow-hidden mb-6 sm:mb-8">
             <!-- Post Header -->
-            <div class="bg-gradient-to-r from-primary to-success p-6 text-white">
-                <div class="flex items-start justify-between">
+            <div class="bg-gradient-to-r from-primary to-success p-4 sm:p-6 text-white">
+                <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                     <div class="flex-1">
-                        <h1 class="text-3xl font-bold mb-3">{{ $post->title }}</h1>
-                        <div class="flex items-center gap-4 text-white/90">
+                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold mb-3">{{ $post->title }}</h1>
+                        <div class="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-white/90">
                             <div class="flex items-center gap-2">
                                 <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white font-bold">
                                     {{ strtoupper(substr($post->user->name, 0, 1)) }}
@@ -60,18 +60,18 @@
             </div>
 
             <!-- Post Body -->
-            <div class="p-8">
-                <div class="prose max-w-none mb-8">
-                    <p class="text-gray-700 text-lg leading-relaxed whitespace-pre-wrap">{{ $post->body }}</p>
+            <div class="p-4 sm:p-6 md:p-8">
+                <div class="prose prose-sm sm:prose max-w-none mb-6 sm:mb-8">
+                    <p class="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed whitespace-pre-wrap">{{ $post->body }}</p>
                 </div>
 
                 <!-- AI Summary Section -->
                 @auth
-                <div class="mb-6">
+                <div class="mb-4 sm:mb-6">
                     <button type="button"
                             onclick="event.preventDefault(); generateAISummary({{ $post->id }}); return false;" 
                             id="ai-summary-btn"
-                            class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition font-semibold shadow-lg hover:shadow-xl">
+                            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg hover:from-purple-600 hover:to-pink-600 transition font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base">
                         <i class="fas fa-magic mr-2"></i>
                         ✨ Résumé IA
                     </button>
@@ -119,31 +119,31 @@
                 @endif
 
                 <!-- Post Footer -->
-                <div class="border-t pt-6">
-                    <div class="flex items-center justify-between">
+                <div class="border-t pt-4 sm:pt-6">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
                         <!-- Voting -->
-                        <div class="flex items-center gap-4">
+                        <div class="flex items-center gap-3 sm:gap-4">
                             @auth
                                 <div class="flex items-center gap-2 bg-gray-50 rounded-lg p-2">
                                     <button onclick="votePost({{ $post->id }}, 1)" 
                                             id="upvote-btn-{{ $post->id }}"
-                                            class="px-4 py-2 rounded-lg hover:bg-success/10 transition {{ $userVote == 1 ? 'bg-success text-white' : 'text-gray-600' }}">
+                                            class="px-2 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg hover:bg-success/10 transition {{ $userVote == 1 ? 'bg-success text-white' : 'text-gray-600' }}">
                                         <i class="fas fa-arrow-up"></i>
                                         <span class="ml-1 font-bold" id="upvotes-{{ $post->id }}">{{ $post->upvotes }}</span>
                                     </button>
                                     <span class="text-gray-400">|</span>
                                     <button onclick="votePost({{ $post->id }}, -1)" 
                                             id="downvote-btn-{{ $post->id }}"
-                                            class="px-4 py-2 rounded-lg hover:bg-red-50 transition {{ $userVote == -1 ? 'bg-red-500 text-white' : 'text-gray-600' }}">
+                                            class="px-2 sm:px-4 py-1.5 sm:py-2 text-sm sm:text-base rounded-lg hover:bg-red-50 transition {{ $userVote == -1 ? 'bg-red-500 text-white' : 'text-gray-600' }}">
                                         <i class="fas fa-arrow-down"></i>
                                         <span class="ml-1 font-bold" id="downvotes-{{ $post->id }}">{{ $post->downvotes }}</span>
                                     </button>
-                                    <span class="ml-2 text-lg font-bold" id="score-{{ $post->id }}">
+                                    <span class="ml-2 text-sm sm:text-lg font-bold" id="score-{{ $post->id }}">
                                         Score: {{ $post->score }}
                                     </span>
                                 </div>
                             @else
-                                <div class="flex items-center gap-4 text-gray-600">
+                                <div class="flex items-center gap-3 sm:gap-4 text-sm sm:text-base text-gray-600">
                                     <span><i class="fas fa-arrow-up text-success mr-1"></i> {{ $post->upvotes }}</span>
                                     <span><i class="fas fa-arrow-down text-red-500 mr-1"></i> {{ $post->downvotes }}</span>
                                     <span class="font-bold">Score: {{ $post->score }}</span>

@@ -1,4 +1,4 @@
-@extends('FrontOffice.layout.app')
+@extends($layout ?? 'FrontOffice.layout.app')
 
 @section('title', 'Contact - Waste2Product')
 
@@ -108,7 +108,7 @@
                         <a href="#" class="w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center justify-center transition-all">
                             <i class="fab fa-instagram text-xl"></i>
                         </a>
-                        <a href="#" class="w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center justify-center transition-all">
+                        <a href="https://www.linkedin.com/in/wassimchamakh/" class="w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center justify-center transition-all">
                             <i class="fab fa-linkedin-in text-xl"></i>
                         </a>
                         <a href="#" class="w-12 h-12 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg flex items-center justify-center transition-all">

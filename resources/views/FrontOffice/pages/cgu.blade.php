@@ -1,4 +1,4 @@
-@extends('FrontOffice.layout.app')
+@extends($layout ?? 'FrontOffice.layout.app')
 
 @section('title', 'Conditions Générales d\'Utilisation - Waste2Product')
 

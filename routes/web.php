@@ -1,6 +1,6 @@
 <?php
 
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Backoffice\Event1controller;
 use App\Http\Controllers\Backoffice\Project1controller;
 use App\Http\Controllers\Backoffice\UserController;
@@ -78,17 +78,24 @@ use App\Http\Controllers\Frontoffice\HomeController;
 
 Route::get('/admin', [DashboardController::class, 'index'])->name('admin');
 
-Route::get('/', [HomeController::class, 'index'])->name('homee');
+Route::get('/', function() {
+    if (Auth::check()) {
+        return redirect()->route('home');
+    }
+    return app(HomeController::class)->index();
+})->name('homee');
 
 Route::get('/home', [HomeController::class, 'dashboard'])->middleware(['auth', 'verified'])->name('home');
 
-// Static pages
-Route::view('/support', 'FrontOffice.pages.support')->name('support');
-Route::view('/aide', 'FrontOffice.pages.aide')->name('aide');
-Route::view('/contact', 'FrontOffice.pages.contact')->name('contact');
-Route::view('/mobile-app', 'FrontOffice.pages.mobile-app')->name('mobile-app');
-Route::view('/confidentialite', 'FrontOffice.pages.confidentialite')->name('confidentialite');
-Route::view('/cgu', 'FrontOffice.pages.cgu')->name('cgu');
+// Static pages with dynamic layout
+use App\Http\Controllers\Frontoffice\StaticPageController;
+
+Route::get('/support', [StaticPageController::class, 'support'])->name('support');
+Route::get('/aide', [StaticPageController::class, 'aide'])->name('aide');
+Route::get('/contact', [StaticPageController::class, 'contact'])->name('contact');
+Route::get('/mobile-app', [StaticPageController::class, 'mobileApp'])->name('mobile-app');
+Route::get('/confidentialite', [StaticPageController::class, 'confidentialite'])->name('confidentialite');
+Route::get('/cgu', [StaticPageController::class, 'cgu'])->name('cgu');
 
 /*
 Route::get('/login', function () {

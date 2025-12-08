@@ -25,12 +25,12 @@
             </div>
             <div class="mt-6 md:mt-0">
                 <div class="flex items-center space-x-4">
-                    <button class="bg-white text-primary px-6 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md">
+                    <a href="{{ route('projects.create') }}" class="bg-white text-primary px-6 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md">
                         <i class="fas fa-plus mr-2"></i>Nouveau Projet
-                    </button>
-                    <button class="bg-white bg-opacity-20 text-white px-6 py-3 rounded-xl font-medium hover:bg-opacity-30 transition-colors border border-white border-opacity-30">
+                    </a>
+                    <a href="{{ route('dechets.create') }}" class="bg-white text-primary px-6 py-3 rounded-xl font-medium hover:bg-gray-50 transition-colors shadow-md border-2 border-white">
                         <i class="fas fa-recycle mr-2"></i>Déclarer Déchet
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -46,9 +46,8 @@
                 <div class="w-20 h-20 bg-primary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg">
                     <i class="fas fa-hammer text-white text-2xl"></i>
                 </div>
-                <div class="text-3xl font-bold text-gray-900 mb-2">12</div>
+                <div class="text-3xl font-bold text-gray-900 mb-2">{{ $userStats['projects_created'] }}</div>
                 <div class="text-sm text-gray-600 font-medium">Projets Créés</div>
-                <div class="text-xs text-success mt-2 font-medium">+2 ce mois</div>
             </div>
 
             <!-- Stat 2 -->
@@ -56,9 +55,8 @@
                 <div class="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -0.5s;">
                     <i class="fas fa-recycle text-white text-2xl"></i>
                 </div>
-                <div class="text-3xl font-bold text-gray-900 mb-2">28</div>
+                <div class="text-3xl font-bold text-gray-900 mb-2">{{ $userStats['wastes_posted'] }}</div>
                 <div class="text-sm text-gray-600 font-medium">Déchets Déclarés</div>
-                <div class="text-xs text-success mt-2 font-medium">+5 cette semaine</div>
             </div>
 
             <!-- Stat 3 -->
@@ -66,9 +64,8 @@
                 <div class="w-20 h-20 bg-success rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -1s;">
                     <i class="fas fa-leaf text-white text-2xl"></i>
                 </div>
-                <div class="text-3xl font-bold text-gray-900 mb-2">347</div>
+                <div class="text-3xl font-bold text-gray-900 mb-2">{{ $userStats['co2_saved'] }}</div>
                 <div class="text-sm text-gray-600 font-medium">Kg CO₂ Économisés</div>
-                <div class="text-xs text-success mt-2 font-medium">Objectif: 500kg</div>
             </div>
 
             <!-- Stat 4 -->
@@ -76,271 +73,203 @@
                 <div class="w-20 h-20 bg-accent rounded-full flex items-center justify-center mx-auto mb-4 floating-icon shadow-lg" style="animation-delay: -1.5s;">
                     <i class="fas fa-star text-white text-2xl"></i>
                 </div>
-                <div class="text-3xl font-bold text-gray-900 mb-2">4.8</div>
+                <div class="text-3xl font-bold text-gray-900 mb-2">{{ number_format($userStats['average_rating'], 1) }}</div>
                 <div class="text-sm text-gray-600 font-medium">Note Moyenne</div>
-                <div class="text-xs text-success mt-2 font-medium">46 évaluations</div>
+                <div class="text-xs text-success mt-2 font-medium">{{ $userStats['reviews_count'] }} évaluations</div>
             </div>
         </div>
     </div>
 </section>
 
 <!-- Main Dashboard Content -->
-<section class="py-8">
+<section class="py-8 bg-gray-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Left Column -->
-            <div class="lg:col-span-2 space-y-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <!-- Left Column - Main Content -->
+            <div class="order-2 lg:order-1 lg:col-span-2 space-y-6 lg:space-y-8">
                 <!-- Mes Projets Récents -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6 border-b border-gray-200">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6 border-b border-gray-200">
                         <div class="flex items-center justify-between">
-                            <h2 class="text-xl font-semibold text-gray-900">
+                            <h2 class="text-lg sm:text-xl font-semibold text-gray-900">
                                 Mes Projets Récents 🔨
                             </h2>
-                            <a  class="text-primary hover:text-primary/80 text-sm font-medium">Voir tout</a>
+                            <a href="{{ route('projects.my') }}" class="text-primary hover:text-primary/80 text-sm font-medium">Voir tout</a>
                         </div>
                     </div>
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
+                        @if($recentProjects->count() > 0)
                         <div class="space-y-4">
-                            <!-- Project 1 -->
-                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                                <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-table text-white"></i>
+                            @foreach($recentProjects as $project)
+                            <a href="{{ route('projects.show', $project['id']) }}" class="flex items-center space-x-4 p-4 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+                                <div class="w-12 h-12 bg-{{ $project['status'] === 'published' ? 'success' : 'secondary' }} rounded-lg flex items-center justify-center">
+                                    <i class="fas fa-{{ $project['icon'] }} text-white"></i>
                                 </div>
                                 <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900">Table Basse Palettes</h3>
-                                    <p class="text-sm text-gray-600">En cours • 75% terminé</p>
-                                </div>
-                                <div class="flex items-center space-x-2">
-                                    <div class="w-8 h-8">
-                                        <svg class="w-8 h-8 progress-ring" viewBox="0 0 32 32">
-                                            <circle cx="16" cy="16" r="14" stroke="#e5e7eb" stroke-width="4" fill="none"/>
-                                            <circle cx="16" cy="16" r="14" stroke="#2E7D47" stroke-width="4" fill="none" 
-                                                    stroke-dasharray="66 22" class="progress-ring-fill"/>
-                                        </svg>
-                                    </div>
-                                    <span class="text-sm font-medium text-primary">75%</span>
-                                </div>
-                            </div>
-
-                            <!-- Project 2 -->
-                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                                <div class="w-12 h-12 bg-success rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-seedling text-white"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900">Jardinière Suspendue</h3>
-                                    <p class="text-sm text-gray-600">Terminé • 4.9/5 ⭐</p>
+                                    <h3 class="font-medium text-gray-900">{{ $project['title'] }}</h3>
+                                    <p class="text-sm text-gray-600">
+                                        {{ ucfirst($project['status']) }}
+                                        @if($project['rating'] > 0)
+                                            • {{ number_format($project['rating'], 1) }}/5 ⭐
+                                        @endif
+                                    </p>
                                 </div>
                                 <div class="flex items-center">
-                                    <span class="bg-success text-white text-xs px-2 py-1 rounded-full">Terminé</span>
+                                    <span class="text-sm text-gray-500">
+                                        <i class="fas fa-heart text-red-400"></i> {{ $project['likes_count'] }}
+                                    </span>
                                 </div>
-                            </div>
-
-                            <!-- Project 3 -->
-                            <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg">
-                                <div class="w-12 h-12 bg-secondary rounded-lg flex items-center justify-center">
-                                    <i class="fas fa-lightbulb text-white"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <h3 class="font-medium text-gray-900">Luminaire Canettes</h3>
-                                    <p class="text-sm text-gray-600">En attente matériaux</p>
-                                </div>
-                                <div class="flex items-center">
-                                    <span class="bg-warning text-gray-900 text-xs px-2 py-1 rounded-full">En attente</span>
-                                </div>
-                            </div>
+                            </a>
+                            @endforeach
                         </div>
+                        @else
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-hammer text-4xl mb-3 opacity-30"></i>
+                            <p>Aucun projet encore</p>
+                            <a href="{{ route('projects.create') }}" class="text-primary hover:underline text-sm">Créer votre premier projet</a>
+                        </div>
+                        @endif
                     </div>
-                </div>
-
-                <!-- Activité Récente -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-xl font-semibold text-gray-900">
+                </div>                <!-- Activité Récente -->
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 class="text-lg sm:text-xl font-semibold text-gray-900">
                             Activité Récente 📈
                         </h2>
                     </div>
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
+                        @if($recentActivity->count() > 0)
                         <div class="space-y-4">
-                            <!-- Activity 1 -->
+                            @foreach($recentActivity as $activity)
                             <div class="flex items-start space-x-4">
-                                <div class="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-check text-white text-xs"></i>
+                                <div class="w-8 h-8 bg-{{ $activity['color'] }} rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-{{ $activity['icon'] }} text-white text-xs"></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-gray-900">
-                                        <span class="font-medium">Projet terminé</span> - Jardinière Suspendue
+                                        <span class="font-medium">{{ $activity['title'] }}</span> - {{ $activity['description'] }}
                                     </p>
-                                    <p class="text-xs text-gray-500">Il y a 2 heures</p>
+                                    <p class="text-xs text-gray-500">{{ $activity['time'] }}</p>
                                 </div>
                             </div>
-
-                            <!-- Activity 2 -->
-                            <div class="flex items-start space-x-4">
-                                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-recycle text-white text-xs"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-sm text-gray-900">
-                                        <span class="font-medium">Nouveau déchet déclaré</span> - Palettes Européennes
-                                    </p>
-                                    <p class="text-xs text-gray-500">Hier à 14h30</p>
-                                </div>
-                            </div>
-
-                            <!-- Activity 3 -->
-                            <div class="flex items-start space-x-4">
-                                <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center flex-shrink-0">
-                                    <i class="fas fa-star text-white text-xs"></i>
-                                </div>
-                                <div class="flex-1">
-                                    <p class="text-sm text-gray-900">
-                                        <span class="font-medium">Nouvelle évaluation reçue</span> - 5 étoiles
-                                    </p>
-                                    <p class="text-xs text-gray-500">Il y a 3 jours</p>
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
+                        @else
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-chart-line text-4xl mb-3 opacity-30"></i>
+                            <p>Aucune activité récente</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>
 
-            <!-- Right Column -->
-            <div class="space-y-8">
+            <!-- Right Column - Sidebar -->
+            <div class="order-1 lg:order-2 space-y-6 lg:space-y-8">
                 <!-- Objectifs du Mois -->
-                <div class="bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
-                    <div class="p-6 border-b border-gray-100">
-                        <h2 class="text-lg font-bold text-gray-900 flex items-center">
-                            Objectifs Décembre <span class="ml-2">🎯</span>
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6 border-b border-gray-100">
+                        <h2 class="text-base sm:text-lg font-bold text-gray-900 flex items-center">
+                            Objectifs {{ now()->translatedFormat('F') }} <span class="ml-2">🎯</span>
                         </h2>
                     </div>
-                    <div class="p-6 space-y-6">
-                        <!-- Goal 1 -->
+                    <div class="p-4 sm:p-6 space-y-6">
+                        @foreach($monthlyGoals as $goal)
                         <div>
                             <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-semibold text-gray-900">Projets créés</span>
-                                <span class="text-sm font-bold text-gray-600">2/3</span>
+                                <span class="text-sm font-semibold text-gray-900">{{ $goal['title'] }}</span>
+                                <span class="text-sm font-bold text-gray-600">{{ $goal['current'] }}/{{ $goal['target'] }}</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-primary h-2.5 rounded-full transition-all duration-500" style="width: 67%"></div>
+                                <div class="bg-{{ $goal['color'] }} h-2.5 rounded-full transition-all duration-500" 
+                                     style="width: {{ min(100, ($goal['current'] / $goal['target']) * 100) }}%"></div>
                             </div>
                         </div>
-
-                        <!-- Goal 2 -->
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-semibold text-gray-900">CO₂ économisé</span>
-                                <span class="text-sm font-bold text-gray-600">347/500kg</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-success h-2.5 rounded-full transition-all duration-500" style="width: 69%"></div>
-                            </div>
-                        </div>
-
-                        <!-- Goal 3 -->
-                        <div>
-                            <div class="flex items-center justify-between mb-3">
-                                <span class="text-sm font-semibold text-gray-900">Événements participés</span>
-                                <span class="text-sm font-bold text-gray-600">1/2</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-secondary h-2.5 rounded-full transition-all duration-500" style="width: 50%"></div>
-                            </div>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
 
                 <!-- Événements Suivis -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 class="text-base sm:text-lg font-semibold text-gray-900">
                             Mes Événements 📅
                         </h2>
                     </div>
-                    <div class="p-6 space-y-4">
-                        <!-- Event 1 -->
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-primary text-white rounded-lg p-2 flex-shrink-0">
-                                <div class="text-center">
-                                    <div class="text-xs font-medium">DÉC</div>
-                                    <div class="text-sm font-bold">15</div>
+                    <div class="p-4 sm:p-6 space-y-4">
+                        @if($upcomingEvents->count() > 0)
+                            @foreach($upcomingEvents as $event)
+                            <a href="{{ route('Events.show', $event->id) }}" class="flex items-start space-x-4 hover:bg-gray-50 p-2 rounded-lg transition-colors">
+                                <div class="bg-primary text-white rounded-lg p-2 flex-shrink-0">
+                                    <div class="text-center">
+                                        <div class="text-xs font-medium">{{ strtoupper($event->date_start->translatedFormat('M')) }}</div>
+                                        <div class="text-sm font-bold">{{ $event->date_start->format('d') }}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-gray-900 text-sm">Repair Café Tunis</h3>
-                                <p class="text-xs text-gray-600">Samedi 14h • Inscrit</p>
-                            </div>
-                        </div>
-
-                        <!-- Event 2 -->
-                        <div class="flex items-start space-x-4">
-                            <div class="bg-secondary text-white rounded-lg p-2 flex-shrink-0">
-                                <div class="text-center">
-                                    <div class="text-xs font-medium">DÉC</div>
-                                    <div class="text-sm font-bold">18</div>
+                                <div class="flex-1">
+                                    <h3 class="font-medium text-gray-900 text-sm">{{ $event->title }}</h3>
+                                    <p class="text-xs text-gray-600">{{ $event->date_start->format('l H:i') }} • Inscrit</p>
                                 </div>
-                            </div>
-                            <div class="flex-1">
-                                <h3 class="font-medium text-gray-900 text-sm">Collecte Électroniques</h3>
-                                <p class="text-xs text-gray-600">Mercredi 9h • Organisateur</p>
-                            </div>
+                            </a>
+                            @endforeach
+                        @else
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-calendar text-4xl mb-3 opacity-30"></i>
+                            <p>Aucun événement à venir</p>
+                            <a href="{{ route('Events.index') }}" class="text-primary hover:underline text-sm">Voir les événements</a>
                         </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Badges & Récompenses -->
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-900">
+                <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6 border-b border-gray-200">
+                        <h2 class="text-base sm:text-lg font-semibold text-gray-900">
                             Mes Badges 🏆
                         </h2>
                     </div>
-                    <div class="p-6">
+                    <div class="p-4 sm:p-6">
+                        @if($badges->count() > 0)
                         <div class="grid grid-cols-3 gap-4">
-                            <!-- Badge 1 -->
+                            @foreach($badges as $badge)
                             <div class="text-center">
-                                <div class="w-12 h-12 bg-yellow-400 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-trophy text-white"></i>
+                                <div class="w-12 h-12 bg-{{ $badge['color'] }} rounded-full flex items-center justify-center mx-auto mb-2 text-xl">
+                                    {{ $badge['icon'] }}
                                 </div>
-                                <div class="text-xs font-medium text-gray-900">Éco-Warrior</div>
+                                <div class="text-xs font-medium text-gray-900">{{ $badge['name'] }}</div>
                             </div>
-
-                            <!-- Badge 2 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-recycle text-white"></i>
-                                </div>
-                                <div class="text-xs font-medium text-gray-900">Recycleur Pro</div>
-                            </div>
-
-                            <!-- Badge 3 -->
-                            <div class="text-center">
-                                <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-2">
-                                    <i class="fas fa-users text-white"></i>
-                                </div>
-                                <div class="text-xs font-medium text-gray-900">Communauté</div>
-                            </div>
+                            @endforeach
                         </div>
+                        @else
+                        <div class="text-center py-8 text-gray-500">
+                            <i class="fas fa-trophy text-4xl mb-3 opacity-30"></i>
+                            <p class="text-xs">Continuez à contribuer pour gagner des badges !</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
 
                 <!-- Recommandations -->
-                <div class="bg-gradient-to-br from-primary to-success text-white rounded-xl shadow-lg overflow-hidden">
-                    <div class="p-6">
+                <div class="bg-gradient-to-br from-primary to-success text-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+                    <div class="p-4 sm:p-6">
                         <h2 class="text-lg font-semibold mb-4">
                             Recommandé pour vous 💡
                         </h2>
+                        @if($recommendations->count() > 0)
                         <div class="space-y-3">
-                            <div class="bg-white bg-opacity-20 rounded-lg p-3">
-                                <h3 class="font-medium text-sm mb-1">Étagère Caisses de Vin</h3>
-                                <p class="text-xs opacity-90">Basé sur vos matériaux disponibles</p>
-                            </div>
-                            <div class="bg-white bg-opacity-20 rounded-lg p-3">
-                                <h3 class="font-medium text-sm mb-1">Atelier Upcycling</h3>
-                                <p class="text-xs opacity-90">Événement près de chez vous</p>
-                            </div>
+                            @foreach($recommendations as $rec)
+                            <a href="{{ $rec['route'] }}" class="block bg-white bg-opacity-20 rounded-lg p-3 hover:bg-opacity-30 transition-colors">
+                                <h3 class="font-medium text-sm mb-1">{{ $rec['title'] }}</h3>
+                                <p class="text-xs opacity-90">{{ $rec['description'] }}</p>
+                            </a>
+                            @endforeach
                         </div>
+                        @else
+                        <div class="bg-white bg-opacity-20 rounded-lg p-4 text-center">
+                            <p class="text-sm">Explorez plus de projets pour recevoir des recommandations personnalisées</p>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

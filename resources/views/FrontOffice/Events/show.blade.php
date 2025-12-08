@@ -98,7 +98,7 @@
 @endif
 
 <!-- Hero Section with Event Image -->
-<section class="relative h-96 overflow-hidden">
+<section class="relative h-64 sm:h-80 md:h-96 overflow-hidden">
     <img src="{{ $event->image ?? 'https://picsum.photos/1200/400?random=' . $event->id }}" 
          alt="{{ $event->title }}" 
          class="w-full h-full object-cover">
@@ -106,31 +106,31 @@
     
     <!-- Event Info Overlay -->
     <div class="absolute inset-0 flex items-end">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8">
-            <div class="flex flex-wrap gap-3 mb-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-4 sm:pb-6 md:pb-8">
+            <div class="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <!-- Type Badge -->
-                <span class="badge-{{ $event->type }} text-white px-4 py-2 rounded-full font-medium">
+                <span class="badge-{{ $event->type }} text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-xs sm:text-sm">
                     {{ $types[$event->type]['label'] }}
                 </span>
                 
                 <!-- Status Badge -->
                 @if($stats->current_participants >= $event->max_participants)
-                    <span class="bg-accent text-white px-4 py-2 rounded-full font-medium">
+                    <span class="bg-accent text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-xs sm:text-sm">
                         <i class="fas fa-users mr-1"></i>Complet
                     </span>
                 @else
-                    <span class="bg-success text-white px-4 py-2 rounded-full font-medium">
+                    <span class="bg-success text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full font-medium text-xs sm:text-sm">
                         <i class="fas fa-check mr-1"></i>Places disponibles
                     </span>
                 @endif
             </div>
             
-            <h1 class="text-4xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
                 {{ $event->title }}
             </h1>
             
             <!-- Key Info -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-white">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 text-white text-sm sm:text-base">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt mr-3 text-xl"></i>
                     <div>

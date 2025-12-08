@@ -98,7 +98,7 @@
 
 @section('content')
 <!-- Hero Section -->
-<section class="relative h-96 md:h-[500px] overflow-hidden">
+<section class="relative h-64 sm:h-80 md:h-96 lg:h-[500px] overflow-hidden">
     <img src="{{ $tutorial->thumbnail_url ?? 'https://picsum.photos/1200/500?random=' . $tutorial->id }}" 
          alt="{{ $tutorial->title }}" 
          class="w-full h-full object-cover">
@@ -106,45 +106,45 @@
     
     <!-- Tutorial Info Overlay -->
     <div class="absolute inset-0 flex items-end">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8">
-            <div class="flex flex-wrap gap-3 mb-4">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-4 sm:pb-6 md:pb-8">
+            <div class="flex flex-wrap gap-2 sm:gap-3 mb-3 sm:mb-4">
                 <!-- Difficulty Badge -->
-                <span class="px-3 py-1 text-sm font-medium rounded-full difficulty-{{ strtolower($tutorial->difficulty_level) }}">
+                <span class="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium rounded-full difficulty-{{ strtolower($tutorial->difficulty_level) }}">
                     {{ $tutorial->difficulty_level }}
                 </span>
                 
                 <!-- Category Badge -->
-                <span class="px-3 py-1 text-sm font-medium rounded-full category-{{ $tutorial->category_slug }}">
+                <span class="px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium rounded-full category-{{ $tutorial->category_slug }}">
                     {{ $tutorial->category }}
                 </span>
 
                 <!-- Featured Badge -->
                 @if($tutorial->is_featured)
-                    <span class="bg-warning text-white px-3 py-1 rounded-full text-sm font-medium">
+                    <span class="bg-warning text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium">
                         <i class="fas fa-star mr-1"></i>Featured
                     </span>
                 @endif
             </div>
             
-            <h1 class="text-3xl md:text-5xl font-bold text-white mb-4">
+            <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-5xl font-bold text-white mb-3 sm:mb-4">
                 {{ $tutorial->title }}
             </h1>
             
             <!-- Creator Info -->
-            <div class="flex items-center text-white mb-6">
+            <div class="flex items-center text-white mb-4 sm:mb-6 text-sm sm:text-base">
                 <img src="{{ $tutorial->creator->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($tutorial->creator->name ?? 'Unknown') }}" 
                      alt="{{ $tutorial->creator->name ?? 'Unknown' }}" 
-                     class="w-10 h-10 rounded-full mr-3 border-2 border-white/20">
+                     class="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 sm:mr-3 border-2 border-white/20">
                 <div>
                     <div class="font-medium">{{ $tutorial->creator->name ?? 'Unknown Author' }}</div>
-                    <div class="text-sm opacity-90">
+                    <div class="text-xs sm:text-sm opacity-90">
                         Published {{ $tutorial->published_at ? $tutorial->published_at->diffForHumans() : $tutorial->created_at->diffForHumans() }}
                     </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-3">
+            <div class="flex flex-col sm:flex-row flex-wrap gap-2 sm:gap-3">
                 @php
                     $buttonText = 'Commencer l\'apprentissage';
                     $buttonIcon = 'fa-play';
