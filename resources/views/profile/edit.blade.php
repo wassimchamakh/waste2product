@@ -268,6 +268,7 @@ body {
 @endsection
 
 @section('scripts')
+<script>
 // Form submission enhancement
 const profileForm = document.querySelector('form[action*="profile.update"]');
 profileForm?.addEventListener('submit', function(e) {
@@ -298,4 +299,5 @@ confirmPassword?.addEventListener('input', function() {
         this.setCustomValidity('');
     }
 });
+</script>
 @endsection
